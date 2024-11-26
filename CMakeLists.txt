@@ -19,7 +19,7 @@ link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
 ## Tile loader lib
 file(GLOB_RECURSE SOURCE_FILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)
-add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
+add_library(lib_tile_level_loader STATIC ${SOURCE_FILES} "src/Player.h" "src/Entity.cpp" "src/Entity.h")
 target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/lib_tile_level_loader/" )
 target_link_libraries(lib_tile_level_loader sfml-graphics)
 
@@ -28,11 +28,9 @@ add_library(lib_math INTERFACE)
 target_sources(lib_math INTERFACE "${CMAKE_SOURCE_DIR}/lib_math/Math.h")
 target_include_directories(lib_math INTERFACE "${CMAKE_SOURCE_DIR}/lib_math" SYSTEM INTERFACE ${SFML_INCS})
 
-
-
 #### Practical 1 ####
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
-add_executable(GameEng ${SOURCES})
+add_executable(GameEng ${SOURCES} "src/Player.h" "src/Entity.cpp" "src/Entity.h")
 target_include_directories(GameEng PRIVATE ${SFML_INCS})
 target_link_libraries(GameEng lib_tile_level_loader lib_math sfml-graphics)
 
