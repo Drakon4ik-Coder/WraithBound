@@ -41,10 +41,9 @@ jobs:
         run: |
           if [ -f "./build/bin/WraithBound" ]; then
             echo "Executable WraithBound found!"
-            # Instead of running a graphical application, just run a command-line test (if available)
-            # For example, you can try running with --version or any other non-graphical option
-            ./build/bin/WraithBound --version || exit 1
+            ./build/bin/WraithBound --headless --version || exit 1
           else
             echo "Error: Executable WraithBound not found."
             exit 1
           fi
+
