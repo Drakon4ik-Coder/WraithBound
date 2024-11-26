@@ -24,6 +24,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential git
+      - name: Install OpenGL
+        run: sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev
 
       # Configure the project with CMake
       - name: Configure Project
