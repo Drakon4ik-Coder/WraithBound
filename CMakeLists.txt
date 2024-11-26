@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.11)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(GameEng)
+project(WraithBound)
 
 #### Setup Directories ####
 #Main output directory
@@ -19,7 +19,7 @@ link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
 ## Tile loader lib
 file(GLOB_RECURSE SOURCE_FILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)
-add_library(lib_tile_level_loader STATIC ${SOURCE_FILES} "src/main.cpp" "src/Entity.cpp" "src/Entity.h" "src/Player.h" "src/Player.cpp")
+add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
 target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/lib_tile_level_loader/" )
 target_link_libraries(lib_tile_level_loader sfml-graphics)
 
@@ -30,20 +30,18 @@ target_include_directories(lib_math INTERFACE "${CMAKE_SOURCE_DIR}/lib_math" SYS
 
 #### Practical 1 ####
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
-add_executable(GameEng ${SOURCES} "src/main.cpp" "src/Entity.cpp" "src/Entity.h" "src/Player.h" "src/Player.cpp")
-target_include_directories(GameEng PRIVATE ${SFML_INCS})
-target_link_libraries(GameEng lib_tile_level_loader lib_math sfml-graphics)
+add_executable(WraithBound ${SOURCES})
+target_include_directories(WraithBound PRIVATE ${SFML_INCS})
+target_link_libraries(WraithBound lib_tile_level_loader lib_math sfml-graphics)
 
-set_target_properties(GameEng 
+set_target_properties(WraithBound 
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
-add_dependencies(GameEng copy_resources)
+add_dependencies(WraithBound copy_resources)
 
 add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} 
   -E copy_directory
     "${PROJECT_SOURCE_DIR}/res"
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res
 )
-
-
