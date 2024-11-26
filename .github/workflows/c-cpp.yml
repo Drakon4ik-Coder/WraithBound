@@ -19,13 +19,13 @@ jobs:
         with:
           submodules: true # Ensures submodules like SFML are initialized
 
-      # Install dependencies
+      # Install all necessary dependencies for SFML and your project
       - name: Install Build Tools and Libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential \
-              libgl1-mesa-dev libglu1-mesa-dev libudev-dev libopenal-dev \
-              libvorbis-dev libogg-dev
+              libgl1-mesa-dev libglu1-mesa-dev libudev-dev \
+              libopenal-dev libvorbis-dev libogg-dev libflac-dev
 
       # Configure the project with CMake
       - name: Configure Project
