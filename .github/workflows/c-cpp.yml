@@ -1,31 +1,45 @@
-name: WraithBound
+name: Build and Test WraithBound
 
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      # Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true # Ensures submodules like SFML are initialized
 
-    - name: Install Dependencies
-      run: sudo apt-get update && sudo apt-get install -y cmake build-essential
+      # Install dependencies
+      - name: Install Build Tools and Libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential git
 
-    - name: Create Build Directory
-      run: mkdir -p build && cd build
+      # Configure the project with CMake
+      - name: Configure Project
+        run: cmake -B build -S .
 
-    - name: Configure with CMake
-      run: |
-        cd build
-        cmake ..
+      # Build the project
+      - name: Build Project
+        run: cmake --build build --config Release
 
-    - name: Build Project
-      run: |
-        cd build
-        cmake --build .
+      # Test the executable
+      - name: Test Executable
+        run: |
+          if [ -f "./build/bin/GameEng" ]; then
+            echo "Executable GameEng found!"
+            ./build/bin/GameEng --version # Replace with an actual test command or argument for your executable
+          else
+            echo "Error: Executable GameEng not found."
+            exit 1
+          fi
