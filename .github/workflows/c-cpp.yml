@@ -19,11 +19,14 @@ jobs:
         with:
           submodules: true # Ensures submodules like SFML are initialized
 
-      # Install dependencies
+      # Install all necessary dependencies for SFML and your project
       - name: Install Build Tools and Libraries
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential git
+          sudo apt-get install -y cmake build-essential \
+              libgl1-mesa-dev libglu1-mesa-dev libudev-dev \
+              libopenal-dev libvorbis-dev libogg-dev libflac-dev \
+              libxrandr-dev libxcursor-dev # Install X-related libraries, no need for Xvfb
 
       # Configure the project with CMake
       - name: Configure Project
@@ -33,13 +36,15 @@ jobs:
       - name: Build Project
         run: cmake --build build --config Release
 
-      # Test the executable
-      - name: Test Executable
+      # Run the executable without launching the display
+      - name: Test Executable without Display
         run: |
-          if [ -f "./build/bin/GameEng" ]; then
-            echo "Executable GameEng found!"
-            ./build/bin/GameEng --version # Replace with an actual test command or argument for your executable
+          if [ -f "./build/bin/WraithBound" ]; then
+            echo "Executable WraithBound found!"
+            # Instead of running a graphical application, just run a command-line test (if available)
+            # For example, you can try running with --version or any other non-graphical option
+            ./build/bin/WraithBound --version || exit 1
           else
-            echo "Error: Executable GameEng not found."
+            echo "Error: Executable WraithBound not found."
             exit 1
           fi
