@@ -26,7 +26,8 @@ jobs:
           sudo apt-get install -y cmake build-essential \
               libgl1-mesa-dev libglu1-mesa-dev libudev-dev \
               libopenal-dev libvorbis-dev libogg-dev libflac-dev \
-              libxrandr-dev libxcursor-dev  # Install missing dependencies for X11 RandR and Cursor
+              libxrandr-dev libxcursor-dev \
+              xvfb  # Install Xvfb for virtual display
 
       # Configure the project with CMake
       - name: Configure Project
@@ -36,12 +37,17 @@ jobs:
       - name: Build Project
         run: cmake --build build --config Release
 
-      # Test the executable
-      - name: Test Executable
+      # Run the executable using Xvfb to emulate a display
+      - name: Test Executable with Xvfb
         run: |
+          # Start Xvfb (virtual display) on display :99
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x16 &
+          
+          # Now run the executable (should not fail due to display)
           if [ -f "./build/bin/WraithBound" ]; then
             echo "Executable WraithBound found!"
-            ./build/bin/WraithBound --version # Replace with an actual test command or argument for your executable
+            ./build/bin/WraithBound --version # Or any headless test command
           else
             echo "Error: Executable WraithBound not found."
             exit 1
