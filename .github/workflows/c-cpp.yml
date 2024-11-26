@@ -25,7 +25,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake build-essential \
               libgl1-mesa-dev libglu1-mesa-dev libudev-dev \
-              libopenal-dev libvorbis-dev libogg-dev libflac-dev
+              libopenal-dev libvorbis-dev libogg-dev libflac-dev \
+              libxrandr-dev  # Install missing dependency for X11 RandR
 
       # Configure the project with CMake
       - name: Configure Project
