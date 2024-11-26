@@ -23,9 +23,7 @@ jobs:
       - name: Install Build Tools and Libraries
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential git
-      - name: Install OpenGL
-        run: sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev
+          sudo apt-get install -y git cmake build-essential libgl1-mesa-dev libglu1-mesa-dev libudev-dev
 
       # Configure the project with CMake
       - name: Configure Project
@@ -38,10 +36,10 @@ jobs:
       # Test the executable
       - name: Test Executable
         run: |
-          if [ -f "./build/bin/GameEng" ]; then
-            echo "Executable GameEng found!"
-            ./build/bin/GameEng --version # Replace with an actual test command or argument for your executable
+          if [ -f "./build/bin/WraithBound" ]; then
+            echo "Executable WraithBound found!"
+            ./build/bin/WraithBound --version # Replace with an actual test command or argument for your executable
           else
-            echo "Error: Executable GameEng not found."
+            echo "Error: Executable WraithBound not found."
             exit 1
           fi
