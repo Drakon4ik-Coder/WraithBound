@@ -26,8 +26,7 @@ jobs:
           sudo apt-get install -y cmake build-essential \
               libgl1-mesa-dev libglu1-mesa-dev libudev-dev \
               libopenal-dev libvorbis-dev libogg-dev libflac-dev \
-              libxrandr-dev libxcursor-dev \
-              xvfb  # Install Xvfb for virtual display
+              libxrandr-dev libxcursor-dev # Install X-related libraries, no need for Xvfb
 
       # Configure the project with CMake
       - name: Configure Project
@@ -37,17 +36,14 @@ jobs:
       - name: Build Project
         run: cmake --build build --config Release
 
-      # Run the executable using Xvfb to emulate a display
-      - name: Test Executable with Xvfb
+      # Run the executable without launching the display
+      - name: Test Executable without Display
         run: |
-          # Start Xvfb (virtual display) on display :99
-          export DISPLAY=:99
-          Xvfb :99 -screen 0 1024x768x16 &
-          
-          # Now run the executable (should not fail due to display)
           if [ -f "./build/bin/WraithBound" ]; then
             echo "Executable WraithBound found!"
-            ./build/bin/WraithBound --version # Or any headless test command
+            # Instead of running a graphical application, just run a command-line test (if available)
+            # For example, you can try running with --version or any other non-graphical option
+            ./build/bin/WraithBound --version || exit 1
           else
             echo "Error: Executable WraithBound not found."
             exit 1
