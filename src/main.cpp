@@ -1,30 +1,55 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <iostream>
+#include "Main.h"
+#include "MeleeMonster.h"
 
-int main(){
+using namespace sf;
 
-    const char* display = std::getenv("DISPLAY");
-    if (display == nullptr) {
-        std::cout << "Running in headless mode, skipping window creation." << std::endl;
-    }
-    else {
-        sf::RenderWindow window(sf::VideoMode({ 200, 200 }), "SFML works!");
-        sf::CircleShape shape(100.f);
-        shape.setFillColor(sf::Color::Green);
+std::unique_ptr<Player> player;
 
-        while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                }
-            }
-            window.clear();
-            window.draw(shape);
-            window.display();
+std::unique_ptr<MeleeMonster> monster;
+
+void Load()
+{
+    player = std::make_unique<Player>();
+    monster = std::make_unique<MeleeMonster>();
+}
+void Update(RenderWindow &window)
+{
+    static Clock clock;
+    float dt = clock.restart().asSeconds();
+    Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == Event::Closed)
+        {
+            window.close();
+            return;
         }
     }
-  
-  return 0;
+
+    if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+        window.close();
+    }
+
+    player->Update(dt);
+    monster->Update(dt);
+}
+void Render(RenderWindow &window)
+{
+    player->Render(window);
+    monster->Render(window);
+}
+
+
+int main()
+{
+    RenderWindow window(VideoMode(gameWidth, gameHeight), "Space Invaders");
+    Load();
+    while (window.isOpen())
+    {
+        window.clear();
+        Update(window);
+        Render(window);
+        window.display();
+    }
+    return 0;
 }
