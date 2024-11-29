@@ -32,7 +32,7 @@ target_include_directories(lib_maths INTERFACE "${CMAKE_SOURCE_DIR}/lib_maths" S
 add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} 
   -E copy_directory
     "${PROJECT_SOURCE_DIR}/res"
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res
 )
 
 #### Game ####
