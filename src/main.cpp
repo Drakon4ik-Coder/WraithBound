@@ -16,6 +16,8 @@ void Load() {
     entityManager = std::make_unique<EntityManager>();
     player = std::make_shared<Player>();
 
+    entityManager->AddEntity(player);
+
     entityManager->AddEntity(make_unique<MeleeMonster>(melee_skeleton, Vector2i{128,128}));
     entityManager->AddEntity(make_unique<MeleeMonster>(melee_skeleton, Vector2i{128,128}));
 }
