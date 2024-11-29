@@ -12,6 +12,8 @@ void Load() {
     entityManager = std::make_unique<EntityManager>();
     player = std::make_shared<Player>();
 
+    entityManager->AddEntity(player);
+
     entityManager->AddEntity(make_unique<MeleeMonster>());
     entityManager->AddEntity(make_unique<MeleeMonster>());
 }

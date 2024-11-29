@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.11)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(Games_Engineering)
+project(WraithBound)
 
 #### Setup Directories ####
 # Main output directories
@@ -37,9 +37,9 @@ add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND}
 
 #### Game ####
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
-add_executable(GAME ${SOURCES} )
-target_include_directories(GAME SYSTEM PRIVATE ${SFML_INCS})
-target_link_libraries(GAME lib_tile_level_loader lib_maths sfml-graphics)
+add_executable(WraithBound ${SOURCES} )
+target_include_directories(WraithBound SYSTEM PRIVATE ${SFML_INCS})
+target_link_libraries(WraithBound lib_tile_level_loader lib_maths sfml-graphics)
 
 ## Tile loader lib
 file(GLOB_RECURSE SOURCE_FILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)
@@ -48,8 +48,8 @@ target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/
 target_link_libraries(lib_tile_level_loader lib_maths sfml-graphics)
 
 
-set_target_properties(GAME 
+set_target_properties(WraithBound 
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
-add_dependencies(GAME copy_resources)
+add_dependencies(WraithBound copy_resources)
