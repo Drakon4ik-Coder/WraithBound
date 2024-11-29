@@ -10,13 +10,12 @@ void MeleeMonster::Update(const double dt) {
         move(moveVect);
     }
     // direction looking handling
-    static bool scale = false;
-    if(direction.x < 0 && !scale){
+    if(direction.x < 0 && !lookLeft){
         _shape->scale(-1.f,1.f);
-        scale = true;
-    } else if(direction.x >= 0 && scale) {
+        lookLeft = true;
+    } else if(direction.x >= 0 && lookLeft) {
         _shape->scale(-1.f,1.f);
-        scale = false;
+        lookLeft = false;
     }
     static int frame_i = 1;
     static float time = 0;

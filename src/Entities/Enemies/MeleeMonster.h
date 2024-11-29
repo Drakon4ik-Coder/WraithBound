@@ -2,6 +2,8 @@
 #include "../Enemies/Monster.h"
 
 class MeleeMonster : public Monster {
+protected:
+    bool lookLeft = false;
 public:
     MeleeMonster() = delete;
     MeleeMonster(sf::Texture& texture, sf::Vector2i size);
