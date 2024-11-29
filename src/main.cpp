@@ -1,26 +1,26 @@
 #include "Main.h"
+#include "EntityManager.h"
 #include "MeleeMonster.h"
+#include "Player.h"
 
-using namespace sf;
+std::shared_ptr<EntityManager> entityManager;
+std::shared_ptr<Player> player;
 
-std::unique_ptr<Player> player;
+void Load() {
+    entityManager = std::make_unique<EntityManager>();
+    player = std::make_shared<Player>();
 
-std::unique_ptr<MeleeMonster> monster;
-
-void Load()
-{
-    player = std::make_unique<Player>();
-    monster = std::make_unique<MeleeMonster>();
+    entityManager->AddEntity(make_unique<MeleeMonster>());
+    entityManager->AddEntity(make_unique<MeleeMonster>());
 }
-void Update(RenderWindow& window)
-{
+
+void Update(RenderWindow& window) {
     static Clock clock;
     float dt = clock.restart().asSeconds();
     Event event;
-    while (window.pollEvent(event))
-    {
-        if (event.type == Event::Closed)
-        {
+
+    while (window.pollEvent(event)) {
+        if (event.type == Event::Closed) {
             window.close();
             return;
         }
@@ -30,13 +30,19 @@ void Update(RenderWindow& window)
         window.close();
     }
 
-    player->Update(dt);
-    monster->Update(dt);
+    // Update all groups
+    entityManager->Update(dt);
+
+    // Optionally, update a specific group
+    // entityManager->UpdateGroup("Enemies", dt);
 }
-void Render(RenderWindow& window)
-{
-    player->Render(window);
-    monster->Render(window);
+
+void Render(RenderWindow& window) {
+    // Render all groups
+    entityManager->Render(window);
+
+    // Optionally, render a specific group
+    // entityManager->RenderGroup("Players", window);
 }
 
 

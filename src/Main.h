@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Player.h"
 
-extern std::unique_ptr<Player> player;
+extern std::shared_ptr<Player> player;
 using namespace sf;
 using namespace std;
 
