@@ -25,3 +25,7 @@ Player::Player() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {
 }
 
 void Player::Render(sf::RenderWindow& window) const { window.draw(*_shape); }
+
+sf::FloatRect Player::getGlobalBounds() {
+    return _shape->getGlobalBounds();
+}

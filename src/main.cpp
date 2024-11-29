@@ -7,10 +7,16 @@ std::unique_ptr<Player> player;
 
 std::unique_ptr<MeleeMonster> monster;
 
+Texture melee_skeleton;
+
 void Load()
 {
+    if (!melee_skeleton.loadFromFile("res/img/Skeleton_Warrior/Run.png")) {
+        cerr << "Failed to load spritesheet!" << std::endl;
+    }
     player = std::make_unique<Player>();
-    monster = std::make_unique<MeleeMonster>();
+    monster = std::make_unique<MeleeMonster>(melee_skeleton, Vector2i{128,128});
+
 }
 void Update(RenderWindow& window)
 {

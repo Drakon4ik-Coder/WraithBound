@@ -9,4 +9,5 @@ public:
 	void Update(double dt) override;
 	Player();
 	void Render(sf::RenderWindow& window) const override;
+	sf::FloatRect getGlobalBounds();
 };
