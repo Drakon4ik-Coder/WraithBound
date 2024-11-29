@@ -43,7 +43,7 @@ void Render(RenderWindow& window)
 
 int main()
 {
-    RenderWindow window(VideoMode(gameWidth, gameHeight), "Space Invaders");
+    RenderWindow window(VideoMode(gameWidth, gameHeight), "Wraithbound");
     Load();
     while (window.isOpen())
     {
