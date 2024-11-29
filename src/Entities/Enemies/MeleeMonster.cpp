@@ -43,6 +43,7 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size)
     _shape->setOrigin(Vector2f(32.f, 32.f));
     _shape->setTexture(&spritesheet);
     _shape->setTextureRect(IntRect(Vector2i{0,0}, size));
+    _position = Vector2f{((float)rand()/RAND_MAX)*gameWidth,((float)rand()/RAND_MAX)*gameHeight};
 }
 void MeleeMonster::attack() {
     return;
