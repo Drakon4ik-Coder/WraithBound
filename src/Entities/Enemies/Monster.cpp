@@ -1,4 +1,4 @@
-#include "Monster.h"
+#include "../Enemies/Monster.h"
 
 void Monster::takeDamage(int damage) {
     _health -= damage;

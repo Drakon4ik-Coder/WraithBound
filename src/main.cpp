@@ -1,5 +1,6 @@
 #include "Main.h"
-#include "MeleeMonster.h"
+#include "Entities\Enemies\MeleeMonster.h"
+#include "Entities\Player\Player.h"
 
 using namespace sf;
 

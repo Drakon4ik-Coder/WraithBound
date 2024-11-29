@@ -1,5 +1,5 @@
 #pragma once
-#include "Monster.h"
+#include "../Enemies/Monster.h"
 
 class MeleeMonster : public Monster {
 public:

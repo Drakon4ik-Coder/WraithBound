@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
-#include "Player.h"
+#include "Entities/Player/Player.h"
 
 extern std::unique_ptr<Player> player;
 using namespace sf;
