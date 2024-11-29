@@ -1,7 +1,8 @@
 #include "Main.h"
-#include "EntityManager.h"
+
 #include "Entities\Enemies\MeleeMonster.h"
 #include "Entities\Player\Player.h"
+#include "EntityManager.h"
 
 using namespace sf;
 
@@ -49,17 +50,21 @@ void Render(RenderWindow& window) {
     // entityManager->RenderGroup("Players", window);
 }
 
-
-int main()
-{
-    RenderWindow window(VideoMode(gameWidth, gameHeight), "Wraithbound");
-    Load();
-    while (window.isOpen())
-    {
-        window.clear();
-        Update(window);
-        Render(window);
-        window.display();
+int main() {
+    const char* display = std::getenv("DISPLAY");
+    if (display == nullptr) {
+        std::cout << "Running in headless mode, skipping window creation."
+                  << std::endl;
+        RenderWindow window(VideoMode(gameWidth, gameHeight), "Wraithbound");
+        Load();
+        while (window.isOpen()) {
+            window.clear();
+            Update(window);
+            Render(window);
+            window.display();
+        }
+    } else {
+        sf::RenderWindow window(sf::VideoMode(800, 600), "WraithBound");
     }
     return 0;
 }
