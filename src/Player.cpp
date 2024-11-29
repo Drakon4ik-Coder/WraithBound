@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "../lib_math/Math.h"
+#include "../lib_maths/maths.h"
 #include <SFML/Window.hpp>
 
 using namespace sf;
