@@ -52,9 +52,3 @@ set_target_properties(GAME
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
 add_dependencies(GAME copy_resources)
-
-
-
-
-
-
