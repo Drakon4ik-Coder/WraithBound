@@ -1,11 +1,11 @@
 #include "MeleeMonster.h"
 #include "Main.h"
-#include "../lib_math/Math.h"
+#include "../lib_maths/maths.h"
 
 void MeleeMonster::Update(const double dt) {
     Vector2f diff = player->getPosition() - getPosition();
     Vector2f direction = sf::normalize(diff);
-    Vector2f moveVect = Vector2f(dt*_speed*direction.x, dt*_speed*direction.y);
+    Vector2f moveVect = Vector2f(dt * _speed * direction.x, dt * _speed * direction.y);
     if (length(diff) > 30) {
         move(moveVect);
     }

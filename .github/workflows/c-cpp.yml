@@ -39,9 +39,9 @@ jobs:
       # Run the executable without launching the display
       - name: Test Executable without Display
         run: |
-          if [ -f "./build/bin/WraithBound" ]; then
+          if [ -f "./build/bin/GAME" ]; then
             echo "Executable WraithBound found!"
-            ./build/bin/WraithBound --headless --version || exit 1
+            ./build/bin/GAME --headless --version || exit 1
           else
             echo "Error: Executable WraithBound not found."
             exit 1

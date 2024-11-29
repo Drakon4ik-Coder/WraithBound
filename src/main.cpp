@@ -12,7 +12,7 @@ void Load()
     player = std::make_unique<Player>();
     monster = std::make_unique<MeleeMonster>();
 }
-void Update(RenderWindow &window)
+void Update(RenderWindow& window)
 {
     static Clock clock;
     float dt = clock.restart().asSeconds();
@@ -33,7 +33,7 @@ void Update(RenderWindow &window)
     player->Update(dt);
     monster->Update(dt);
 }
-void Render(RenderWindow &window)
+void Render(RenderWindow& window)
 {
     player->Render(window);
     monster->Render(window);
