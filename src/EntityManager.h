@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Entity.h"
+#include "Entities/Entity.h"
 
 class EntityManager {
 private:

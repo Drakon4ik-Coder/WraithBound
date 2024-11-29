@@ -1,4 +1,5 @@
-#include "Player.h"
+#include "../Player/Player.h"
+#include "../src/Entities/Entity.h"
 #include "../lib_maths/maths.h"
 #include <SFML/Window.hpp>
 

@@ -1,7 +1,9 @@
 #include "Main.h"
 #include "EntityManager.h"
-#include "MeleeMonster.h"
-#include "Player.h"
+#include "Entities\Enemies\MeleeMonster.h"
+#include "Entities\Player\Player.h"
+
+using namespace sf;
 
 std::shared_ptr<EntityManager> entityManager;
 std::shared_ptr<Player> player;
@@ -48,7 +50,7 @@ void Render(RenderWindow& window) {
 
 int main()
 {
-    RenderWindow window(VideoMode(gameWidth, gameHeight), "Space Invaders");
+    RenderWindow window(VideoMode(gameWidth, gameHeight), "Wraithbound");
     Load();
     while (window.isOpen())
     {

@@ -1,5 +1,5 @@
-#include "MeleeMonster.h"
-#include "Main.h"
+#include "../Enemies/MeleeMonster.h"
+#include "../src/Main.h"
 #include "../lib_maths/maths.h"
 
 void MeleeMonster::Update(const double dt) {
