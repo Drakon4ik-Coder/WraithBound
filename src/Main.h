@@ -9,3 +9,5 @@ using namespace std;
 
 constexpr uint16_t gameWidth = 800;
 constexpr uint16_t gameHeight = 600;
+
+extern Texture melee_skeleton;
