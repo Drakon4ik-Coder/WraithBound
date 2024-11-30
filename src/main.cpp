@@ -54,16 +54,37 @@ void Render(RenderWindow& window) {
 }
 
 
-int main()
-{
+#include <iostream>
+#include <SFML/Graphics.hpp>
+
+using namespace sf;
+
+int main(int argc, char* argv[]) {
+    bool testMode = false;
+    float testDuration = 10.0f; // Duration in seconds for test mode
+
+    // Check for the test mode argument
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--test-mode") {
+            testMode = true;
+        }
+    }
+
     RenderWindow window(VideoMode(gameWidth, gameHeight), "Wraithbound");
     Load();
-    while (window.isOpen())
-    {
+
+    Clock timer; // Timer for test mode
+    while (window.isOpen()) {
         window.clear();
         Update(window);
         Render(window);
         window.display();
+
+        // If in test mode, exit after the specified duration
+        if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
+            std::cout << "Exiting test mode after " << testDuration << " seconds." << std::endl;
+            window.close();
+        }
     }
     return 0;
 }
