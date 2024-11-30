@@ -69,6 +69,7 @@ int main(int argc, char* argv[]) {
             testMode = true;
         }
     }
+    srand(time(0));
 
     RenderWindow window(VideoMode(gameWidth, gameHeight), "Wraithbound");
     Load();
