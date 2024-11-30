@@ -41,9 +41,10 @@ jobs:
         run: |
           if [ -f "./build/bin/WraithBound" ]; then
             echo "Executable WraithBound found!"
-            xvfb-run -s "-screen 0 1024x768x24" ./build/bin/WraithBound || exit 1
+            xvfb-run -s "-screen 0 1024x768x24" ./build/bin/WraithBound --test-mode || exit 1
           else
             echo "Error: Executable WraithBound not found."
             exit 1
           fi
+
 
