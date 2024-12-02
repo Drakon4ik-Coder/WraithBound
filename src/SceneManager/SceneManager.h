@@ -12,6 +12,7 @@ private:
 public:
     void addScene(const std::string& name, std::shared_ptr<Scene> scene) {
         _scenes[name] = scene;
+        std::cout << "Scene added: " << name << std::endl;
     }
 
     void setActiveScene(const std::string& name) {
