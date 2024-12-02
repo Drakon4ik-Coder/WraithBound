@@ -59,15 +59,29 @@ void Render(RenderWindow& window) {
     // entityManager->RenderGroup("Players", window);
 }
 
-int main() {
 
-    // Create the window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "WraithBound");
+#include <iostream>
+#include <SFML/Graphics.hpp>
+
+using namespace sf;
+
+int main(int argc, char* argv[]) {
+    bool testMode = false;
+    float testDuration = 10.0f; // Duration in seconds for test mode
+
+    // Check for the test mode argument
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--test-mode") {
+            testMode = true;
+        }
+    }
+    srand(time(0));
+
+    RenderWindow window(VideoMode(gameWidth, gameHeight), "Wraithbound");
 
     // Create the SceneManager
     SceneManager sceneManager;
 
-    // Load global assets
     Load();
 
     // Create and add scenes to the SceneManager
@@ -82,17 +96,18 @@ int main() {
     // Optionally set the active scene
     sceneManager.setActiveScene("MainMenu"); // Assuming your SceneManager identifies scenes by names.
 
-    // Main game loop
-    sf::Clock clock;
+    Clock timer; // Timer for test mode
     while (window.isOpen()) {
-        // Handle events
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
+        window.clear();
+        Update(window);
+        Render(window);
+        window.display();
 
+        // If in test mode, exit after the specified duration
+        if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
+            std::cout << "Exiting test mode after " << testDuration << " seconds." << std::endl;
+            window.close();
+        }
         // Update and render the active scene
         float dt = clock.restart().asSeconds();
         sceneManager.handleInput(window);
@@ -101,6 +116,5 @@ int main() {
         sceneManager.render(window);
         window.display();
     }
-
     return 0;
 }

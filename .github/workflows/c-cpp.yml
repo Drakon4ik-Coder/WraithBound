@@ -20,13 +20,13 @@ jobs:
           submodules: true # Ensures submodules like SFML are initialized
 
       # Install all necessary dependencies for SFML and your project
-      - name: Install Build Tools and Libraries
+      - name: Install Required Libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential \
               libgl1-mesa-dev libglu1-mesa-dev libudev-dev \
               libopenal-dev libvorbis-dev libogg-dev libflac-dev \
-              libxrandr-dev libxcursor-dev # Install X-related libraries, no need for Xvfb
+              libxrandr-dev libxcursor-dev xvfb
 
       # Configure the project with CMake
       - name: Configure Project
@@ -37,13 +37,14 @@ jobs:
         run: cmake --build build --config Release
 
       # Run the executable without launching the display
-      - name: Test Executable without Display
+      - name: Test Executable with Xvfb
         run: |
-          if [ -f "./build/bin/GAME" ]; then
+          if [ -f "./build/bin/WraithBound" ]; then
             echo "Executable WraithBound found!"
-            ./build/bin/GAME --headless --version || exit 1
+            xvfb-run -s "-screen 0 1024x768x24" ./build/bin/WraithBound --test-mode || exit 1
           else
             echo "Error: Executable WraithBound not found."
             exit 1
           fi
+
 
