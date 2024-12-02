@@ -109,9 +109,9 @@ int main(int argc, char* argv[]) {
             window.close();
         }
         // Update and render the active scene
-        float dt = clock.restart().asSeconds();
+        //float dt = clock.restart().asSeconds();
         sceneManager.handleInput(window);
-        sceneManager.update(dt);
+        sceneManager.update(testDuration);
         window.clear();
         sceneManager.render(window);
         window.display();
