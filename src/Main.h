@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "Entities/Player/Player.h"
+#include <fstream>
 
 extern std::shared_ptr<Player> player;
 using namespace sf;
