@@ -90,8 +90,6 @@ int main(int argc, char* argv[]) {
 
     sceneManager.addScene("MainMenu", mainMenuScene);
     sceneManager.addScene("InGame", inGameScene);
-    sceneManager.setActiveScene("MainMenu");
-
 
     // Optionally set the active scene
     sceneManager.setActiveScene("MainMenu"); // Assuming your SceneManager identifies scenes by names.
