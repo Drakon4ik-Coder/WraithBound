@@ -3,23 +3,25 @@
 #include "../Entities/Player/Player.h"
 #include "../Entities/Enemies/MeleeMonster.h"
 
-
-
 class InGameScene : public Scene {
 private:
     std::shared_ptr<EntityManager> entityManager;
     std::shared_ptr<Player> player;
+
 public:
-    InGameScene()
-    {
-        entityManager = std::make_unique<EntityManager>();
-        entityManager->AddEntity(std::make_unique<Player>());
+    InGameScene() {
+        entityManager = std::make_shared<EntityManager>();
 
+        // Create player and store a reference to it
+        player = std::make_shared<Player>();
+        entityManager->AddEntity(player);  // Add player to the entity manager
 
+        // Add other entities (e.g., enemies)
         for (int i = 0; i < 10; i++) {
-            entityManager->AddEntity(make_unique<MeleeMonster>(melee_skeleton, Vector2i{ 128,128 }));
+            entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 128, 128 }));
         }
     }
+
     void handleInput(sf::RenderWindow& window) override {
         // Handle input for in-game logic
     }
@@ -32,5 +34,9 @@ public:
     void render(sf::RenderWindow& window) override {
         // Render in-game entities
         entityManager->Render(window);
+    }
+
+    std::shared_ptr<Player> getPlayer() const {
+        return player; // Return the player instance stored in this scene
     }
 };

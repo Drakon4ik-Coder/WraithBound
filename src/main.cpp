@@ -11,6 +11,7 @@
 
 //std::shared_ptr<EntityManager> entityManager;
 std::shared_ptr<Player> player;
+sf::View camera(sf::Vector2f(400, 300), sf::Vector2f(800, 600)); // Center and size
 Texture melee_skeleton;
 
 void Load() {
@@ -61,10 +62,22 @@ int main(int argc, char* argv[]) {
             window.close();
         }
 
+        // Update game logic
         sceneManager.handleInput(window);
-        sceneManager.update(dt);
+        sceneManager.update(dt);                 // Update scene logic (includes player)
+
+        // Get the player from the InGameScene and update camera position
+        auto player = std::dynamic_pointer_cast<InGameScene>(sceneManager.getActiveScene())->getPlayer();
+        camera.setCenter(player->getPosition());  // Update the camera position
+        window.setView(camera);  // Apply the camera
+
+        // Debugging player and camera positions
+        std::cout << "Player position: " << player->getPosition().x << ", " << player->getPosition().y << std::endl;
+        std::cout << "Camera position: " << camera.getCenter().x << ", " << camera.getCenter().y << std::endl;
+
+        // Render game
         window.clear();
-        sceneManager.render(window);
+        sceneManager.render(window);             // Render all entities in the scene
         window.display();
     }
     return 0;

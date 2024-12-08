@@ -18,6 +18,8 @@ void Player::Update(double dt) {
     move(Vector2f(direction.x * dt * _speed, direction.y * dt * _speed));
 
     Entity::Update(dt);
+
+    //std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 }
 
 Player::Player() : _speed(200.0f), Entity(make_unique<CircleShape>(25.f)) {

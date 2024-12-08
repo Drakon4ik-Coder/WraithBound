@@ -16,4 +16,8 @@ public:
         window.clear(sf::Color::Black);
         // Render menu items
     }
+
+    std::shared_ptr<Player> getPlayer() const {
+        return player; // Return the player instance stored in this scene
+    }
 };

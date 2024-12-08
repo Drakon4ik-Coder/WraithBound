@@ -26,6 +26,11 @@ public:
         }
     }
 
+    // Added the getActiveScene function here
+    std::shared_ptr<Scene> getActiveScene() const {
+        return _activeScene;
+    }
+
     void handleInput(sf::RenderWindow& window) {
         if (_activeScene) _activeScene->handleInput(window);
     }
