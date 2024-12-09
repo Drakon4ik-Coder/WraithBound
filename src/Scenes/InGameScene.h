@@ -2,6 +2,7 @@
 #include "../EntityManager.h"
 #include "../Entities/Player/Player.h"
 #include "../Entities/Enemies/MeleeMonster.h"
+//#include "../src/EntityManager.h"
 
 class InGameScene : public Scene {
 private:
@@ -13,7 +14,7 @@ public:
         entityManager = std::make_shared<EntityManager>();
 
         // Create player and store a reference to it
-        player = std::make_shared<Player>();
+        player = std::make_shared<Player>(entityManager.get());
         entityManager->AddEntity(player);  // Add player to the entity manager
 
         // Add other entities (e.g., enemies)

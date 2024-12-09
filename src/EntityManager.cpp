@@ -1,12 +1,25 @@
 #include "EntityManager.h"
+#include <iostream>
 
 void EntityManager::AddEntity(std::shared_ptr<Entity> entity) {
-    entities.push_back(std::move(entity));
+    if (entity) {
+        entities.push_back(entity);
+        std::cout << "Entity added. Total entities: " << entities.size() << std::endl;
+    }
+    else {
+        std::cerr << "Attempted to add a null entity!" << std::endl;
+    }
 }
 
 void EntityManager::Update(double dt) {
-    for (auto& entity : entities) {
-        entity->Update(dt);
+    for (size_t i = 0; i < entities.size(); ++i) {
+        auto& entity = entities[i];
+        if (entity) {
+            entity->Update(dt);
+        }
+        else {
+            std::cerr << "Encountered a null entity at index " << i << " during update!" << std::endl;
+        }
     }
 }
 
