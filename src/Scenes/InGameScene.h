@@ -17,9 +17,10 @@ public:
         player = std::make_shared<Player>(entityManager.get());
         entityManager->AddEntity(player);  // Add player to the entity manager
 
-        // Add other entities (e.g., enemies)
+        // Add other entities (e.g., enemies) using shared_ptr
         for (int i = 0; i < 10; i++) {
-            entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 128, 128 }));
+            auto enemy = std::make_shared<MeleeMonster>(melee_skeleton, sf::Vector2i{ 128, 128 });
+            entityManager->AddEntity(enemy);
         }
     }
 
