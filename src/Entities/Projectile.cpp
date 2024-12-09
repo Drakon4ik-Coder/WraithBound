@@ -5,8 +5,8 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <iostream>
-
-// Existing Projectile constructor and other methods...
+#include <cmath>
+#include "../lib_maths/maths.h"
 
 std::unique_ptr<sf::Shape> Projectile::InitializeShape(const sf::Texture* texture, const sf::Vector2f& size) {
     if (texture) {
@@ -36,11 +36,8 @@ Projectile::Projectile(const sf::Vector2f& position,
     speed(speed),
     size(size)
 {
-    // Ensure the direction is normalized
-    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (length != 0.f) {
-        this->direction /= length;
-    }
+    // Normalize the direction using the maths.h utility
+    this->direction = sf::normalize(direction);
 
     // Set initial position
     setPosition(position);
