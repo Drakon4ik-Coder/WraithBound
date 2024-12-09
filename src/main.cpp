@@ -56,6 +56,14 @@ int main(int argc, char* argv[]) {
         static Clock clock;
         float dt = clock.restart().asSeconds();
 
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+                return 0;
+            }
+        }
+
         // If in test mode, exit after the specified duration
         if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
             std::cout << "Exiting test mode after " << testDuration << " seconds." << std::endl;
