@@ -67,13 +67,13 @@ int main(int argc, char* argv[]) {
         sceneManager.update(dt);                 // Update scene logic (includes player)
 
         // Get the player from the InGameScene and update camera position
-        auto player = std::dynamic_pointer_cast<InGameScene>(sceneManager.getActiveScene())->getPlayer();
+        player = std::dynamic_pointer_cast<InGameScene>(sceneManager.getActiveScene())->getPlayer();
         camera.setCenter(player->getPosition());  // Update the camera position
         window.setView(camera);  // Apply the camera
 
         // Debugging player and camera positions
-        std::cout << "Player position: " << player->getPosition().x << ", " << player->getPosition().y << std::endl;
-        std::cout << "Camera position: " << camera.getCenter().x << ", " << camera.getCenter().y << std::endl;
+        // std::cout << "Player position: " << player->getPosition().x << ", " << player->getPosition().y << std::endl;
+        // std::cout << "Camera position: " << camera.getCenter().x << ", " << camera.getCenter().y << std::endl;
 
         // Render game
         window.clear();
