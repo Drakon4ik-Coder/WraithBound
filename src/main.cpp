@@ -24,12 +24,12 @@ void Load() {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
     entityManager = std::make_unique<EntityManager>();
-    player = std::make_shared<Player>();
+    player = std::make_shared<Player>(entityManager.get()); // Pass EntityManager pointer
 
     // Add the player and some enemies to the entity manager
     entityManager->AddEntity(player);
-    entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{128, 128}));
-    entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{256, 256}));
+    entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 128, 128 }));
+    entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 256, 256 }));
 }
 
 void Update(float dt, sf::Clock& timer) {
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     }
     srand(static_cast<unsigned int>(time(0)));
 
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(gameWidth, gameHeight), "Wraithbound");
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Wraithbound");
     sceneManager = std::make_unique<SceneManager>();
 
     Load();
