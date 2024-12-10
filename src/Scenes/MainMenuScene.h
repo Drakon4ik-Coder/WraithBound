@@ -45,7 +45,10 @@ private:
     std::shared_ptr<SceneManager> _sceneManager;
 
 public:
-    MainMenuScene() {
+    // Updated constructor to accept SceneManager
+    MainMenuScene(std::shared_ptr<SceneManager> sceneManager)
+        : _sceneManager(sceneManager)
+    {
         // Load font for text rendering
         if (!font.loadFromFile("res/fonts/RobotoMono-Regular.ttf")) {
             std::cerr << "Error loading font!" << std::endl;
@@ -59,9 +62,9 @@ public:
         titleText.setPosition(300, 50);
 
         // Create buttons
-        buttons.push_back(Button("Play", sf::Vector2f(300, 250)));
-        buttons.push_back(Button("Settings", sf::Vector2f(300, 320)));
-        buttons.push_back(Button("Exit", sf::Vector2f(300, 390)));
+        buttons.emplace_back("Play", sf::Vector2f(300, 250));
+        buttons.emplace_back("Settings", sf::Vector2f(300, 320));
+        buttons.emplace_back("Exit", sf::Vector2f(300, 390));
     }
 
     void handleInput(sf::RenderWindow& window) override {
@@ -81,7 +84,12 @@ public:
                     window.clear();
 
                     // Assume that "InGame" scene is set as active here
-                    _sceneManager->setActiveScene("InGame");
+                    if (_sceneManager) {
+                        _sceneManager->setActiveScene("InGame");
+                    }
+                    else {
+                        std::cerr << "SceneManager is not initialized!" << std::endl;
+                    }
                 }
                 else if (buttons[1].isClicked(mousePos)) {
                     std::cout << "Settings Button Clicked!" << std::endl;

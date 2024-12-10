@@ -8,9 +8,12 @@ class InGameScene : public Scene {
 private:
     std::shared_ptr<EntityManager> entityManager;
     std::shared_ptr<Player> player;
+    std::shared_ptr<SceneManager> _sceneManager;
 
 public:
-    InGameScene() {
+    // Constructor accepting SceneManager
+    InGameScene(std::shared_ptr<SceneManager> sceneManager)
+        : _sceneManager(sceneManager) {
         entityManager = std::make_shared<EntityManager>();
 
         // Create player and store a reference to it

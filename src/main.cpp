@@ -16,7 +16,7 @@ Texture playerTexture; // Declare here
 
 // Globals
 std::unique_ptr<sf::RenderWindow> window;
-std::unique_ptr<SceneManager> sceneManager;
+std::shared_ptr<SceneManager> sceneManager;
 bool testMode = false;
 float testDuration = 10.0f; // Duration in seconds for test mode
 
@@ -90,15 +90,17 @@ int main(int argc, char* argv[]) {
     srand(static_cast<unsigned int>(time(0)));
 
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Wraithbound");
-    // Initialize SceneManager
-    sceneManager = std::make_unique<SceneManager>(); // Proper initialization of sceneManager
+    // Initialize SceneManager as shared_ptr
+    sceneManager = std::make_shared<SceneManager>();
 
+    // Load resources
     Load();
 
-    // Create and add scenes to the SceneManager
-    std::shared_ptr<MainMenuScene> mainMenuScene = std::make_shared<MainMenuScene>();
-    std::shared_ptr<InGameScene> inGameScene = std::make_shared<InGameScene>();
+    // Create scenes with SceneManager reference
+    std::shared_ptr<MainMenuScene> mainMenuScene = std::make_shared<MainMenuScene>(sceneManager);
+    std::shared_ptr<InGameScene> inGameScene = std::make_shared<InGameScene>(sceneManager);
 
+    // Add scenes to SceneManager
     sceneManager->addScene("MainMenu", mainMenuScene);
     sceneManager->addScene("InGame", inGameScene);
 
