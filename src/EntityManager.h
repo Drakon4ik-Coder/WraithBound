@@ -1,3 +1,4 @@
+// EntityManager.h
 #pragma once
 
 #include <vector>
@@ -24,4 +25,7 @@ public:
 
     // Remove entities based on some criteria (e.g., out of bounds, health <= 0)
     void RemoveEntities();
+
+    // Check and handle collisions between entities
+    void HandleCollisions();
 };
