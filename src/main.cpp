@@ -12,6 +12,7 @@ std::shared_ptr<EntityManager> entityManager;
 std::shared_ptr<Player> player;
 sf::View camera(sf::Vector2f(400, 300), sf::Vector2f(800, 600)); // Center and size
 Texture melee_skeleton;
+Texture playerTexture; // Declare here
 
 // Globals
 std::unique_ptr<sf::RenderWindow> window;
@@ -23,9 +24,17 @@ void Load() {
     if (!melee_skeleton.loadFromFile("res/img/Skeleton_Warrior/Run.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
+    if (!playerTexture.loadFromFile("res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
+        std::cerr << "Failed to load texture: res/img/Player/PlayerTexture.png" << std::endl;
+    }
+    else {
+        std::cout << "Player texture loaded successfully!" << std::endl;
+    }
+    
     entityManager = std::make_unique<EntityManager>();
     player = std::make_shared<Player>(entityManager.get()); // Pass EntityManager pointer
-
+    player->setTexture(playerTexture); // Pass it to the player
+    
     // Add the player and some enemies to the entity manager
     entityManager->AddEntity(player);
     entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 128, 128 }));
@@ -81,7 +90,8 @@ int main(int argc, char* argv[]) {
     srand(static_cast<unsigned int>(time(0)));
 
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Wraithbound");
-    sceneManager = std::make_unique<SceneManager>();
+    // Initialize SceneManager
+    sceneManager = std::make_unique<SceneManager>(); // Proper initialization of sceneManager
 
     Load();
 
@@ -93,7 +103,7 @@ int main(int argc, char* argv[]) {
     sceneManager->addScene("InGame", inGameScene);
 
     // Set the active scene
-    sceneManager->setActiveScene("InGame");
+    sceneManager->setActiveScene("MainMenu");
 
     sf::Clock timer; // Timer for test mode
     sf::Clock clock;
