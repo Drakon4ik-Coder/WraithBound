@@ -119,7 +119,9 @@ vector<vector<char>> generateDungeonLayout(int width, int height, int roomCount)
                     // Connect the new room to the current room with a tunnel
                     int tunnelY = (currentY + newY) / 2;
                     int tunnelX = (currentX + newX) / 2;
-                    layout[tunnelY][tunnelX] = 't';
+
+                    // Determine tunnel type
+                    layout[tunnelY][tunnelX] = (dy != 0) ? 'v' : 'h';
 
                     placed = true;
                     break;  // Exit direction loop
@@ -137,9 +139,6 @@ vector<vector<char>> generateDungeonLayout(int width, int height, int roomCount)
 
     return layout;
 }
-
-
-
 
 // Validate dungeon layout to ensure all rooms are reachable
 bool validateDungeonLayout(const vector<vector<char>>& layout) {
@@ -180,7 +179,7 @@ bool validateDungeonLayout(const vector<vector<char>>& layout) {
             if (newY >= 0 && newY < height && newX >= 0 && newX < width &&
                 !visited[newY][newX] &&
                 (layout[newY][newX] == 'r' || layout[newY][newX] == 's' ||
-                 layout[newY][newX] == 't')) {
+                 layout[newY][newX] == 'v' || layout[newY][newX] == 'h')) {
                 visited[newY][newX] = true;
                 q.push({newY, newX});
             }
@@ -203,14 +202,12 @@ vector<vector<vector<string>>> expandDungeon(
             } else if (layout[y][x] == 's') {
                 expandedDungeon[y][x] =
                     readTemplateFromFile("..res/levels/room_spawn.txt");
-            } else if (layout[y][x] == 't') {
-                if (y > 0 && layout[y - 1][x] == 't') {
-                    expandedDungeon[y][x] =
-                        readTemplateFromFile("..res/levels/tunnelV.txt");
-                } else {
-                    expandedDungeon[y][x] =
-                        readTemplateFromFile("..res/levels/tunnelH.txt");
-                }
+            } else if (layout[y][x] == 'v') {
+                expandedDungeon[y][x] =
+                    readTemplateFromFile("..res/levels/tunnelV.txt");
+            } else if (layout[y][x] == 'h') {
+                expandedDungeon[y][x] =
+                    readTemplateFromFile("..res/levels/tunnelH.txt");
             } else {
                 expandedDungeon[y][x] =
                     readTemplateFromFile("..res/levels/blank.txt");
@@ -232,7 +229,7 @@ int main() {
     vector<vector<vector<string>>> expandedDungeon = expandDungeon(dungeon);
 
     // Write expanded dungeon to file
-    writeExpandedDungeonToFile(expandedDungeon, "..res/levels/maze.txt");
+    writeExpandedDungeonToFile(expandedDungeon, "maze.txt");
     cout << "Dungeon written to maze.txt" << endl;
     printDungeonLayout(dungeon);
     // Validate layout
