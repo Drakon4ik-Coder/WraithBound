@@ -37,13 +37,13 @@ add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND}
 
 #### Game ####
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
-add_executable(WraithBound ${SOURCES}  "src/SceneManager/SceneManager.cpp")
+add_executable(WraithBound ${SOURCES} )
 target_include_directories(WraithBound SYSTEM PRIVATE ${SFML_INCS})
 target_link_libraries(WraithBound lib_tile_level_loader lib_maths sfml-graphics)
 
 ## Tile loader lib
 file(GLOB_RECURSE SOURCE_FILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)
-add_library(lib_tile_level_loader STATIC ${SOURCE_FILES} "src/SceneManager/SceneManager.cpp")
+add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
 target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/lib_tile_level_loader/" )
 target_link_libraries(lib_tile_level_loader lib_maths sfml-graphics)
 
