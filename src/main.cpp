@@ -1,41 +1,37 @@
 #include "Main.h"
-#include "EntityManager.h"
+
 #include "./Entities/Enemies/MeleeMonster.h"
 #include "./Entities/Player/Player.h"
+#include "EntityManager.h"
 // Scenes + Manager
 #include "../src/SceneManager/SceneManager.h"
-#include "../src/Scenes/Scene.h"
 #include "../src/Scenes/InGameScene.h"
 #include "../src/Scenes/MainMenuScene.h"
+#include "../src/Scenes/Scene.h"
 
 std::shared_ptr<EntityManager> entityManager;
-std::shared_ptr<Player> player;
-sf::View camera(sf::Vector2f(400, 300), sf::Vector2f(800, 600)); // Center and size
+sf::View camera(sf::Vector2f(400, 300),
+                sf::Vector2f(800, 600));  // Center and size
 Texture melee_skeleton;
 
 // Globals
 std::unique_ptr<sf::RenderWindow> window;
 std::unique_ptr<SceneManager> sceneManager;
 bool testMode = false;
-float testDuration = 10.0f; // Duration in seconds for test mode
+float testDuration = 10.0f;  // Duration in seconds for test mode
 
 void Load() {
-    if (!melee_skeleton.loadFromFile("res/img/Skeleton_Warrior/Run.png")) {
+    if (!melee_skeleton.loadFromFile("../res/img/Skeleton_Warrior/Run.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
     entityManager = std::make_unique<EntityManager>();
-    player = std::make_shared<Player>(entityManager.get()); // Pass EntityManager pointer
-
-    // Add the player and some enemies to the entity manager
-    entityManager->AddEntity(player);
-    entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 128, 128 }));
-    entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 256, 256 }));
 }
 
 void Update(float dt, sf::Clock& timer) {
     // If in test mode, exit after the specified duration
     if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
-        std::cout << "Exiting test mode after " << testDuration << " seconds." << std::endl;
+        std::cout << "Exiting test mode after " << testDuration << " seconds."
+                  << std::endl;
         window->close();
         return;
     }
@@ -49,24 +45,22 @@ void Update(float dt, sf::Clock& timer) {
         }
     }
 
-    // Update all entities via the entity manager
-    entityManager->Update(dt);
-
-    // Optionally, update scene-specific logic
+    // Update scene-specific logic
     sceneManager->handleInput(*window);
     sceneManager->update(dt);
 
-    // Update the camera to follow the player
-    if (player) {
-        camera.setCenter(player->getPosition());
-        window->setView(camera);
+    // Update the camera to follow the player in the active scene
+    auto activeScene = sceneManager->getActiveScene();
+    if (activeScene) {
+        auto player = activeScene->getPlayer();
+        if (player) {
+            camera.setCenter(player->getPosition());
+            window->setView(camera);
+        }
     }
 }
 
 void Render() {
-    // Render all entities via the entity manager
-    entityManager->Render(*window);
-
     // Optionally, render scene-specific elements
     sceneManager->render(*window);
 }
@@ -80,22 +74,28 @@ int main(int argc, char* argv[]) {
     }
     srand(static_cast<unsigned int>(time(0)));
 
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Wraithbound");
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600),
+                                                "Wraithbound");
     sceneManager = std::make_unique<SceneManager>();
 
     Load();
 
     // Create and add scenes to the SceneManager
-    std::shared_ptr<MainMenuScene> mainMenuScene = std::make_shared<MainMenuScene>();
-    std::shared_ptr<InGameScene> inGameScene = std::make_shared<InGameScene>();
+    std::shared_ptr<MainMenuScene> mainMenuScene =
+        std::make_shared<MainMenuScene>();
+    std::shared_ptr<InGameScene> inGameScene =
+        std::make_shared<InGameScene>(entityManager);
 
     sceneManager->addScene("MainMenu", mainMenuScene);
     sceneManager->addScene("InGame", inGameScene);
 
     // Set the active scene
     sceneManager->setActiveScene("InGame");
+    for (size_t i = 0; i < 5; i++) {
+        inGameScene->spawnMonsters();  // Call to spawn monsters
+    }
 
-    sf::Clock timer; // Timer for test mode
+    sf::Clock timer;
     sf::Clock clock;
 
     while (window->isOpen()) {
