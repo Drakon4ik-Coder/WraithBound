@@ -1,43 +1,39 @@
-#include "../src/Scenes/Scene.h"
-#include "../EntityManager.h"
+#pragma once
 #include "../Entities/Player/Player.h"
-#include "../Entities/Enemies/MeleeMonster.h"
-//#include "../src/EntityManager.h"
+#include "../EntityManager.h"
+#include "Scene.h"
 
 class InGameScene : public Scene {
-private:
-    std::shared_ptr<EntityManager> entityManager;
+   private:
     std::shared_ptr<Player> player;
+    std::shared_ptr<EntityManager> entityManager;
 
-public:
-    InGameScene() {
-        entityManager = std::make_shared<EntityManager>();
-
-        // Create player and store a reference to it
+   public:
+    InGameScene(std::shared_ptr<EntityManager> entityManager)
+        : entityManager(entityManager) {
+        // Create the Player with the entity manager
         player = std::make_shared<Player>(entityManager.get());
-        entityManager->AddEntity(player);  // Add player to the entity manager
-
-        // Add other entities (e.g., enemies)
-        for (int i = 0; i < 10; i++) {
-            entityManager->AddEntity(std::make_unique<MeleeMonster>(melee_skeleton, sf::Vector2i{ 128, 128 }));
-        }
+        entityManager->AddEntity(player);
     }
 
+    std::shared_ptr<Player> getPlayer() const override { return player; }
+
     void handleInput(sf::RenderWindow& window) override {
-        // Handle input for in-game logic
+        // Handle input for player and other entities
     }
 
     void update(float dt) override {
-        // Update in-game entities
-        entityManager->Update(dt);
+        entityManager->Update(dt);  // Update all entities
     }
 
     void render(sf::RenderWindow& window) override {
-        // Render in-game entities
-        entityManager->Render(window);
+        entityManager->Render(window);  // Render all entities
     }
-
-    std::shared_ptr<Player> getPlayer() const {
-        return player; // Return the player instance stored in this scene
+    void InGameScene::spawnMonsters() {
+        // Example of spawning a monster
+        auto monster =
+            std::make_shared<MeleeMonster>(melee_skeleton, sf::Vector2i(68, 68),
+                                           player, gameWidth, gameHeight);
+        entityManager->AddEntity(monster);
     }
 };
