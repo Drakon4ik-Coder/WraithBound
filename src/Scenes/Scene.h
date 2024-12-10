@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "../src/SceneManager/SceneManager.h"
+#include "../Entities/Player/Player.h" 
 
 class Scene {
 public:
@@ -12,6 +13,11 @@ public:
 
     // Method to retrieve the Player from the Scene
     virtual std::shared_ptr<Player> getPlayer() const = 0;
+
+    // Method to get Scene Name
+    virtual std::string getSceneName() const {
+        return typeid(*this).name(); // Use type info as a fallback
+    }
 
 protected:
     EntityManager _ents; // Manage entities specific to the scene
