@@ -34,7 +34,8 @@ Projectile::Projectile(const sf::Vector2f& position,
     damage(damage),
     direction(direction),
     speed(speed),
-    size(size)
+    size(size),
+    _isActive(true)
 {
     // Normalize the direction using the maths.h utility
     this->direction = sf::normalize(direction);
@@ -44,12 +45,24 @@ Projectile::Projectile(const sf::Vector2f& position,
 }
 
 void Projectile::Update(const double dt) {
-    sf::Vector2f movement = direction * speed * static_cast<float>(dt);
-    move(movement);
-    _shape->setPosition(_position);
-    //std::cout << "Projectile Position: (" << getPosition().x << ", " << getPosition().y << ")\n";
+    if (_isActive) {
+        sf::Vector2f velocity = direction * speed * static_cast<float>(dt);
+        move(velocity);
+        Entity::Update(dt);
+        //std::cout << "Projectile updated to position (" << _position.x << ", " << _position.y << ")" << std::endl;
+    }
 }
 
+
 void Projectile::Render(sf::RenderWindow& window) const {
-    window.draw(*_shape);
+    if (_isActive)
+        window.draw(*_shape);
+}
+
+void Projectile::OnCollision(Entity* other) {
+	// TODO: remove the projectile from the game on collision
+	std::cout << "Projectile collided with an entity.\n";
+    deactivate();
+    _shape->setFillColor(sf::Color::Yellow);
+
 }
