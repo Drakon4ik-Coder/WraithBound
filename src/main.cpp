@@ -1,3 +1,4 @@
+// ../WraithBound/src/main.cpp
 #include "Main.h"
 
 #include "./Entities/Enemies/MeleeMonster.h"
@@ -13,7 +14,7 @@
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
-                sf::Vector2f(800, 600));  // Center and size
+    sf::Vector2f(800, 600));  // Center and size
 Texture melee_skeleton;
 Texture player_sword;
 
@@ -33,27 +34,28 @@ void Load() {
 
     try {
         LevelSystem::setColor(LevelSystem::WALL,
-                              sf::Color(128, 128, 128));  // Grey
+            sf::Color(128, 128, 128));  // Grey
         LevelSystem::setColor(LevelSystem::ENTRANCE,
-                              sf::Color(255, 0, 0));  // Red
+            sf::Color(255, 0, 0));  // Red
         LevelSystem::setColor(LevelSystem::START,
-                              sf::Color(0, 255, 0));  // Green
+            sf::Color(0, 255, 0));  // Green
         LevelSystem::setColor(LevelSystem::EMPTY,
-                              sf::Color::Transparent);  // Transparent
-    } catch (const std::exception& e) {
+            sf::Color::Transparent);  // Transparent
+    }
+    catch (const std::exception& e) {
         std::cerr << "Error initializing LevelSystem: " << e.what()
-                  << std::endl;
+            << std::endl;
         std::exit(1);
     }
 
-    entityManager = std::make_unique<EntityManager>();
+    //entityManager = std::make_unique<EntityManager>();
 }
 
 void Update(float dt, sf::Clock& timer) {
     // If in test mode, exit after the specified duration
     if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
         std::cout << "Exiting test mode after " << testDuration << " seconds."
-                  << std::endl;
+            << std::endl;
         window->close();
         return;
     }
@@ -97,37 +99,33 @@ int main(int argc, char* argv[]) {
     srand(static_cast<unsigned int>(time(0)));
 
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600),
-                                                "Wraithbound");
+        "Wraithbound");
     sceneManager = std::make_unique<SceneManager>();
 
     Load();
 
     // Create and add scenes to the SceneManager
     std::shared_ptr<MainMenuScene> mainMenuScene =
-        std::make_shared<MainMenuScene>();
-    std::shared_ptr<InGameScene> inGameScene =
-        std::make_shared<InGameScene>(entityManager);
+        std::make_shared<MainMenuScene>(sceneManager.get());  // Pass SceneManager pointer
+    //std::shared_ptr<InGameScene> inGameScene = std::make_shared<InGameScene>(entityManager);
 
     sceneManager->addScene("MainMenu", mainMenuScene);
-    sceneManager->addScene("InGame", inGameScene);
+    //sceneManager->addScene("InGame", inGameScene);
 
-    // Set the active scene
-    sceneManager->setActiveScene("InGame");
-    inGameScene->onActivate();  // Call to generate and load the maze
-
-    for (size_t i = 0; i < 5; i++) {
-        inGameScene->spawnMonsters();  // Call to spawn monsters
-    }
+    // Set the active scene to MainMenu
+    sceneManager->setActiveScene("MainMenu");  // Start with MainMenu
+    mainMenuScene->onActivate();  // Initialize main menu
 
     sf::Clock timer;
     sf::Clock clock;
 
     while (window->isOpen()) {
         float dt = clock.restart().asSeconds();
-
+        sceneManager->handleInput(*window);
         Update(dt, timer);
         window->clear();
         Render();
+        
         window->display();
     }
     return 0;
