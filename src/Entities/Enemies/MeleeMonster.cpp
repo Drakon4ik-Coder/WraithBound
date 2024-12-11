@@ -1,5 +1,6 @@
 #include "../Enemies/MeleeMonster.h"
 #include "../lib_maths/maths.h"
+#include "../../../lib_tile_level_loader/LevelSystem.h"
 #include <SFML/Audio.hpp>  // Include the SFML Audio module
 
 // Add these member variables at the top of your class (MeleeMonster.h)
@@ -29,7 +30,18 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
 void MeleeMonster::Update(const double dt) {
     if (!player) return; // check if player reference is valid
 
-    sf::Vector2f diff = player->getPosition() - getPosition();
+    sf::Vector2f diff;
+
+    if(LevelSystem::getTileVectPos(getPosition()) == LevelSystem::getTileVectPos(player->getPosition())) {
+        diff = player->getPosition() - getPosition();
+    } 
+    else{
+        std::pair<int,int> nextTile = LevelSystem::findPath(getPosition(), player->getPosition()).front();
+        diff = LevelSystem::getTilePosition({nextTile.first, nextTile.second}) - getPosition();
+    }
+
+    
+
     sf::Vector2f direction = sf::normalize(diff);
     sf::Vector2f moveVect = sf::Vector2f(dt * _speed * direction.x, dt * _speed * direction.y);
 
