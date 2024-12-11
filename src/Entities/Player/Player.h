@@ -14,11 +14,6 @@ private:
     EntityManager* _entityManager; // Pointer to EntityManager
 
 public:
-    /**
-     * @brief Constructs a Player with a reference to the EntityManager.
-     *
-     * @param entityManager Pointer to the EntityManager.
-     */
     Player(EntityManager* entityManager);
 
     void Update(double dt) override;

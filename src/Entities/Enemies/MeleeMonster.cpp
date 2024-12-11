@@ -30,7 +30,7 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
 }
 
 void MeleeMonster::Update(const double dt) {
-    if (!player) return;  // Ensure the player reference is valid
+    if (!player) return;
 
     sf::Vector2f diff;
 

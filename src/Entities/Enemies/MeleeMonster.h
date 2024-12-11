@@ -4,7 +4,7 @@
 
 class MeleeMonster : public Monster {
    private:
-    std::shared_ptr<Player> player;  // Reference to the player
+    std::shared_ptr<Player> player;
     bool lookLeft = false;
 
    public:
