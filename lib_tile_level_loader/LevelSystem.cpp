@@ -21,7 +21,8 @@ std::map<LevelSystem::TILE, sf::Color> LevelSystem::_colours = {
     {WALL, Color::White},
     {ENTRANCE, Color::Red},
     {START, Color::Green},
-    {EMPTY, Color::Transparent}};
+    {EMPTY, Color::Transparent},
+    {ENEMY, Color::Blue}};
 
 sf::Color LevelSystem::getColor(LevelSystem::TILE t) {
     auto it = _colours.find(t);
@@ -35,10 +36,7 @@ void LevelSystem::setColor(LevelSystem::TILE t, sf::Color c) {
     _colours[t] = c;
 }
 
-float LevelSystem::getTileSize() {
-    return _tileSize;
-}
-
+float LevelSystem::getTileSize() { return _tileSize; }
 
 void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
     _tileSize = tileSize;
@@ -71,6 +69,9 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
                 break;
             case ' ':
                 temp_tiles.push_back(EMPTY);
+                break;
+            case 'm':  // Add support for monster tiles
+                temp_tiles.push_back(ENEMY);
                 break;
             case '\n':
                 if (w == 0) {
@@ -125,6 +126,18 @@ LevelSystem::TILE LevelSystem::getTile(Vector2ul p) {
 }
 bool LevelSystem::isPassable(TILE tile) {
     return tile == EMPTY || tile == START || tile == ENTRANCE;
+}
+
+std::vector<sf::Vector2ul> LevelSystem::getMonsterSpawnPoints() {
+    std::vector<sf::Vector2ul> spawnPoints;
+    for (size_t y = 0; y < 75; ++y) {
+        for (size_t x = 0; x < 75; ++x) {
+            if (getTile({x, y}) == ENEMY) {  // Check for ENEMY tile
+                spawnPoints.push_back({x, y});  // Add to spawn list
+            }
+        }
+    }
+    return spawnPoints;
 }
 
 

@@ -10,10 +10,8 @@ class MeleeMonster : public Monster {
 
    public:
     MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
-                 std::shared_ptr<Player> player, float gameWidth,
-                 float gameHeight);
-
+                 std::shared_ptr<Player> player, sf::Vector2f position);
     void Update(const double dt) override;
     void Render(sf::RenderWindow& window) const override;
-    void attack();  // Declare the attack method
+    void attack();
 };

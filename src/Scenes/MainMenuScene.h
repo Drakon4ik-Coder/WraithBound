@@ -1,15 +1,16 @@
 // ../WraithBound/src/Scenes/MainMenuScene.h
 #pragma once
-#include "Scene.h"
-#include "../SceneManager/SceneManager.h"  // Include SceneManager
 #include <SFML/Graphics.hpp>
-#include <memory>
 #include <iostream>
-#include "InGameScene.h"
+#include <memory>
+
 #include "../EntityManager.h"
+#include "../SceneManager/SceneManager.h"  // Include SceneManager
+#include "InGameScene.h"
+#include "Scene.h"
 
 class MainMenuScene : public Scene {
-private:
+   private:
     sf::Font font;
     sf::RectangleShape startButton;
     sf::RectangleShape settingsButton;
@@ -40,9 +41,12 @@ private:
         // Center the text within the button
         sf::FloatRect startBounds = startText.getLocalBounds();
         startText.setPosition(
-            startButton.getPosition().x + (startButton.getSize().x - startBounds.width) / 2 - startBounds.left,
-            startButton.getPosition().y + (startButton.getSize().y - startBounds.height) / 2 - startBounds.top
-        );
+            startButton.getPosition().x +
+                (startButton.getSize().x - startBounds.width) / 2 -
+                startBounds.left,
+            startButton.getPosition().y +
+                (startButton.getSize().y - startBounds.height) / 2 -
+                startBounds.top);
 
         // Setup Settings Button
         settingsButton.setSize(sf::Vector2f(200, 50));
@@ -55,9 +59,12 @@ private:
         settingsText.setFillColor(sf::Color::White);
         sf::FloatRect settingsBounds = settingsText.getLocalBounds();
         settingsText.setPosition(
-            settingsButton.getPosition().x + (settingsButton.getSize().x - settingsBounds.width) / 2 - settingsBounds.left,
-            settingsButton.getPosition().y + (settingsButton.getSize().y - settingsBounds.height) / 2 - settingsBounds.top
-        );
+            settingsButton.getPosition().x +
+                (settingsButton.getSize().x - settingsBounds.width) / 2 -
+                settingsBounds.left,
+            settingsButton.getPosition().y +
+                (settingsButton.getSize().y - settingsBounds.height) / 2 -
+                settingsBounds.top);
 
         // Setup Quit Button
         quitButton.setSize(sf::Vector2f(200, 50));
@@ -70,12 +77,15 @@ private:
         quitText.setFillColor(sf::Color::White);
         sf::FloatRect quitBounds = quitText.getLocalBounds();
         quitText.setPosition(
-            quitButton.getPosition().x + (quitButton.getSize().x - quitBounds.width) / 2 - quitBounds.left,
-            quitButton.getPosition().y + (quitButton.getSize().y - quitBounds.height) / 2 - quitBounds.top
-        );
+            quitButton.getPosition().x +
+                (quitButton.getSize().x - quitBounds.width) / 2 -
+                quitBounds.left,
+            quitButton.getPosition().y +
+                (quitButton.getSize().y - quitBounds.height) / 2 -
+                quitBounds.top);
     }
 
-public:
+   public:
     // Updated constructor to accept SceneManager pointer
     MainMenuScene(SceneManager* sceneMgr) : sceneManager(sceneMgr) {
         initializeButtons();
@@ -91,25 +101,27 @@ public:
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+                    sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
+                                           static_cast<float>(mousePos.y));
 
-                    std::cout << "Mouse Clicked at: (" << mousePosF.x << ", " << mousePosF.y << ")\n";
+                    std::cout << "Mouse Clicked at: (" << mousePosF.x << ", "
+                              << mousePosF.y << ")\n";
 
                     if (startButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Start Game clicked" << std::endl;
                         if (sceneManager) {
                             entityManager = std::make_shared<EntityManager>();
-                            std::shared_ptr<InGameScene> inGameScene = std::make_shared<InGameScene>(entityManager);
+                            std::shared_ptr<InGameScene> inGameScene =
+                                std::make_shared<InGameScene>(entityManager);
                             sceneManager->addScene("InGame", inGameScene);
                             sceneManager->setActiveScene("InGame");
-                            inGameScene->onActivate();  // Call to generate and load the maze
-                            for (size_t i = 0; i < 5; i++) {
-                                inGameScene->spawnMonsters();  // Call to spawn monsters
-                                std::cout << "Monster " << i + 1 << " spawned." << std::endl;
-                            }
+                            inGameScene->onActivate();  // Call to generate and
+                                                        // load the maze
 
-                        }
-                        else {
+                            inGameScene->spawnMonsters();  // Call to spawn
+                                                           // monsters
+
+                        } else {
                             std::cerr << "SceneManager is null!" << std::endl;
                         }
                     }
@@ -120,14 +132,14 @@ public:
                     }
 
                     if (quitButton.getGlobalBounds().contains(mousePosF)) {
-                        std::cout << "Quit clicked, closing window." << std::endl;
+                        std::cout << "Quit clicked, closing window."
+                                  << std::endl;
                         window.close();
                     }
                 }
             }
         }
     }
-
 
     void update(float dt) override {
         // No dynamic content to update in the main menu
