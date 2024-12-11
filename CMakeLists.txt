@@ -19,6 +19,13 @@ if(NOT OpenGL_FOUND)
     message(FATAL_ERROR "OpenGL libraries not found. Please install OpenGL development packages.")
 endif()
 
+# ### Find OpenAL ####
+find_package(OpenAL REQUIRED)
+
+if(NOT OpenAL_FOUND)
+    message(FATAL_ERROR "OpenAL libraries not found. Please install OpenAL development packages.")
+endif()
+
 # ### Add External Dependencies ####
 add_subdirectory("lib/sfml")
 set(SFML_INCS "lib/sfml/include")
@@ -47,7 +54,7 @@ file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
 add_executable(WraithBound ${SOURCES})
 target_include_directories(WraithBound SYSTEM PRIVATE ${SFML_INCS})
 
-# Link the necessary SFML libraries (graphics, window, system, audio)
+# Link the necessary SFML and OpenAL libraries
 target_link_libraries(WraithBound
     lib_tile_level_loader
     lib_maths
@@ -55,6 +62,7 @@ target_link_libraries(WraithBound
     sfml-window
     sfml-system
     sfml-audio
+    OpenAL::OpenAL
 )
 
 # # Tile loader lib
@@ -67,5 +75,4 @@ set_target_properties(WraithBound
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
-add_dependencies(WraithBound copy_resources)
-add_dependencies(WraithBound copy_resources2)
+add_dependencies(WraithBound copy_resources copy_resources2)
