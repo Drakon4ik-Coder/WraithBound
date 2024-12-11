@@ -1,5 +1,6 @@
 #include "../Enemies/MeleeMonster.h"
-
+#include "../lib_maths/maths.h"
+#include "../../../lib_tile_level_loader/LevelSystem.h"
 #include <SFML/Audio.hpp>  // Include the SFML Audio module
 
 #include "../lib_maths/maths.h"
@@ -31,15 +32,21 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
 void MeleeMonster::Update(const double dt) {
     if (!player) return;  // Ensure the player reference is valid
 
-    // Calculate distance in tiles
-    sf::Vector2f diff = player->getPosition() - getPosition();
-    float distance = std::sqrt(diff.x * diff.x + diff.y * diff.y);
-    float distanceInTiles = distance / LevelSystem::getTileSize();
+    sf::Vector2f diff;
 
-    // Check if the player is within 10 tiles
-    if (distanceInTiles > 10) {
-        return;  // Player is too far; skip movement logic
+    if(LevelSystem::getTileVectPos(getPosition()) == LevelSystem::getTileVectPos(player->getPosition())) {
+        diff = player->getPosition() - getPosition();
+    } 
+    else{
+        std::vector<std::pair<int,int>> path = LevelSystem::findPath(getPosition(), player->getPosition());
+        if(path.empty()) {
+            return;
+        }
+        std::pair<int,int> nextTile = path.front();
+        diff = LevelSystem::getTilePosition({nextTile.first, nextTile.second}) - getPosition();
     }
+
+    
 
     sf::Vector2f direction = sf::normalize(diff);
     sf::Vector2f moveVect =
