@@ -34,7 +34,10 @@ void MeleeMonster::Update(const double dt) {
     static const float frameDuration = 0.067f;
     static int frame_i = 1;
     static float time = 0;
-    int frames = _shape->getTexture()->getSize().x / size;
+    //int frames = _shape->getTexture()->getSize().x / size;
+    int textureWidth = _shape->getTexture() ? _shape->getTexture()->getSize().x : 0;
+    int frames = (textureWidth >= size) ? (textureWidth / size) : 1;
+
 
     time += dt;
     if (time > frameDuration) {
