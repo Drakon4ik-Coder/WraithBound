@@ -206,7 +206,7 @@ vector<pair<int, int>> LevelSystem::findPath(sf::Vector2f e1, sf::Vector2f e2) {
             pair<int,int> neighbor = pair(newRow, newCol);
 
             // Check bounds, walls, and if already visited
-            if (visited.find(neighbor) == visited.end() && getTile({neighbor.first, neighbor.second}) != TILE::ENTRANCE &&  getTile({neighbor.first, neighbor.second}) != TILE::WALL) {
+            if (visited.find(neighbor) == visited.end() && getTile({ static_cast<size_t>(neighbor.first), static_cast<size_t>(neighbor.second) }) != TILE::ENTRANCE && getTile({ static_cast<size_t>(neighbor.first), static_cast<size_t>(neighbor.second) }) != TILE::WALL) {
                 visited.insert(neighbor);
                 vector<pair<int,int>> newPath = path; // Copy the current path
                 newPath.push_back(neighbor);          // Add the neighbor to the path

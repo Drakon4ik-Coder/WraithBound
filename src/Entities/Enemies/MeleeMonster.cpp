@@ -43,7 +43,7 @@ void MeleeMonster::Update(const double dt) {
             return;
         }
         std::pair<int,int> nextTile = path.front();
-        diff = LevelSystem::getTilePosition({nextTile.first, nextTile.second}) - getPosition();
+        diff = LevelSystem::getTilePosition(sf::Vector2ul{ static_cast<unsigned long>(nextTile.first), static_cast<unsigned long>(nextTile.second) }) - getPosition();
     }
 
     
