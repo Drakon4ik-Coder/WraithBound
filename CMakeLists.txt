@@ -62,18 +62,10 @@ add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
 target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/lib_tile_level_loader/" )
 target_link_libraries(lib_tile_level_loader lib_maths sfml-graphics)
 
-# Copy OpenAL32.dll after the build process
-add_custom_command(TARGET WraithBound POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/lib/dll/OpenAL32.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
-)
 
-# Set the working directory for debugging
 set_target_properties(WraithBound 
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
-# Ensure resources are copied
 add_dependencies(WraithBound copy_resources)
 add_dependencies(WraithBound copy_resources2)
