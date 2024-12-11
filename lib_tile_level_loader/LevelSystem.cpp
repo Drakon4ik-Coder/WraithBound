@@ -3,6 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <queue>
+#include <vector>
+#include <set>
 
 #include "maths.h"
 
@@ -124,6 +127,15 @@ LevelSystem::TILE LevelSystem::getTile(Vector2ul p) {
     }
     return _tiles[(p.y * _width) + p.x];
 }
+
+Vector2ul LevelSystem::getTileVectPos(Vector2f v) {
+    auto a = v - _offset;
+    if (a.x < 0 || a.y < 0) {
+        throw out_of_range("Tile out of range");
+    }
+    return Vector2ul((v - _offset) / _tileSize);
+}
+
 bool LevelSystem::isPassable(TILE tile) {
     return tile == EMPTY || tile == START || tile == ENTRANCE;
 }
@@ -154,3 +166,56 @@ void LevelSystem::Render(RenderWindow& window) {
         window.draw(*sprite);
     }
 }
+
+const vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+bool LevelSystem::inSameRoom(sf::Vector2f e1, sf::Vector2f e2) {
+    if(findPath(e1, e2).empty()) {
+        return false;
+    }
+    return true;
+}
+
+vector<pair<int, int>> LevelSystem::findPath(sf::Vector2f e1, sf::Vector2f e2) {
+    Vector2ul e1Tile = getTileVectPos(e1);
+    Vector2ul e2Tile = getTileVectPos(e2);
+
+    pair<int,int> e1P = pair(e1Tile.x, e1Tile.y);
+    pair<int,int> e2P = pair(e2Tile.x, e2Tile.y);
+
+    queue<pair<pair<int, int>, vector<pair<int, int>>>> bfsQueue;
+    set<pair<int, int>> visited; // To keep track of visited tiles
+
+    // Initialize BFS
+    bfsQueue.push({e1P, {}});
+    visited.insert(e1P);
+
+    while (!bfsQueue.empty()) {
+        auto [current, path] = bfsQueue.front();
+        bfsQueue.pop();
+
+        // Check if we have reached the goal
+        if (current == e2P) {
+            return path;
+        }
+
+        // Explore neighbors
+        for (const auto& direction : directions) {
+            int newRow = current.first + direction.first;
+            int newCol = current.second + direction.second;
+            pair<int,int> neighbor = pair(newRow, newCol);
+
+            // Check bounds, walls, and if already visited
+            if (visited.find(neighbor) == visited.end() && getTile({neighbor.first, neighbor.second}) != TILE::ENTRANCE &&  getTile({neighbor.first, neighbor.second}) != TILE::WALL) {
+                visited.insert(neighbor);
+                vector<pair<int,int>> newPath = path; // Copy the current path
+                newPath.push_back(neighbor);          // Add the neighbor to the path
+                bfsQueue.push({neighbor, newPath});
+            }
+        }
+    }
+
+    // Return an empty path if no path exists
+    return {};
+}
+
