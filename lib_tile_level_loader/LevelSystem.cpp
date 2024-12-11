@@ -14,7 +14,7 @@ size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 
-float LevelSystem::_tileSize(100.f);
+float LevelSystem::_tileSize(50.f);
 vector<std::unique_ptr<sf::RectangleShape>> LevelSystem::_sprites;
 
 std::map<LevelSystem::TILE, sf::Color> LevelSystem::_colours = {

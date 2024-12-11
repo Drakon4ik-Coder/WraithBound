@@ -221,6 +221,66 @@ vector<vector<vector<string>>> expandDungeon(
     return expandedDungeon;
 }
 
+void fixIsolatedEInDungeon(const string& filePath) {
+    ifstream file(filePath);
+    if (!file.is_open()) {
+        cerr << "Error: Could not read file " << filePath << endl;
+        return;
+    }
+
+    vector<string> dungeonGrid;
+    string line;
+
+    // Read file into dungeon grid
+    while (getline(file, line)) {
+        dungeonGrid.push_back(line);
+    }
+
+    // Close file after reading
+    file.close();
+
+    int height = dungeonGrid.size();
+    if (height == 0) return;  // Empty file, nothing to check
+
+    int width = dungeonGrid[0].size();
+
+    // Lambda to check if a position is within bounds and contains 'e'
+    auto isEAdjacent = [&](int y, int x) -> bool {
+        return y >= 0 && y < height && x >= 0 && x < width &&
+               dungeonGrid[y][x] == 'e';
+    };
+
+    // Analyze all positions containing 'e' and replace isolated ones with 'w'
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < dungeonGrid[y].size(); ++x) {
+            if (dungeonGrid[y][x] == 'e') {
+                // Check neighbors for 'e'
+                bool hasAdjacentE =
+                    isEAdjacent(y - 1, x) || isEAdjacent(y + 1, x) ||
+                    isEAdjacent(y, x - 1) || isEAdjacent(y, x + 1);
+
+                if (!hasAdjacentE) {
+                    // Replace isolated 'e' with 'w'
+                    dungeonGrid[y][x] = 'w';
+                }
+            }
+        }
+    }
+
+    // Write the modified grid back to the file
+    ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        cerr << "Error: Could not write to file " << filePath << endl;
+        return;
+    }
+
+    for (const auto& row : dungeonGrid) {
+        outFile << row << endl;
+    }
+
+    outFile.close();
+}
+
 void generateLevelToFile() {
     int roomCount = 6;
 
@@ -232,12 +292,19 @@ void generateLevelToFile() {
     vector<vector<vector<string>>> expandedDungeon = expandDungeon(dungeon);
 
     // Write expanded dungeon to file
-    writeExpandedDungeonToFile(expandedDungeon, "../res/levels/maze.txt");
+    const string filePath = "../res/levels/maze.txt";
+    writeExpandedDungeonToFile(expandedDungeon, filePath);
     cout << "Dungeon written to maze.txt" << endl;
     printDungeonLayout(dungeon);
+
     // Validate layout
     if (!validateDungeonLayout(dungeon)) {
         cerr << "Dungeon layout is invalid: not all rooms are reachable."
              << endl;
     }
+
+    // Analyze and fix isolated 'e' in expanded dungeon
+    fixIsolatedEInDungeon(filePath);
+    cout << "Isolated 'e' characters have been replaced with 'w' in maze.txt."
+         << endl;
 }
