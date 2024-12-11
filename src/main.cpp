@@ -8,6 +8,7 @@
 #include "../src/Scenes/InGameScene.h"
 #include "../src/Scenes/MainMenuScene.h"
 #include "../src/Scenes/Scene.h"
+#include "../src/Entities/Entity.h"
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),

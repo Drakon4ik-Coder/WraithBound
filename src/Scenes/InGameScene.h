@@ -29,7 +29,7 @@ class InGameScene : public Scene {
     void render(sf::RenderWindow& window) override {
         entityManager->Render(window);  // Render all entities
     }
-    void InGameScene::spawnMonsters() {
+    void spawnMonsters() {
         // Example of spawning a monster
         auto monster =
             std::make_shared<MeleeMonster>(melee_skeleton, sf::Vector2i(68, 68),
