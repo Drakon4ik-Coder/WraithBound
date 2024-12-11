@@ -47,7 +47,7 @@ class InGameScene : public Scene {
 
         // Load the generated level into the LevelSystem
         try {
-            LevelSystem::loadLevelFile("../res/levels/maze.txt", 100.0f);
+            LevelSystem::loadLevelFile("res/levels/maze.txt", 100.0f);
         } catch (const std::exception& e) {
             std::cerr << "Error loading level: " << e.what() << std::endl;
             return;

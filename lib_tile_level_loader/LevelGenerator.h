@@ -201,19 +201,19 @@ vector<vector<vector<string>>> expandDungeon(
         for (size_t x = 0; x < layout[y].size(); ++x) {
             if (layout[y][x] == 'r') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("../res/levels/room.txt");
+                    readTemplateFromFile("res/levels/room.txt");
             } else if (layout[y][x] == 's') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("../res/levels/room_spawn.txt");
+                    readTemplateFromFile("res/levels/room_spawn.txt");
             } else if (layout[y][x] == 'v') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("../res/levels/tunnelV.txt");
+                    readTemplateFromFile("res/levels/tunnelV.txt");
             } else if (layout[y][x] == 'h') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("../res/levels/tunnelH.txt");
+                    readTemplateFromFile("res/levels/tunnelH.txt");
             } else {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("../res/levels/blank.txt");
+                    readTemplateFromFile("res/levels/blank.txt");
             }
         }
     }
@@ -292,7 +292,7 @@ void generateLevelToFile() {
     vector<vector<vector<string>>> expandedDungeon = expandDungeon(dungeon);
 
     // Write expanded dungeon to file
-    const string filePath = "../res/levels/maze.txt";
+    const string filePath = "res/levels/maze.txt";
     writeExpandedDungeonToFile(expandedDungeon, filePath);
     cout << "Dungeon written to maze.txt" << endl;
     printDungeonLayout(dungeon);

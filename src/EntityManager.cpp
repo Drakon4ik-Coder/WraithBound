@@ -57,7 +57,7 @@ void EntityManager::HandleCollisions() {
             auto& entityB = entities[j];
 
             if (entityA->getGlobalBounds().intersects(entityB->getGlobalBounds())) {
-                std::cout << "Collision detected between Entity " << i << " and Entity " << j << "\n";
+                //std::cout << "Collision detected between Entity " << i << " and Entity " << j << "\n";
 
                 // Calculate the overlap
                 sf::FloatRect overlap;
@@ -79,7 +79,7 @@ void EntityManager::HandleCollisions() {
                 entityA->OnCollision(entityB.get());
                 entityB->OnCollision(entityA.get());
 
-                std::cout << "Entities " << i << " and " << j << " positions adjusted to resolve collision.\n";
+                //std::cout << "Entities " << i << " and " << j << " positions adjusted to resolve collision.\n";
             }
         }
     }
@@ -97,7 +97,7 @@ void EntityManager::HandleCollisions() {
 
             // Check if the tile is a WALL
             if (tile == LevelSystem::TILE::WALL) {
-                std::cout << "Entity colliding with WALL at position: " << entityPos.x << ", " << entityPos.y << "\n";
+                //std::cout << "Entity colliding with WALL at position: " << entityPos.x << ", " << entityPos.y << "\n";
 
                 // Adjust entity position to resolve collision
                 sf::Vector2f tilePos = LevelSystem::getTilePosition(
@@ -122,7 +122,7 @@ void EntityManager::HandleCollisions() {
             }
         } catch (std::out_of_range& e) {
             // Entity is outside the level bounds
-            std::cerr << "Entity out of bounds: " << entityPos.x << ", " << entityPos.y << std::endl;
+            //std::cerr << "Entity out of bounds: " << entityPos.x << ", " << entityPos.y << std::endl;
         }
     }
 }

@@ -24,7 +24,7 @@ private:
 
     void initializeButtons() {
         // Load font
-        if (!font.loadFromFile("../res/fonts/RobotoMono-Regular.ttf")) {
+        if (!font.loadFromFile("res/fonts/RobotoMono-Regular.ttf")) {
             std::cerr << "Failed to load font!" << std::endl;
         }
 
