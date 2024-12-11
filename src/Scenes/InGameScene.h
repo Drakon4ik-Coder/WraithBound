@@ -51,7 +51,7 @@ class InGameScene : public Scene {
         }
     }
 
-    void InGameScene::onActivate() {
+    void onActivate() {
         // Generate the dungeon level and save it to a file
         generateLevelToFile();
 
