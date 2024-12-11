@@ -1,8 +1,11 @@
 #include "../Enemies/MeleeMonster.h"
+
 #include <SFML/Audio.hpp>  // Include the SFML Audio module
+
 #include "../lib_maths/maths.h"
 
-// Add these member variables at the top of your class (MeleeMonster.h)
+#include "../lib_tile_level_loader/LevelSystem.h"
+
 sf::SoundBuffer collisionSoundBuffer;
 sf::Sound collisionSound;
 
@@ -11,12 +14,10 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
                            sf::Vector2f position)
     : Monster(std::make_unique<sf::CircleShape>(32.f), 100.f, 100, 1),
       player(player) {
-
     if (!collisionSoundBuffer.loadFromFile(
-        "res/audio/skeleton_melee/sword-sound-effect.mp3")) {
+            "res/audio/skeleton_melee/sword-sound-effect.mp3")) {
         std::cerr << "Error loading collision sound!" << std::endl;
-    }
-    else {
+    } else {
         collisionSound.setBuffer(collisionSoundBuffer);
     }
 
@@ -28,37 +29,43 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
 }
 
 void MeleeMonster::Update(const double dt) {
-    if (!player) return;  // check if player reference is valid
+    if (!player) return;  // Ensure the player reference is valid
 
+    // Calculate distance in tiles
     sf::Vector2f diff = player->getPosition() - getPosition();
+    float distance = std::sqrt(diff.x * diff.x + diff.y * diff.y);
+    float distanceInTiles = distance / LevelSystem::getTileSize();
+
+    // Check if the player is within 10 tiles
+    if (distanceInTiles > 10) {
+        return;  // Player is too far; skip movement logic
+    }
+
     sf::Vector2f direction = sf::normalize(diff);
     sf::Vector2f moveVect =
         sf::Vector2f(dt * _speed * direction.x, dt * _speed * direction.y);
 
     if (!_shape->getGlobalBounds().intersects(player->getGlobalBounds())) {
         move(moveVect);
-    }
-    else {
-        // Collision detected! Play the sound
+    } else {
         collisionSound.play();
-
-        // Handle collision logic, for example:
-        player->OnCollision(this);        // Notify player of the collision
-        this->OnCollision(player.get());  // Notify monster of the collision
+        player->OnCollision(this);
+        this->OnCollision(player.get());
     }
 
-    // Direction looking handling
+    // Handle direction looking
     if ((direction.x < 0 && !lookLeft) || (direction.x >= 0 && lookLeft)) {
         _shape->scale(-1.f, 1.f);
         lookLeft = !lookLeft;
     }
 
+    // Animation handling
     static const int size = 128;
     static const float frameDuration = 0.067f;
     static int frame_i = 1;
     static float time = 0;
-    //int frames = _shape->getTexture()->getSize().x / size;
-    int textureWidth = _shape->getTexture() ? _shape->getTexture()->getSize().x : 0;
+    int textureWidth =
+        _shape->getTexture() ? _shape->getTexture()->getSize().x : 0;
     int frames = (textureWidth >= size) ? (textureWidth / size) : 1;
 
     time += dt;
