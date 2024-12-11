@@ -26,10 +26,10 @@ float testDuration = 10.0f;  // Duration in seconds for test mode
 
 void Load() {
     if (!player_sword.loadFromFile(
-            "../res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
+            "res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
-    if (!melee_skeleton.loadFromFile("../res/img/Skeleton_Warrior/Run.png")) {
+    if (!melee_skeleton.loadFromFile("res/img/Skeleton_Warrior/Run.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
 
