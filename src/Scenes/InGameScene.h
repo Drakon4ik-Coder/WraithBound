@@ -34,20 +34,30 @@ class InGameScene : public Scene {
     }
 
     void spawnMonsters() {
-        // Example of spawning a monster
-        auto monster =
-            std::make_shared<MeleeMonster>(melee_skeleton, sf::Vector2i(68, 68),
-                                           player, gameWidth, gameHeight);
-        entityManager->AddEntity(monster);
+        // Get spawn points for ENEMY tiles
+        auto monsterSpawnPoints = LevelSystem::getMonsterSpawnPoints();
+
+        // Loop through each spawn point and create a monster at that location
+        for (const auto& point : monsterSpawnPoints) {
+            auto position =
+                LevelSystem::getTilePosition(point);  // Get tile position
+            auto monster = std::make_shared<MeleeMonster>(
+                melee_skeleton,        // Texture
+                sf::Vector2i(68, 68),  // Size of the texture frame
+                player,                // Player reference
+                position               // Monster's spawn position
+            );
+            entityManager->AddEntity(monster);  // Add to the entity manager
+        }
     }
 
-    void onActivate() override {
+    void InGameScene::onActivate() {
         // Generate the dungeon level and save it to a file
         generateLevelToFile();
 
         // Load the generated level into the LevelSystem
         try {
-            LevelSystem::loadLevelFile("res/levels/maze.txt", 100.0f);
+            LevelSystem::loadLevelFile("../res/levels/maze.txt", 100.0f);
         } catch (const std::exception& e) {
             std::cerr << "Error loading level: " << e.what() << std::endl;
             return;
@@ -58,11 +68,21 @@ class InGameScene : public Scene {
             for (size_t x = 0; x < LevelSystem::getWidth(); ++x) {
                 if (LevelSystem::getTile({x, y}) == LevelSystem::START) {
                     player->setPosition(LevelSystem::getTilePosition({x, y}));
-                    return;
+                    break;
                 }
             }
         }
 
-        std::cerr << "Error: No spawn point found in maze!" << std::endl;
+        // Spawn monsters at 'ENEMY' tiles
+        auto monsterSpawnPoints = LevelSystem::getMonsterSpawnPoints();
+        for (const auto& point : monsterSpawnPoints) {
+            auto position = LevelSystem::getTilePosition(point);
+            auto monster = std::make_shared<MeleeMonster>(
+                melee_skeleton,        // Texture
+                sf::Vector2i(68, 68),  // Size of the texture frame
+                player,                // Player reference
+                position);             // Monster's spawn position
+            entityManager->AddEntity(monster);
+        }
     }
 };

@@ -14,7 +14,7 @@
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
-    sf::Vector2f(800, 600));  // Center and size
+                sf::Vector2f(800, 600));  // Center and size
 Texture melee_skeleton;
 Texture player_sword;
 
@@ -25,37 +25,37 @@ bool testMode = false;
 float testDuration = 10.0f;  // Duration in seconds for test mode
 
 void Load() {
-    if (!player_sword.loadFromFile("res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
+    if (!player_sword.loadFromFile(
+            "../res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
-    if (!melee_skeleton.loadFromFile("res/img/Skeleton_Warrior/Run.png")) {
+    if (!melee_skeleton.loadFromFile("../res/img/Skeleton_Warrior/Run.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
 
     try {
         LevelSystem::setColor(LevelSystem::WALL,
-            sf::Color(128, 128, 128));  // Grey
+                              sf::Color(128, 128, 128));  // Grey
         LevelSystem::setColor(LevelSystem::ENTRANCE,
-            sf::Color(255, 0, 0));  // Red
+                              sf::Color(255, 0, 0));  // Red
         LevelSystem::setColor(LevelSystem::START,
-            sf::Color(0, 255, 0));  // Green
+                              sf::Color(0, 255, 0));  // Green
         LevelSystem::setColor(LevelSystem::EMPTY,
-            sf::Color::Transparent);  // Transparent
-    }
-    catch (const std::exception& e) {
+                              sf::Color::Transparent);  // Transparent
+    } catch (const std::exception& e) {
         std::cerr << "Error initializing LevelSystem: " << e.what()
-            << std::endl;
+                  << std::endl;
         std::exit(1);
     }
 
-    //entityManager = std::make_unique<EntityManager>();
+    // entityManager = std::make_unique<EntityManager>();
 }
 
 void Update(float dt, sf::Clock& timer) {
     // If in test mode, exit after the specified duration
     if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
         std::cout << "Exiting test mode after " << testDuration << " seconds."
-            << std::endl;
+                  << std::endl;
         window->close();
         return;
     }
@@ -99,22 +99,24 @@ int main(int argc, char* argv[]) {
     srand(static_cast<unsigned int>(time(0)));
 
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600),
-        "Wraithbound");
+                                                "Wraithbound");
     sceneManager = std::make_unique<SceneManager>();
 
     Load();
 
     // Create and add scenes to the SceneManager
     std::shared_ptr<MainMenuScene> mainMenuScene =
-        std::make_shared<MainMenuScene>(sceneManager.get());  // Pass SceneManager pointer
-    //std::shared_ptr<InGameScene> inGameScene = std::make_shared<InGameScene>(entityManager);
+        std::make_shared<MainMenuScene>(
+            sceneManager.get());  // Pass SceneManager pointer
+    // std::shared_ptr<InGameScene> inGameScene =
+    // std::make_shared<InGameScene>(entityManager);
 
     sceneManager->addScene("MainMenu", mainMenuScene);
-    //sceneManager->addScene("InGame", inGameScene);
+    // sceneManager->addScene("InGame", inGameScene);
 
     // Set the active scene to MainMenu
     sceneManager->setActiveScene("MainMenu");  // Start with MainMenu
-    mainMenuScene->onActivate();  // Initialize main menu
+    mainMenuScene->onActivate();               // Initialize main menu
 
     sf::Clock timer;
     sf::Clock clock;
@@ -125,7 +127,7 @@ int main(int argc, char* argv[]) {
         Update(dt, timer);
         window->clear();
         Render();
-        
+
         window->display();
     }
     return 0;

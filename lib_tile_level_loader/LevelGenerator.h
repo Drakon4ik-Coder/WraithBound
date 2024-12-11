@@ -197,23 +197,50 @@ vector<vector<vector<string>>> expandDungeon(
     vector<vector<vector<string>>> expandedDungeon(
         layout.size(), vector<vector<string>>(layout[0].size()));
 
+    // Random number generator
+    std::random_device rd;
+    std::mt19937 rng(rd());
+
     for (size_t y = 0; y < layout.size(); ++y) {
         for (size_t x = 0; x < layout[y].size(); ++x) {
             if (layout[y][x] == 'r') {
-                expandedDungeon[y][x] =
-                    readTemplateFromFile("res/levels/room.txt");
+                // Read the room template
+                auto roomTemplate =
+                    readTemplateFromFile("../res/levels/room.txt");
+
+                // Identify spawnable positions ([2][2] to [12][12])
+                vector<pair<int, int>> spawnablePositions;
+                for (int i = 3; i <= 11; ++i) {
+                    for (int j = 3; j <= 11; ++j) {
+                        if (roomTemplate[i][j] == ' ') {
+                            spawnablePositions.emplace_back(i, j);
+                        }
+                    }
+                }
+
+                // Shuffle positions and select the first 5 for spawning
+                std::shuffle(spawnablePositions.begin(),
+                             spawnablePositions.end(), rng);
+                for (size_t i = 0; i < std::min(size_t(5), spawnablePositions.size()); ++i) {
+                    auto [row, col] = spawnablePositions[i];
+                    roomTemplate[row][col] = 'm';  // Place monster spawn
+                }
+
+                expandedDungeon[y][x] = roomTemplate;
+
             } else if (layout[y][x] == 's') {
+                // Read the spawn room template
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("res/levels/room_spawn.txt");
+                    readTemplateFromFile("../res/levels/room_spawn.txt");
             } else if (layout[y][x] == 'v') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("res/levels/tunnelV.txt");
+                    readTemplateFromFile("../res/levels/tunnelV.txt");
             } else if (layout[y][x] == 'h') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("res/levels/tunnelH.txt");
+                    readTemplateFromFile("../res/levels/tunnelH.txt");
             } else {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("res/levels/blank.txt");
+                    readTemplateFromFile("../res/levels/blank.txt");
             }
         }
     }
@@ -292,7 +319,7 @@ void generateLevelToFile() {
     vector<vector<vector<string>>> expandedDungeon = expandDungeon(dungeon);
 
     // Write expanded dungeon to file
-    const string filePath = "res/levels/maze.txt";
+    const string filePath = "../res/levels/maze.txt";
     writeExpandedDungeonToFile(expandedDungeon, filePath);
     cout << "Dungeon written to maze.txt" << endl;
     printDungeonLayout(dungeon);
