@@ -29,8 +29,8 @@ class InGameScene : public Scene {
     }
 
     void render(sf::RenderWindow& window) override {
-        entityManager->Render(window);  // Render all entities
         LevelSystem::Render(window);
+        entityManager->Render(window);  // Render all entities
     }
 
     void spawnMonsters() {
@@ -73,16 +73,5 @@ class InGameScene : public Scene {
             }
         }
 
-        // Spawn monsters at 'ENEMY' tiles
-        auto monsterSpawnPoints = LevelSystem::getMonsterSpawnPoints();
-        for (const auto& point : monsterSpawnPoints) {
-            auto position = LevelSystem::getTilePosition(point);
-            auto monster = std::make_shared<MeleeMonster>(
-                melee_skeleton,        // Texture
-                sf::Vector2i(68, 68),  // Size of the texture frame
-                player,                // Player reference
-                position);             // Monster's spawn position
-            entityManager->AddEntity(monster);
-        }
     }
 };

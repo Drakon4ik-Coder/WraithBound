@@ -1,24 +1,12 @@
 #include "../Enemies/MeleeMonster.h"
 
-#include <SFML/Audio.hpp>  // Include the SFML Audio module
-
 #include "../lib_maths/maths.h"
-
-// Add these member variables at the top of your class (MeleeMonster.h)
-sf::SoundBuffer collisionSoundBuffer;
-sf::Sound collisionSound;
 
 MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
                            std::shared_ptr<Player> player,
                            sf::Vector2f position)
     : Monster(std::make_unique<sf::CircleShape>(32.f), 100.f, 100, 1),
       player(player) {
-    if (!collisionSoundBuffer.loadFromFile(
-            "res/audio/skeleton_melee/sword-sound-effect.mp3")) {
-        std::cerr << "Error loading collision sound!" << std::endl;
-    } else {
-        collisionSound.setBuffer(collisionSoundBuffer);
-    }
     _shape->setOrigin(sf::Vector2f(32.f, 32.f));
     _shape->setTexture(&spritesheet);
     _shape->setTextureRect(sf::IntRect(sf::Vector2i{0, 0}, size));
@@ -36,13 +24,6 @@ void MeleeMonster::Update(const double dt) {
 
     if (!_shape->getGlobalBounds().intersects(player->getGlobalBounds())) {
         move(moveVect);
-    } else {
-        // Collision detected! Play the sound
-        collisionSound.play();
-
-        // Handle collision logic, for example:
-        player->OnCollision(this);        // Notify player of the collision
-        this->OnCollision(player.get());  // Notify monster of the collision
     }
 
     // Direction looking handling
@@ -51,7 +32,6 @@ void MeleeMonster::Update(const double dt) {
         lookLeft = !lookLeft;
     }
 
-    // Animation handling
     static const int size = 128;
     static const float frameDuration = 0.067f;
     static int frame_i = 1;
