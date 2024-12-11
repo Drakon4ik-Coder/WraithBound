@@ -1,12 +1,12 @@
+#include <algorithm>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <iostream>
 #include <queue>
+#include <random>
 #include <sstream>
 #include <vector>
-#include <random>
-#include <algorithm>
 
 using namespace std;
 
@@ -75,7 +75,8 @@ void printDungeonLayout(const vector<vector<char>>& layout) {
 }
 
 // Generate 2D Dungeon Layout
-vector<vector<char>> generateDungeonLayout(int width, int height, int roomCount) {
+vector<vector<char>> generateDungeonLayout(int width, int height,
+                                           int roomCount) {
     vector<vector<char>> layout(height, vector<char>(width, ' '));
     srand(static_cast<unsigned>(time(0)));
 
@@ -97,7 +98,8 @@ vector<vector<char>> generateDungeonLayout(int width, int height, int roomCount)
 
         while (!placed) {
             // Pick a random room from the list
-            auto [currentY, currentX] = roomPositions[rand() % roomPositions.size()];
+            auto [currentY, currentX] =
+                roomPositions[rand() % roomPositions.size()];
 
             // Shuffle directions to randomize placement
             std::random_device rd;
@@ -198,19 +200,20 @@ vector<vector<vector<string>>> expandDungeon(
     for (size_t y = 0; y < layout.size(); ++y) {
         for (size_t x = 0; x < layout[y].size(); ++x) {
             if (layout[y][x] == 'r') {
-                expandedDungeon[y][x] = readTemplateFromFile("..res/levels/room.txt");
+                expandedDungeon[y][x] =
+                    readTemplateFromFile("../res/levels/room.txt");
             } else if (layout[y][x] == 's') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("..res/levels/room_spawn.txt");
+                    readTemplateFromFile("../res/levels/room_spawn.txt");
             } else if (layout[y][x] == 'v') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("..res/levels/tunnelV.txt");
+                    readTemplateFromFile("../res/levels/tunnelV.txt");
             } else if (layout[y][x] == 'h') {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("..res/levels/tunnelH.txt");
+                    readTemplateFromFile("../res/levels/tunnelH.txt");
             } else {
                 expandedDungeon[y][x] =
-                    readTemplateFromFile("..res/levels/blank.txt");
+                    readTemplateFromFile("../res/levels/blank.txt");
             }
         }
     }
@@ -218,7 +221,7 @@ vector<vector<vector<string>>> expandDungeon(
     return expandedDungeon;
 }
 
-int main() {
+void generateLevelToFile() {
     int roomCount = 6;
 
     // Generate dungeon layout
@@ -229,15 +232,12 @@ int main() {
     vector<vector<vector<string>>> expandedDungeon = expandDungeon(dungeon);
 
     // Write expanded dungeon to file
-    writeExpandedDungeonToFile(expandedDungeon, "maze.txt");
+    writeExpandedDungeonToFile(expandedDungeon, "../res/levels/maze.txt");
     cout << "Dungeon written to maze.txt" << endl;
     printDungeonLayout(dungeon);
     // Validate layout
     if (!validateDungeonLayout(dungeon)) {
         cerr << "Dungeon layout is invalid: not all rooms are reachable."
              << endl;
-        return 1;
     }
-
-    return 0;
 }

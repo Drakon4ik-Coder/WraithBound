@@ -4,16 +4,18 @@
 #include "./Entities/Player/Player.h"
 #include "EntityManager.h"
 // Scenes + Manager
+#include "../lib_tile_level_loader/LevelSystem.h"
+#include "../src/Entities/Entity.h"
 #include "../src/SceneManager/SceneManager.h"
 #include "../src/Scenes/InGameScene.h"
 #include "../src/Scenes/MainMenuScene.h"
 #include "../src/Scenes/Scene.h"
-#include "../src/Entities/Entity.h"
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
                 sf::Vector2f(800, 600));  // Center and size
 Texture melee_skeleton;
+Texture player_sword;
 
 // Globals
 std::unique_ptr<sf::RenderWindow> window;
@@ -22,9 +24,28 @@ bool testMode = false;
 float testDuration = 10.0f;  // Duration in seconds for test mode
 
 void Load() {
+    if (!player_sword.loadFromFile("../res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
+        std::cerr << "Failed to load spritesheet!" << std::endl;
+    }
     if (!melee_skeleton.loadFromFile("../res/img/Skeleton_Warrior/Run.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
+
+    try {
+        LevelSystem::setColor(LevelSystem::WALL,
+                              sf::Color(128, 128, 128));  // Grey
+        LevelSystem::setColor(LevelSystem::ENTRANCE,
+                              sf::Color(255, 0, 0));  // Red
+        LevelSystem::setColor(LevelSystem::START,
+                              sf::Color(0, 255, 0));  // Green
+        LevelSystem::setColor(LevelSystem::EMPTY,
+                              sf::Color::Transparent);  // Transparent
+    } catch (const std::exception& e) {
+        std::cerr << "Error initializing LevelSystem: " << e.what()
+                  << std::endl;
+        std::exit(1);
+    }
+
     entityManager = std::make_unique<EntityManager>();
 }
 
@@ -92,6 +113,8 @@ int main(int argc, char* argv[]) {
 
     // Set the active scene
     sceneManager->setActiveScene("InGame");
+    inGameScene->onActivate();  // Call to generate and load the maze
+
     for (size_t i = 0; i < 5; i++) {
         inGameScene->spawnMonsters();  // Call to spawn monsters
     }

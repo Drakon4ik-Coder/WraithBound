@@ -1,14 +1,15 @@
 #pragma once
-#include "Scene.h"
 #include "../Entities/Player/Player.h"
+#include "Scene.h"
 
 class MainMenuScene : public Scene {
-private:
-    std::shared_ptr<Player> player; // Declare player
+   private:
+    std::shared_ptr<Player> player;  // Declare player
 
-public:
+   public:
     MainMenuScene() {
-        player = std::make_shared<Player>(&_ents); // Initialize player if needed
+        player =
+            std::make_shared<Player>(&_ents);  // Initialize player if needed
     }
 
     void handleInput(sf::RenderWindow& window) override {
@@ -19,10 +20,14 @@ public:
     }
 
     void update(float dt) override {
-        _ents.Update(dt); // Update entities in the scene
+        _ents.Update(dt);  // Update entities in the scene
     }
 
     void render(sf::RenderWindow& window) override {
-        _ents.Render(window); // Render entities in the scene
+        _ents.Render(window);  // Render entities in the scene
+    }
+
+    void onActivate() override {
+        // Handle scene activation
     }
 };

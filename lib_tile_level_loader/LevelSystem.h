@@ -11,7 +11,7 @@
 
 class LevelSystem {
 public:
-    enum TILE { EMPTY, START, END, WALL, ENEMY, WAYPOINT };
+    enum TILE { EMPTY, START, ENTRANCE, WALL, ENEMY };
 
     static void loadLevelFile(const std::string&, float tileSize = 100.f);
     static void Render(sf::RenderWindow& window);
@@ -23,6 +23,8 @@ public:
     static sf::Vector2f getTilePosition(sf::Vector2ul);
     //get the tile at screenspace pos
     static TILE getTileAt(sf::Vector2f);
+    static bool isPassable(TILE tile);
+
 	static int getWidth();
 	static int getHeight();
 

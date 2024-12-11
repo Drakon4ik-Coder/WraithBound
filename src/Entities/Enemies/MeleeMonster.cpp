@@ -14,37 +14,38 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
 }
 
 void MeleeMonster::Update(const double dt) {
-    if (player) { // Ensure player reference is valid
-        sf::Vector2f diff = player->getPosition() - getPosition();
-        sf::Vector2f direction = sf::normalize(diff);
-        sf::Vector2f moveVect = sf::Vector2f(dt * _speed * direction.x, dt * _speed * direction.y);
-        if (!_shape->getGlobalBounds().intersects(player->getGlobalBounds())) {
-            move(moveVect);
-        }
-        // Direction looking handling
-        if (direction.x < 0 && !lookLeft) {
-            _shape->scale(-1.f, 1.f);
-            lookLeft = true;
-        } else if (direction.x >= 0 && lookLeft) {
-            _shape->scale(-1.f, 1.f);
-            lookLeft = false;
-        }
-        static int frame_i = 1;
-        static float time = 0;
-        int size = 128;
-        int frames = _shape->getTexture()->getSize().x / size;
-        time += dt;
-        if (time > 0.067) {
-            _shape->setTextureRect(sf::IntRect(sf::Vector2i{frame_i * size + 30, 60}, sf::Vector2i{68, 68}));
-            frame_i++;
-            if (frame_i == frames) {
-                frame_i = 0;
-            }
-            time = 0;
-        }
+    if (!player) return; // check if player reference is valid
+
+    sf::Vector2f diff = player->getPosition() - getPosition();
+    sf::Vector2f direction = sf::normalize(diff);
+    sf::Vector2f moveVect = sf::Vector2f(dt * _speed * direction.x, dt * _speed * direction.y);
+
+    if (!_shape->getGlobalBounds().intersects(player->getGlobalBounds())) {
+        move(moveVect);
     }
+
+    // Direction looking handling
+    if ((direction.x < 0 && !lookLeft) || (direction.x >= 0 && lookLeft)) {
+        _shape->scale(-1.f, 1.f);
+        lookLeft = !lookLeft;
+    }
+
+    static const int size = 128;
+    static const float frameDuration = 0.067f;
+    static int frame_i = 1;
+    static float time = 0;
+    int frames = _shape->getTexture()->getSize().x / size;
+
+    time += dt;
+    if (time > frameDuration) {
+        _shape->setTextureRect(sf::IntRect(sf::Vector2i{frame_i * size + 30, 60}, sf::Vector2i{68, 68}));
+        frame_i = (frame_i + 1) % frames;
+        time = 0;
+    }
+
     Monster::Update(dt);
 }
+
 
 void MeleeMonster::Render(sf::RenderWindow& window) const {
     window.draw(*_shape);
