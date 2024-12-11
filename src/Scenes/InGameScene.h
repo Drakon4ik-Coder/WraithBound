@@ -4,7 +4,7 @@
 #include "../Entities/Player/Player.h"
 #include "../EntityManager.h"
 #include "Scene.h"
-#include <SFML/Audio.hpp>  // Include SFML Audio module for music
+#include <SFML/Audio.hpp>
 
 class InGameScene : public Scene {
    private:
@@ -23,7 +23,7 @@ class InGameScene : public Scene {
     std::shared_ptr<Player> getPlayer() const override { return player; }
 
     void handleInput(sf::RenderWindow& window) override {
-        // Handle input for player and other entities
+        
     }
 
     void update(float dt) override {
@@ -76,7 +76,6 @@ class InGameScene : public Scene {
             }
         }
 
-        // Correct file path
         std::string musicPath = "res/audio/backgorund-music/b-music.mp3";
 
         // Load and play background music
