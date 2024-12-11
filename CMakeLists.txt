@@ -35,6 +35,12 @@ add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND}
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res
 )
 
+add_custom_target(copy_resources2 ALL COMMAND ${CMAKE_COMMAND} 
+  -E copy_directory
+    "${PROJECT_SOURCE_DIR}/res"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/res
+)
+
 #### Game ####
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
 add_executable(WraithBound ${SOURCES} )
@@ -53,3 +59,4 @@ set_target_properties(WraithBound
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
 add_dependencies(WraithBound copy_resources)
+add_dependencies(WraithBound copy_resources2)
