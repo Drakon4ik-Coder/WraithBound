@@ -32,6 +32,7 @@ class LevelSystem {
     static int getHeight();
     static float getTileSize();
     static std::vector<Vector2ul> getMonsterSpawnPoints();
+    static void loadSpritesheet(const std::string& path);  // Load spritesheet
 
    protected:
     static std::unique_ptr<TILE[]> _tiles;  // Internal array of tiles
@@ -50,4 +51,8 @@ class LevelSystem {
    private:
     LevelSystem() = delete;
     ~LevelSystem() = delete;
+
+    static sf::Texture _spritesheet;  // Texture for the spritesheet
+    static std::map<TILE, sf::IntRect>
+        _textureRects;  // Map tile types to texture rects
 };

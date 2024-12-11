@@ -9,13 +9,28 @@
 using namespace std;
 using namespace sf;
 
+sf::Texture LevelSystem::_spritesheet;
+std::map<LevelSystem::TILE, sf::IntRect> LevelSystem::_textureRects = {
+    {WALL, sf::IntRect(128, 0, 32, 32)},
+    {ENTRANCE, sf::IntRect(96, 64, 32, 32)},
+    {START, sf::IntRect(32, 32, 32, 32)},
+    {EMPTY, sf::IntRect(160, 128, 32, 32)},
+    {ENEMY, sf::IntRect(160, 128, 32, 32)}  // Modify as per your sprite sheet
+};
+
 std::unique_ptr<LevelSystem::TILE[]> LevelSystem::_tiles;
 size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 
-float LevelSystem::_tileSize(50.f);
+float LevelSystem::_tileSize(25.f);
 vector<std::unique_ptr<sf::RectangleShape>> LevelSystem::_sprites;
+
+void LevelSystem::loadSpritesheet(const std::string& path) {
+    if (!_spritesheet.loadFromFile("res/img/Dungeon/dungeon.png")) {
+        throw std::runtime_error("Failed to load spritesheet: " + path);
+    }
+}
 
 std::map<LevelSystem::TILE, sf::Color> LevelSystem::_colours = {
     {WALL, Color::White},
@@ -96,18 +111,33 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
     buildSprites();
 }
 
+
 void LevelSystem::buildSprites() {
     _sprites.clear();
+
     for (size_t y = 0; y < getHeight(); ++y) {
         for (size_t x = 0; x < getWidth(); ++x) {
-            auto s = make_unique<RectangleShape>();
+            auto s = std::make_unique<sf::RectangleShape>();
             s->setPosition(getTilePosition({x, y}));
-            s->setSize(Vector2f(_tileSize, _tileSize));
-            s->setFillColor(getColor(getTile({x, y})));
-            _sprites.push_back(move(s));
+            s->setSize(sf::Vector2f(_tileSize, _tileSize));
+
+            TILE tile = getTile({x, y});
+            auto& textureRect = _textureRects[tile];
+
+            // Set texture rect for the specific tile type
+            if (_textureRects.find(tile) != _textureRects.end()) {
+                s->setTexture(&_spritesheet);  // Set the spritesheet texture
+                s->setTextureRect(textureRect);  // Set the specific tile region
+            } else {
+                s->setFillColor(getColor(tile));  // Default to color if no texture
+            }
+
+            _sprites.push_back(std::move(s));
         }
     }
 }
+
+
 
 int LevelSystem::getWidth() { return _width; }
 
@@ -132,14 +162,13 @@ std::vector<sf::Vector2ul> LevelSystem::getMonsterSpawnPoints() {
     std::vector<sf::Vector2ul> spawnPoints;
     for (size_t y = 0; y < 75; ++y) {
         for (size_t x = 0; x < 75; ++x) {
-            if (getTile({x, y}) == ENEMY) {  // Check for ENEMY tile
+            if (getTile({x, y}) == ENEMY) {     // Check for ENEMY tile
                 spawnPoints.push_back({x, y});  // Add to spawn list
             }
         }
     }
     return spawnPoints;
 }
-
 
 LevelSystem::TILE LevelSystem::getTileAt(Vector2f v) {
     auto a = v - _offset;

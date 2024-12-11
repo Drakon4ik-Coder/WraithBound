@@ -17,12 +17,16 @@ sf::View camera(sf::Vector2f(400, 300),
                 sf::Vector2f(800, 600));  // Center and size
 Texture melee_skeleton;
 Texture player_sword;
+Texture dungeonTexture;
 
 // Globals
 std::unique_ptr<sf::RenderWindow> window;
 std::unique_ptr<SceneManager> sceneManager;
 bool testMode = false;
 float testDuration = 10.0f;  // Duration in seconds for test mode
+const int TILE_SIZE = 32;    // Change to your tile size
+const int TILE_COUNT_X = dungeonTexture.getSize().x / TILE_SIZE;
+const int TILE_COUNT_Y = dungeonTexture.getSize().y / TILE_SIZE;
 
 void Load() {
     if (!player_sword.loadFromFile(
@@ -32,16 +36,19 @@ void Load() {
     if (!melee_skeleton.loadFromFile("res/img/Skeleton_Warrior/Run.png")) {
         std::cerr << "Failed to load spritesheet!" << std::endl;
     }
+    if (!dungeonTexture.loadFromFile("res/img/Dungeon/dungeon.png")) {
+        std::cerr << "Failed to load texture!" << std::endl;
+    }
 
     try {
-        LevelSystem::setColor(LevelSystem::WALL,
-                              sf::Color(128, 128, 128));  // Grey
-        LevelSystem::setColor(LevelSystem::ENTRANCE,
-                              sf::Color(255, 0, 0));  // Red
-        LevelSystem::setColor(LevelSystem::START,
-                              sf::Color(0, 255, 0));  // Green
-        LevelSystem::setColor(LevelSystem::EMPTY,
-                              sf::Color::Transparent);  // Transparent
+        LevelSystem::loadSpritesheet(
+            "res/img/Dungeon/dungeon.png");  // Ensure the spritesheet is loaded
+
+        LevelSystem::WALL;
+        LevelSystem::ENTRANCE;
+        LevelSystem::START;
+        LevelSystem::EMPTY;
+
     } catch (const std::exception& e) {
         std::cerr << "Error initializing LevelSystem: " << e.what()
                   << std::endl;
