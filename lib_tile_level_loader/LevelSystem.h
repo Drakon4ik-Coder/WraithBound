@@ -27,6 +27,8 @@ public:
 
 	static int getWidth();
 	static int getHeight();
+    static float getTileSize();
+
 
 protected:
     static std::unique_ptr<TILE[]> _tiles; //Internal array of tiles

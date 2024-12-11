@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 #include <iostream>
 #include "../src/Entities/Projectile.h"
+#include "../lib_tile_level_loader/LevelSystem.h"
 
 void EntityManager::AddEntity(std::shared_ptr<Entity> entity) {
     if (entity) {
@@ -49,6 +50,7 @@ void EntityManager::RemoveEntities() {
 
 
 void EntityManager::HandleCollisions() {
+    // Entity-Entity Collisions
     for (size_t i = 0; i < entities.size(); ++i) {
         for (size_t j = i + 1; j < entities.size(); ++j) {
             auto& entityA = entities[i];
@@ -64,10 +66,9 @@ void EntityManager::HandleCollisions() {
                 // Determine the minimal displacement
                 sf::Vector2f displacement(0.f, 0.f);
                 if (overlap.width < overlap.height) {
-                    displacement.x = (entityA->getPosition().x < entityB->getPosition().x) ? -overlap.width / 2.f : overlap.width / 2.f;
-                }
-                else {
-                    displacement.y = (entityA->getPosition().y < entityB->getPosition().y) ? -overlap.height / 2.f : overlap.height / 2.f;
+                    displacement.x = (entityA->getPosition().x < entityB->getPosition().x) ? -overlap.width : overlap.width;
+                } else {
+                    displacement.y = (entityA->getPosition().y < entityB->getPosition().y) ? -overlap.height : overlap.height;
                 }
 
                 // Apply displacement to separate entities
@@ -80,6 +81,48 @@ void EntityManager::HandleCollisions() {
 
                 std::cout << "Entities " << i << " and " << j << " positions adjusted to resolve collision.\n";
             }
+        }
+    }
+
+    // Entity-Tile Collisions
+    for (const auto& entity : entities) {
+        if (!entity) continue;
+
+        // Get the entity's current position
+        sf::Vector2f entityPos = entity->getPosition();
+
+        try {
+            // Determine the tile at the entity's position
+            LevelSystem::TILE tile = LevelSystem::getTileAt(entityPos);
+
+            // Check if the tile is a WALL
+            if (tile == LevelSystem::TILE::WALL) {
+                std::cout << "Entity colliding with WALL at position: " << entityPos.x << ", " << entityPos.y << "\n";
+
+                // Adjust entity position to resolve collision
+                sf::Vector2f tilePos = LevelSystem::getTilePosition(
+                    sf::Vector2ul(entityPos / LevelSystem::getTileSize()));
+                sf::FloatRect tileBounds(tilePos, sf::Vector2f(LevelSystem::getTileSize(), LevelSystem::getTileSize()));
+                sf::FloatRect entityBounds = entity->getGlobalBounds();
+
+                sf::FloatRect overlap;
+                if (tileBounds.intersects(entityBounds, overlap)) {
+                    sf::Vector2f displacement(0.f, 0.f);
+                    if (overlap.width < overlap.height) {
+                        displacement.x = (entityBounds.left < tileBounds.left) ? -overlap.width : overlap.width;
+                    } else {
+                        displacement.y = (entityBounds.top < tileBounds.top) ? -overlap.height : overlap.height;
+                    }
+
+                    entity->setPosition(entity->getPosition() + displacement);
+
+                    // Notify the entity of the collision
+                    entity->OnTileCollision(LevelSystem::TILE::WALL);
+                }
+            }
+        } catch (std::out_of_range& e) {
+            // Entity is outside the level bounds
+            std::cerr << "Entity out of bounds: " << entityPos.x << ", " << entityPos.y << std::endl;
         }
     }
 }

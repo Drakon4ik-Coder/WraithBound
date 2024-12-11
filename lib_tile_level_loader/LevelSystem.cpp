@@ -35,6 +35,11 @@ void LevelSystem::setColor(LevelSystem::TILE t, sf::Color c) {
     _colours[t] = c;
 }
 
+float LevelSystem::getTileSize() {
+    return _tileSize;
+}
+
+
 void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
     _tileSize = tileSize;
     size_t w = 0, h = 0;
