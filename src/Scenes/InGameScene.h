@@ -4,11 +4,13 @@
 #include "../Entities/Player/Player.h"
 #include "../EntityManager.h"
 #include "Scene.h"
+#include <SFML/Audio.hpp>
 
 class InGameScene : public Scene {
    private:
     std::shared_ptr<Player> player;
     std::shared_ptr<EntityManager> entityManager;
+    sf::Music backgroundMusic;
 
    public:
     InGameScene(std::shared_ptr<EntityManager> entityManager)
@@ -21,7 +23,7 @@ class InGameScene : public Scene {
     std::shared_ptr<Player> getPlayer() const override { return player; }
 
     void handleInput(sf::RenderWindow& window) override {
-        // Handle input for player and other entities
+        
     }
 
     void update(float dt) override {
@@ -58,7 +60,8 @@ class InGameScene : public Scene {
         // Load the generated level into the LevelSystem
         try {
             LevelSystem::loadLevelFile("res/levels/maze.txt", 100.0f);
-        } catch (const std::exception& e) {
+        }
+        catch (const std::exception& e) {
             std::cerr << "Error loading level: " << e.what() << std::endl;
             return;
         }
@@ -66,12 +69,23 @@ class InGameScene : public Scene {
         // Find the spawn point and initialize the player
         for (size_t y = 0; y < LevelSystem::getHeight(); ++y) {
             for (size_t x = 0; x < LevelSystem::getWidth(); ++x) {
-                if (LevelSystem::getTile({x, y}) == LevelSystem::START) {
-                    player->setPosition(LevelSystem::getTilePosition({x, y}));
+                if (LevelSystem::getTile({ x, y }) == LevelSystem::START) {
+                    player->setPosition(LevelSystem::getTilePosition({ x, y }));
                     break;
                 }
             }
         }
 
+        std::string musicPath = "res/audio/backgorund-music/b-music.mp3";
+
+        // Load and play background music
+        if (!backgroundMusic.openFromFile(musicPath)) {
+            std::cerr << "Error loading background music!" << std::endl;
+        }
+        else {
+            backgroundMusic.setLoop(true);  // Loop the music
+            backgroundMusic.setVolume(50);  // Set volume to 70% of the maximum volume
+            backgroundMusic.play();         // Start the music
+        }
     }
 };
