@@ -26,7 +26,7 @@ Player::Player(EntityManager* entityManager)
     _shape->setOrigin(Vector2f(25.f, 25.f));
 
     // Load projectile texture
-    if (!projectileTexture.loadFromFile("res/img/Projectiles/projectile.png")) {
+    if (!projectileTexture.loadFromFile("../../res/img/Projectiles/projectile.png")) {
         std::cerr << "Failed to load projectile texture!" << std::endl;
     }
 }
