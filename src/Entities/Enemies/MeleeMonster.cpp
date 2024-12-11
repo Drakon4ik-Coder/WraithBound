@@ -8,14 +8,14 @@
 
 sf::SoundBuffer collisionSoundBuffer;
 sf::Sound collisionSound;
+std::string musicPath = "res/audio/skeleton_melee/sword-sound-effect.mp3";
 
 MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
                            std::shared_ptr<Player> player,
                            sf::Vector2f position)
     : Monster(std::make_unique<sf::CircleShape>(32.f), 100.f, 100, 1),
       player(player) {
-    if (!collisionSoundBuffer.loadFromFile(
-            "res/audio/skeleton_melee/sword-sound-effect.mp3")) {
+    if (!collisionSoundBuffer.loadFromFile(musicPath)) {
         std::cerr << "Error loading collision sound!" << std::endl;
     } else {
         collisionSound.setBuffer(collisionSoundBuffer);
