@@ -42,4 +42,22 @@ public:
     void render(sf::RenderWindow& window) {
         if (_activeScene) _activeScene->render(window);
     }
+
+    void removeScene(const std::string& name) {
+        auto it = _scenes.find(name);
+        if (it != _scenes.end()) {
+            if (_activeScene == it->second) {
+                _activeScene.reset();  // Reset active scene if it's being removed
+            }
+            _scenes.erase(it);
+        }
+    }
+
+    std::shared_ptr<Scene> getScene(const std::string& name) const {
+        auto it = _scenes.find(name);
+        if (it != _scenes.end()) {
+            return it->second;
+        }
+        return nullptr;
+    }
 };

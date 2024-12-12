@@ -11,10 +11,12 @@ class InGameScene : public Scene {
     std::shared_ptr<Player> player;
     std::shared_ptr<EntityManager> entityManager;
     sf::Music backgroundMusic;
+    SceneManager* sceneManager;
 
-   public:
-    InGameScene(std::shared_ptr<EntityManager> entityManager)
-        : entityManager(entityManager) {
+public:
+    // Modified constructor to accept SceneManager pointer
+    InGameScene(std::shared_ptr<EntityManager> entityManager, SceneManager* sceneMgr)
+        : entityManager(entityManager), sceneManager(sceneMgr) {
         // Create the Player with the entity manager
         player = std::make_shared<Player>(entityManager.get());
         entityManager->AddEntity(player);
@@ -23,7 +25,23 @@ class InGameScene : public Scene {
     std::shared_ptr<Player> getPlayer() const override { return player; }
 
     void handleInput(sf::RenderWindow& window) override {
-        
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Escape) {
+                    if (sceneManager) {
+                        sceneManager->setActiveScene("Pause");
+                    }
+                }
+                // Handle other key inputs...
+            }
+
+            // Handle other inputs...
+        }
     }
 
     void update(float dt) override {

@@ -12,6 +12,7 @@
 #include "../src/Scenes/MainMenuScene.h"
 #include "../src/Scenes/SettingsScene.h"
 #include "../src/Scenes/Scene.h"
+#include "../src/Scenes/PauseScene.h"
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
@@ -62,22 +63,12 @@ void Load() {
 void Update(float dt, sf::Clock& timer) {
     // If in test mode, exit after the specified duration
     if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
-        std::cout << "Exiting test mode after " << testDuration << " seconds."
-                  << std::endl;
+        std::cout << "Exiting test mode after " << testDuration << " seconds." << std::endl;
         window->close();
         return;
     }
 
-    // Poll events
-    sf::Event event;
-    while (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            window->close();
-            return;
-        }
-    }
-
-    // Update scene-specific logic
+    // Handle input and update scenes
     sceneManager->handleInput(*window);
     sceneManager->update(dt);
 
@@ -89,8 +80,13 @@ void Update(float dt, sf::Clock& timer) {
             camera.setCenter(player->getPosition());
             window->setView(camera);
         }
+        else {
+            // Reset the view to default if there's no player (e.g., in MainMenu)
+            window->setView(window->getDefaultView());
+        }
     }
 }
+
 
 void Render() {
     // Optionally, render scene-specific elements
@@ -112,14 +108,18 @@ int main(int argc, char* argv[]) {
 
     Load();
 
-    // Create and add scenes to the SceneManager
-    std::shared_ptr<MainMenuScene> mainMenuScene =
-        std::make_shared<MainMenuScene>(
-            sceneManager.get());  // Pass SceneManager pointer
-    // std::shared_ptr<InGameScene> inGameScene =
-    // std::make_shared<InGameScene>(entityManager);
 
+    // Create MainMenuScene with SceneManager pointer
+    std::shared_ptr<MainMenuScene> mainMenuScene =
+        std::make_shared<MainMenuScene>(sceneManager.get());
+
+    // Add MainMenuScene to SceneManager
     sceneManager->addScene("MainMenu", mainMenuScene);
+
+    // Add PauseScene with SceneManager pointer
+    std::shared_ptr<PauseScene> pauseScene =
+        std::make_shared<PauseScene>(sceneManager.get());
+    sceneManager->addScene("Pause", pauseScene);
 
     std::shared_ptr<SettingsScene> settingsScene = std::make_shared<SettingsScene>(sceneManager.get());
     sceneManager->addScene("Settings", settingsScene);
