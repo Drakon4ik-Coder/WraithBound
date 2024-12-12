@@ -128,13 +128,13 @@ void EntityManager::HandleCollisions() {
     }
 }
 
-std::shared_ptr<Entity> EntityManager::findNearestEnemy(const sf::Vector2f& position) {
+std::shared_ptr<Entity> EntityManager::findNearestEnemy(const sf::Vector2f& position, float range) {
     std::shared_ptr<Entity> nearestEnemy = nullptr;
-    float minDistance = std::numeric_limits<float>::max();
+    float minDistance = range;
 
     for (const auto& entity : entities) {
         auto monster = std::dynamic_pointer_cast<Monster>(entity);
-        if (monster) {
+        if (monster && monster->isAlive()) {
             float distance = sf::length(position - monster->getPosition());
             if (distance < minDistance) {
                 minDistance = distance;

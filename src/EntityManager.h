@@ -29,6 +29,6 @@ public:
     // Check and handle collisions between entities
     void HandleCollisions();
 
-    std::shared_ptr<Entity> findNearestEnemy(const sf::Vector2f& position);
+    std::shared_ptr<Entity> findNearestEnemy(const sf::Vector2f& position, float range);
 
 };

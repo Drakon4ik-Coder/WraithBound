@@ -109,7 +109,8 @@ void Player::autoAimAndFire(double dt) {
         return;
     }
 
-    auto nearestEnemy = _entityManager->findNearestEnemy(getPosition());
+    float range = 500.0f;
+    auto nearestEnemy = _entityManager->findNearestEnemy(getPosition(), range);
     if (nearestEnemy) {
         sf::Vector2f direction = nearestEnemy->getPosition() - getPosition();
         direction = normalize(direction);
