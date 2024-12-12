@@ -27,4 +27,6 @@ public:
     void Render(sf::RenderWindow& window) const override;
     sf::FloatRect getGlobalBounds();
     void updateAnimation(float dt);
+
+    void autoAimAndFire(double dt);
 };

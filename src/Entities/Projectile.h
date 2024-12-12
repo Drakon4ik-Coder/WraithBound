@@ -13,25 +13,23 @@ public:
         const sf::Texture* texture = nullptr,
         const sf::Vector2f& size = sf::Vector2f(10.f, 10.f));
 
-
     virtual void Update(const double dt) override;
-
     virtual void Render(sf::RenderWindow& window) const override;
 
     float getDamage() const { return damage; }
-
     void OnCollision(Entity* other) override;
     bool isActive() const { return _isActive; }
     void deactivate() { _isActive = false; }
 
 private:
-    float damage;                     
-	sf::Vector2f direction;   // Normalized direction vector
-    float speed;                     
-    sf::Vector2f size;   
+    float damage;
+    sf::Vector2f direction;   // Normalized direction vector
+    float speed;
+    sf::Vector2f size;
     bool _isActive;
+    float elapsedTime;  // Track the elapsed time
+    float maxTravelDistance = 800.f;  // Maximum travel distance
 
     // Initializes the shape based on whether a texture is provided.
     static std::unique_ptr<sf::Shape> InitializeShape(const sf::Texture* texture, const sf::Vector2f& size);
 };
-
