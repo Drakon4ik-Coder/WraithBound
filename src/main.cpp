@@ -62,22 +62,12 @@ void Load() {
 void Update(float dt, sf::Clock& timer) {
     // If in test mode, exit after the specified duration
     if (testMode && timer.getElapsedTime().asSeconds() >= testDuration) {
-        std::cout << "Exiting test mode after " << testDuration << " seconds."
-                  << std::endl;
+        std::cout << "Exiting test mode after " << testDuration << " seconds." << std::endl;
         window->close();
         return;
     }
 
-    // Poll events
-    sf::Event event;
-    while (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            window->close();
-            return;
-        }
-    }
-
-    // Update scene-specific logic
+    // Handle input and update scenes
     sceneManager->handleInput(*window);
     sceneManager->update(dt);
 
@@ -89,8 +79,13 @@ void Update(float dt, sf::Clock& timer) {
             camera.setCenter(player->getPosition());
             window->setView(camera);
         }
+        else {
+            // Reset the view to default if there's no player (e.g., in MainMenu)
+            window->setView(window->getDefaultView());
+        }
     }
 }
+
 
 void Render() {
     // Optionally, render scene-specific elements
