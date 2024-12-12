@@ -53,6 +53,8 @@ public:
                 sceneManager->setActiveScene("GameOver");
             }
         }
+
+        checkVictoryCondition();
     }
 
     void render(sf::RenderWindow& window) override {
@@ -113,4 +115,14 @@ public:
             backgroundMusic.play();         // Start the music
         }
     }
+
+    void checkVictoryCondition() {
+        bool hasMonsters = entityManager->hasEntitiesOfType<MeleeMonster>();
+        if (!hasMonsters) {
+            if (sceneManager) {
+                sceneManager->setActiveScene("Victory");
+            }
+        }
+    }
+
 };

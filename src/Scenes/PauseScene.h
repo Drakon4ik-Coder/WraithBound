@@ -124,9 +124,17 @@ public:
 
         // Draw buttons and texts
         window.draw(resumeButton);
+        resumeButton.setOrigin(resumeButton.getLocalBounds().width / 2, resumeButton.getLocalBounds().height / 2);
+        resumeButton.setPosition(window.getSize().x/2, 200);
         window.draw(resumeText);
+        resumeText.setOrigin(resumeText.getLocalBounds().width / 2, resumeText.getLocalBounds().height / 2);
+        resumeText.setPosition(window.getSize().x/2, 200);
         window.draw(quitButton);
+        quitButton.setOrigin(quitButton.getLocalBounds().width / 2, quitButton.getLocalBounds().height / 2);
+        quitButton.setPosition(window.getSize().x/2, 300);
         window.draw(quitText);
+        quitText.setOrigin(quitText.getLocalBounds().width / 2, quitText.getLocalBounds().height / 2);
+        quitText.setPosition(window.getSize().x/2, 300);
     }
 
     void onActivate() override {

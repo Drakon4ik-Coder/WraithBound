@@ -92,10 +92,10 @@ void Player::updateAnimation(float dt) {
 
     // Update sprite direction
     if (_facingLeft) {
-        _sprite.setScale(-3.0f, 3.0f);
+        _sprite.setScale(-4.0f, 4.0f);
     }
     else {
-        _sprite.setScale(3.0f, 3.0f);
+        _sprite.setScale(4.0f, 4.0f);
     }
 
     // Update sprite position to match entity position
