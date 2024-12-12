@@ -11,3 +11,4 @@ constexpr uint16_t gameWidth = 1600;
 constexpr uint16_t gameHeight = 800;
 
 extern Texture melee_skeleton;
+extern Texture player_sword;

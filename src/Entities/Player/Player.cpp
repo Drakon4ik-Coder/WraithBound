@@ -20,11 +20,26 @@ Player::Player(EntityManager* entityManager)
     _shootCooldown(0.5f),
     _shootTimer(_shootCooldown),
     _entityManager(entityManager),
-    Entity(make_unique<CircleShape>(25.f)) // Player radius = 25.f
+    Entity(make_unique<RectangleShape>(Vector2f(64, 64))),
+    _currentFrame(0),
+    _animationTime(0),
+    _frameTime(0.1f),
+    _facingLeft(false)
 {
-    _shape->setFillColor(Color::Magenta);
-    _shape->setOrigin(Vector2f(25.f, 25.f));
-
+    // Load player texture
+    if (!_texture.loadFromFile("res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
+        std::cerr << "Failed to load player spritesheet!" << std::endl;
+    }
+    
+    // Setup sprite
+    _sprite.setTexture(_texture);
+    _frameSize = sf::Vector2i(64, 64); // Adjust based on your spritesheet's frame size
+    _sprite.setTextureRect(sf::IntRect(0, 64, _frameSize.x, _frameSize.y));
+    _sprite.setOrigin(_frameSize.x/2.f, _frameSize.y/2.f);
+    
+    float scale = 2.0f;
+    _sprite.setScale(scale, scale);
+    
     // Load projectile texture
     if (!projectileTexture.loadFromFile("res/img/Projectiles/projectile.png")) {
         std::cerr << "Failed to load projectile texture!" << std::endl;
@@ -36,13 +51,22 @@ void Player::Update(double dt) {
     // Move in four directions based on keys
     if (Keyboard::isKeyPressed(Keyboard::W)) direction.y--;
     if (Keyboard::isKeyPressed(Keyboard::S)) direction.y++;
-    if (Keyboard::isKeyPressed(Keyboard::A)) direction.x--;
-    if (Keyboard::isKeyPressed(Keyboard::D)) direction.x++;
+    if (Keyboard::isKeyPressed(Keyboard::A)) {
+        direction.x--;
+        _facingLeft = true;
+    }
+    if (Keyboard::isKeyPressed(Keyboard::D)) {
+        direction.x++;
+        _facingLeft = false;
+    }
 
     direction = normalize(direction);
 
     // Move the player
     move(Vector2f(direction.x * dt * _speed, direction.y * dt * _speed));
+    
+    // Update animation
+    updateAnimation(dt);
 
     // Handle shooting cooldown
     if (_shootTimer < _shootCooldown) {
@@ -100,9 +124,30 @@ void Player::Update(double dt) {
 }
 
 void Player::Render(sf::RenderWindow& window) const {
-    window.draw(*_shape);
+    window.draw(_sprite);
 }
 
 sf::FloatRect Player::getGlobalBounds() {
     return _shape->getGlobalBounds();
+}
+
+void Player::updateAnimation(float dt) {
+    _animationTime += dt;
+    
+    // Update animation frame
+    if (_animationTime >= _frameTime) {
+        _animationTime = 0;
+        _currentFrame = (_currentFrame + 1) % 8; // Assuming 8 frames in spritesheet
+        _sprite.setTextureRect(sf::IntRect(_currentFrame * _frameSize.x, 64*2, _frameSize.x, _frameSize.y));
+    }
+
+    // Update sprite direction
+    if (_facingLeft) {
+        _sprite.setScale(-3.0f, 3.0f);
+    } else {
+        _sprite.setScale(3.0f, 3.0f);
+    }
+
+    // Update sprite position to match entity position
+    _sprite.setPosition(getPosition());
 }
