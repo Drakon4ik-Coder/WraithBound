@@ -152,11 +152,23 @@ class MainMenuScene : public Scene {
 
     void render(sf::RenderWindow& window) override {
         window.draw(startButton);
+        startButton.setOrigin(startButton.getLocalBounds().width / 2, startButton.getLocalBounds().height / 2);
+        startButton.setPosition(window.getSize().x / 2, 200);
         window.draw(startText);
+        startText.setOrigin(startText.getLocalBounds().width / 2, startText.getLocalBounds().height / 2);
+        startText.setPosition(window.getSize().x / 2, 200);
         window.draw(settingsButton);
+        settingsButton.setOrigin(settingsButton.getLocalBounds().width / 2, settingsButton.getLocalBounds().height / 2);
+        settingsButton.setPosition(window.getSize().x / 2, 300);
         window.draw(settingsText);
+        settingsText.setOrigin(settingsText.getLocalBounds().width / 2, settingsText.getLocalBounds().height / 2);
+        settingsText.setPosition(window.getSize().x / 2, 300);
         window.draw(quitButton);
+        quitButton.setOrigin(quitButton.getLocalBounds().width / 2, quitButton.getLocalBounds().height / 2);
+        quitButton.setPosition(window.getSize().x / 2, 400);
         window.draw(quitText);
+        quitText.setOrigin(quitText.getLocalBounds().width / 2, quitText.getLocalBounds().height / 2);
+        quitText.setPosition(window.getSize().x / 2, 400);
     }
 
     void onActivate() override {

@@ -98,8 +98,14 @@ public:
 
     void render(sf::RenderWindow& window) override {
         window.draw(gameOverText);
+        gameOverText.setOrigin(gameOverText.getLocalBounds().width / 2, gameOverText.getLocalBounds().height / 2);
+        gameOverText.setPosition(window.getSize().x / 2, 150);
         window.draw(restartText);
+        restartText.setOrigin(restartText.getLocalBounds().width / 2, restartText.getLocalBounds().height / 2);
+        restartText.setPosition(window.getSize().x / 2, 300);
         window.draw(mainMenuText);
+        mainMenuText.setOrigin(mainMenuText.getLocalBounds().width / 2, mainMenuText.getLocalBounds().height / 2);
+        mainMenuText.setPosition(window.getSize().x / 2, 350);
     }
 
     void onActivate() override {
