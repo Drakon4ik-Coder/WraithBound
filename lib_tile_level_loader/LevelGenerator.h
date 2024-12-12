@@ -221,7 +221,7 @@ vector<vector<vector<string>>> expandDungeon(
                 // Shuffle positions and select the first 5 for spawning
                 std::shuffle(spawnablePositions.begin(),
                              spawnablePositions.end(), rng);
-                for (size_t i = 0; i < std::min(size_t(5), spawnablePositions.size()); ++i) {
+                for (size_t i = 0; i < std::min(size_t(7), spawnablePositions.size()); ++i) {
                     auto [row, col] = spawnablePositions[i];
                     roomTemplate[row][col] = 'm';
                 }
