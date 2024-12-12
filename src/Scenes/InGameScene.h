@@ -46,6 +46,15 @@ public:
 
     void update(float dt) override {
         entityManager->Update(dt);  // Update all entities
+
+        // Check if the player is dead
+        if (!player->isAlive()) {
+            if (sceneManager) {
+                sceneManager->setActiveScene("GameOver");
+            }
+        }
+
+        checkVictoryCondition();
     }
 
     void render(sf::RenderWindow& window) override {
@@ -106,4 +115,14 @@ public:
             backgroundMusic.play();         // Start the music
         }
     }
+
+    void checkVictoryCondition() {
+        bool hasMonsters = entityManager->hasEntitiesOfType<MeleeMonster>();
+        if (!hasMonsters) {
+            if (sceneManager) {
+                sceneManager->setActiveScene("Victory");
+            }
+        }
+    }
+
 };

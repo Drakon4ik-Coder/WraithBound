@@ -25,4 +25,6 @@ class Entity {
     virtual sf::FloatRect getGlobalBounds() const;
 
     const sf::Vector2f& getPreviousPosition() const;
+    virtual void takeDamage(float damage) = 0;
+    virtual bool isAlive() const = 0;
 };

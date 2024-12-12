@@ -12,3 +12,4 @@ constexpr uint16_t gameHeight = 800;
 
 extern Texture melee_skeleton;
 extern Texture player_sword;
+extern std::unique_ptr<sf::RenderWindow> window;

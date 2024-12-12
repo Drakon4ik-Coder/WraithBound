@@ -56,6 +56,8 @@ add_custom_target(copy_resources2 ALL COMMAND ${CMAKE_COMMAND}
 )
 
 add_custom_target(copy_resources_release ALL COMMAND ${CMAKE_COMMAND}
+
+add_custom_target(copy_resources_release ALL COMMAND ${CMAKE_COMMAND}
     -E copy_directory
     "${PROJECT_SOURCE_DIR}/res"
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/res
