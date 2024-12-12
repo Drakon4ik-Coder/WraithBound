@@ -6,7 +6,7 @@ class MeleeMonster : public Monster {
 private:
     std::shared_ptr<Player> player;
     bool lookLeft = false;
-    float attackCooldown = 1.0f;  // Cooldown time in seconds
+    float attackCooldown = 1.0f;  // Attack ooldown time (in seconds)
     float attackTimer = 0.0f;     // Timer to track cooldown
 
 public:

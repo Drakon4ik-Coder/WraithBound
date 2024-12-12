@@ -18,7 +18,7 @@ std::map<LevelSystem::TILE, sf::IntRect> LevelSystem::_textureRects = {
     {ENTRANCE, sf::IntRect(96, 64, 32, 32)},
     {START, sf::IntRect(32, 32, 32, 32)},
     {EMPTY, sf::IntRect(160, 128, 32, 32)},
-    {ENEMY, sf::IntRect(160, 128, 32, 32)}  // Modify as per your sprite sheet
+    {ENEMY, sf::IntRect(160, 128, 32, 32)}
 };
 
 std::unique_ptr<LevelSystem::TILE[]> LevelSystem::_tiles;
@@ -88,7 +88,7 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
             case ' ':
                 temp_tiles.push_back(EMPTY);
                 break;
-            case 'm':  // Add support for monster tiles
+            case 'm':
                 temp_tiles.push_back(ENEMY);
                 break;
             case '\n':
@@ -127,12 +127,11 @@ void LevelSystem::buildSprites() {
             TILE tile = getTile({x, y});
             auto& textureRect = _textureRects[tile];
 
-            // Set texture rect for the specific tile type
             if (_textureRects.find(tile) != _textureRects.end()) {
-                s->setTexture(&_spritesheet);  // Set the spritesheet texture
-                s->setTextureRect(textureRect);  // Set the specific tile region
+                s->setTexture(&_spritesheet); 
+                s->setTextureRect(textureRect);
             } else {
-                s->setFillColor(getColor(tile));  // Default to color if no texture
+                s->setFillColor(getColor(tile));
             }
 
             _sprites.push_back(std::move(s));

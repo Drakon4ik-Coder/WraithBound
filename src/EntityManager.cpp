@@ -61,7 +61,6 @@ void EntityManager::RemoveEntities() {
 
 
 void EntityManager::HandleCollisions() {
-    // Entity-Entity Collisions
     for (size_t i = 0; i < entities.size(); ++i) {
         for (size_t j = i + 1; j < entities.size(); ++j) {
             auto& entityA = entities[i];
@@ -92,42 +91,32 @@ void EntityManager::HandleCollisions() {
                 // Calculate minimum separation distance based on entity bounds
                 float minSeparation = (entityA->getGlobalBounds().width + entityB->getGlobalBounds().width) * 0.5f;
 
-                // Apply separation
                 if (distance < minSeparation) {
                     float pushDistance = (minSeparation - distance) * 0.5f;
                     entityA->setPosition(centerA + separation * pushDistance);
                     entityB->setPosition(centerB - separation * pushDistance);
                 }
 
-                // Notify both entities of the collision
                 entityA->OnCollision(entityB.get());
                 entityB->OnCollision(entityA.get());
             }
         }
     }
 
-
-    // Entity-Tile Collisions
     for (const auto& entity : entities) {
         if (!entity) continue;
 
-        // Get the entity's current position
         sf::Vector2f entityPos = entity->getPosition();
 
         try {
             // Determine the tile at the entity's position
             LevelSystem::TILE tile = LevelSystem::getTileAt(entityPos);
 
-            // Check if the tile is a WALL
             if (tile == LevelSystem::TILE::WALL) {
-                // Reset to previous position instead of calculating displacement
                 entity->setPosition(entity->getPreviousPosition());
-                
-                // Notify the entity of the collision
                 entity->OnTileCollision(LevelSystem::TILE::WALL);
             }
         } catch (std::out_of_range& e) {
-            // If out of bounds, reset to previous position
             entity->setPosition(entity->getPreviousPosition());
         }
     }

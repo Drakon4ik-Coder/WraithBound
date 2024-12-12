@@ -26,7 +26,6 @@ public:
         }
     }
 
-    // Added the getActiveScene function here
     std::shared_ptr<Scene> getActiveScene() const {
         return _activeScene;
     }
@@ -47,7 +46,7 @@ public:
         auto it = _scenes.find(name);
         if (it != _scenes.end()) {
             if (_activeScene == it->second) {
-                _activeScene.reset();  // Reset active scene if it's being removed
+                _activeScene.reset();
             }
             _scenes.erase(it);
         }

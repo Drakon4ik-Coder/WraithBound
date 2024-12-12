@@ -1,4 +1,3 @@
-// Entity.cpp
 #include "../src/Entities/Entity.h"
 
 using namespace std;

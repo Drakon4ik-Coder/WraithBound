@@ -5,21 +5,20 @@
 #include <iostream>
 #include <cmath>
 #include "Player/Player.h"
-#include "Enemies/Monster.h"  // Include the Monster class
+#include "Enemies/Monster.h"
 
 std::unique_ptr<sf::Shape> Projectile::InitializeShape(const sf::Texture* texture, const sf::Vector2f& size) {
     if (texture) {
         // Create a RectangleShape with the provided texture
         auto rectShape = std::make_unique<sf::RectangleShape>(size);
         rectShape->setTexture(texture);
-        rectShape->setFillColor(sf::Color::White); // Optional: Set a default color if needed
+        rectShape->setFillColor(sf::Color::White);
         return rectShape;
     }
     else {
-        // Create a CircleShape with a default color
         float radius = size.x / 2.f;
         auto circleShape = std::make_unique<sf::CircleShape>(radius);
-        circleShape->setFillColor(sf::Color::Yellow); // Choose a default color
+        circleShape->setFillColor(sf::Color::Yellow);
         return circleShape;
     }
 }
@@ -36,12 +35,9 @@ Projectile::Projectile(const sf::Vector2f& position,
     speed(speed),
     size(size),
     _isActive(true),
-    elapsedTime(0.f)  // Initialize the elapsed time
+    elapsedTime(0.f)
 {
-    // Normalize the direction using the maths.h utility
     this->direction = sf::normalize(direction);
-
-    // Set initial position
     setPosition(position);
 }
 
@@ -50,14 +46,8 @@ void Projectile::Update(const double dt) {
         Entity::Update(dt);
         sf::Vector2f velocity = direction * speed * static_cast<float>(dt);
         move(velocity);
-
-        // Update the elapsed time
         elapsedTime += static_cast<float>(dt);
-
-        // Calculate the distance traveled
         float distanceTraveled = speed * elapsedTime;
-
-        // Check if the projectile has traveled beyond the maximum distance
         if (distanceTraveled > maxTravelDistance) {
             deactivate();
         }
@@ -74,20 +64,13 @@ void Projectile::OnCollision(Entity* other) {
     if (dynamic_cast<Player*>(other) != nullptr) {
         return;
     }
-
-    // Deal damage to the other entity
     other->takeDamage(damage);
-
-    // Deactivate the projectile
     deactivate();
     _shape->setFillColor(sf::Color::Yellow);
-
     std::cout << "Projectile collided with an entity and dealt " << damage << " damage.\n";
 }
 
-void Projectile::takeDamage(float damage) {
-    // Projectiles do not take damage
-}
+void Projectile::takeDamage(float damage) {}
 
 bool Projectile::isAlive() const {
     return _isActive;

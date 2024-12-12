@@ -1,11 +1,10 @@
-// ../WraithBound/src/Scenes/MainMenuScene.h
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
 
 #include "../EntityManager.h"
-#include "../SceneManager/SceneManager.h"  // Include SceneManager
+#include "../SceneManager/SceneManager.h"
 #include "InGameScene.h"
 #include "Scene.h"
 
@@ -86,7 +85,6 @@ class MainMenuScene : public Scene {
     }
 
    public:
-    // Updated constructor to accept SceneManager pointer
     MainMenuScene(SceneManager* sceneMgr) : sceneManager(sceneMgr) {
         initializeButtons();
     }
@@ -120,8 +118,8 @@ class MainMenuScene : public Scene {
                                 inGameScene = std::make_shared<InGameScene>(entityManager, sceneManager);
                                 sceneManager->addScene("InGame", inGameScene);
                                 sceneManager->setActiveScene("InGame");
-                                inGameScene->onActivate();   // Generate and load the maze
-                                inGameScene->spawnMonsters(); // Spawn monsters
+                                inGameScene->onActivate();  
+                                inGameScene->spawnMonsters(); 
                             }
                         }
                         else {
@@ -146,9 +144,7 @@ class MainMenuScene : public Scene {
         }
     }
 
-    void update(float dt) override {
-        // No dynamic content to update in the main menu
-    }
+    void update(float dt) override {}
 
     void render(sf::RenderWindow& window) override {
         window.draw(startButton);
@@ -171,7 +167,5 @@ class MainMenuScene : public Scene {
         quitText.setPosition(window.getSize().x / 2, 400);
     }
 
-    void onActivate() override {
-        // Any activation logic if needed
-    }
+    void onActivate() override {}
 };

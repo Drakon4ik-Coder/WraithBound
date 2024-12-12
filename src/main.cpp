@@ -1,10 +1,7 @@
-// ../WraithBound/src/main.cpp
 #include "Main.h"
-
 #include "./Entities/Enemies/MeleeMonster.h"
 #include "./Entities/Player/Player.h"
 #include "EntityManager.h"
-// Scenes + Manager
 #include "../lib_tile_level_loader/LevelSystem.h"
 #include "../src/Entities/Entity.h"
 #include "../src/SceneManager/SceneManager.h"
@@ -18,7 +15,7 @@
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
-                sf::Vector2f(800, 600));  // Center and size
+                sf::Vector2f(800, 600));
 Texture melee_skeleton;
 Texture player_sword;
 Texture dungeonTexture;
@@ -27,8 +24,8 @@ Texture dungeonTexture;
 std::unique_ptr<sf::RenderWindow> window;
 std::unique_ptr<SceneManager> sceneManager;
 bool testMode = false;
-float testDuration = 10.0f;  // Duration in seconds for test mode
-const int TILE_SIZE = 32;    // Change to your tile size
+float testDuration = 10.0f;
+const int TILE_SIZE = 32;  
 const int TILE_COUNT_X = dungeonTexture.getSize().x / TILE_SIZE;
 const int TILE_COUNT_Y = dungeonTexture.getSize().y / TILE_SIZE;
 
@@ -46,7 +43,7 @@ void Load() {
 
     try {
         LevelSystem::loadSpritesheet(
-            "res/img/Dungeon/dungeon.png");  // Ensure the spritesheet is loaded
+            "res/img/Dungeon/dungeon.png");
 
         LevelSystem::WALL;
         LevelSystem::ENTRANCE;
@@ -58,8 +55,6 @@ void Load() {
                   << std::endl;
         std::exit(1);
     }
-
-    // entityManager = std::make_unique<EntityManager>();
 }
 
 void Update(float dt, sf::Clock& timer) {
@@ -91,7 +86,6 @@ void Update(float dt, sf::Clock& timer) {
 
 
 void Render() {
-    // Optionally, render scene-specific elements
     sceneManager->render(*window);
 }
 
@@ -111,33 +105,19 @@ int main(int argc, char* argv[]) {
 
     Load();
 
-    // Pass window reference to SettingsScene
     auto settingsScene = std::make_shared<SettingsScene>(sceneManager.get(), *window);
-
-    // Create MainMenuScene with SceneManager pointer
     std::shared_ptr<MainMenuScene> mainMenuScene =
         std::make_shared<MainMenuScene>(sceneManager.get());
-
-    // Add MainMenuScene to SceneManager
     sceneManager->addScene("MainMenu", mainMenuScene);
-
-    // Add PauseScene with SceneManager pointer
     std::shared_ptr<PauseScene> pauseScene = std::make_shared<PauseScene>(sceneManager.get());
     sceneManager->addScene("Pause", pauseScene);
-
-    // Add GameOverScene with SceneManager pointer
     std::shared_ptr<GameOverScene> gameOverScene = std::make_shared<GameOverScene>(sceneManager.get());
     sceneManager->addScene("GameOver", gameOverScene);
     sceneManager->addScene("Settings", settingsScene);
-
     std::shared_ptr<VictoryScene> victoryScene = std::make_shared<VictoryScene>(sceneManager.get());
     sceneManager->addScene("Victory", victoryScene);
-
-    // Set the active scene to MainMenu
     sceneManager->setActiveScene("MainMenu");  // Start with MainMenu
-    mainMenuScene->onActivate();               // Initialize main menu
-    //sceneManager->setActiveScene("Settings");
-    
+    mainMenuScene->onActivate();                 
 
     sf::Clock timer;
     sf::Clock clock;

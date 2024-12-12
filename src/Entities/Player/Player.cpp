@@ -10,7 +10,6 @@
 using namespace sf;
 using namespace std;
 
-// Initialize static members if any (e.g., projectile texture)
 static sf::Texture projectileTexture;
 
 Player::Player(EntityManager* entityManager)
@@ -23,16 +22,16 @@ Player::Player(EntityManager* entityManager)
     _animationTime(0),
     _frameTime(0.1f),
     _facingLeft(false),
-    _health(100)  // Initialize health
+    _health(100)
 {
-    // Load player texture
+
     if (!_texture.loadFromFile("res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
         std::cerr << "Failed to load player spritesheet!" << std::endl;
     }
 
     // Setup sprite
     _sprite.setTexture(_texture);
-    _frameSize = sf::Vector2i(64, 64); // Adjust based on your spritesheet's frame size
+    _frameSize = sf::Vector2i(64, 64);
     _sprite.setTextureRect(sf::IntRect(0, 64, _frameSize.x, _frameSize.y));
     _sprite.setOrigin(_frameSize.x / 2.f, _frameSize.y / 2.f);
 
@@ -48,7 +47,7 @@ Player::Player(EntityManager* entityManager)
 void Player::Update(double dt) {
     Entity::Update(dt);
     Vector2f direction = { 0.f, 0.f };
-    // Move in four directions based on keys
+    // Move the player
     if (Keyboard::isKeyPressed(Keyboard::W)) direction.y--;
     if (Keyboard::isKeyPressed(Keyboard::S)) direction.y++;
     if (Keyboard::isKeyPressed(Keyboard::A)) {
@@ -61,14 +60,8 @@ void Player::Update(double dt) {
     }
 
     direction = normalize(direction);
-
-    // Move the player
     move(Vector2f(direction.x * dt * _speed, direction.y * dt * _speed));
-
-    // Update animation
     updateAnimation(dt);
-
-    // Auto-aim and fire at the nearest enemy
     autoAimAndFire(dt);
 }
 
@@ -86,7 +79,7 @@ void Player::updateAnimation(float dt) {
     // Update animation frame
     if (_animationTime >= _frameTime) {
         _animationTime = 0;
-        _currentFrame = (_currentFrame + 1) % 8; // Assuming 8 frames in spritesheet
+        _currentFrame = (_currentFrame + 1) % 8; // 8 frames in the spritesheet
         _sprite.setTextureRect(sf::IntRect(_currentFrame * _frameSize.x, 64 * 2, _frameSize.x, _frameSize.y));
     }
 
@@ -123,26 +116,23 @@ void Player::autoAimAndFire(double dt) {
         float projectileHalfSize = 5.f; // Half of 10.f size
         sf::Vector2f spawnOffset = projectileDirection * (playerRadius + projectileHalfSize + 1.f); // Additional 1.f to prevent overlap
 
-        // Set projectile spawn position
         sf::Vector2f projectilePosition = playerPosition + spawnOffset;
 
         float projectileSpeed = 300.f;
         float projectileDamage = 20.f;
 
-        // Create and initialize the projectile
         std::shared_ptr<Projectile> projectile = std::make_shared<Projectile>(
             projectilePosition,
             projectileDirection,
             projectileSpeed,
             projectileDamage,
-            &projectileTexture, // Use loaded texture
+            &projectileTexture,
             sf::Vector2f(50.f, 50.f)
         );
 
-        // Add the projectile to the entity manager
         if (_entityManager) {
             _entityManager->AddEntity(projectile);
-            _shootTimer = 0.f; // Reset the shoot timer
+            _shootTimer = 0.f;
             std::cout << "Projectile auto-aimed and fired at position ("
                 << projectilePosition.x << ", "
                 << projectilePosition.y << ")\n";

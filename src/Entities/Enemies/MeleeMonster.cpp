@@ -1,7 +1,7 @@
 #include "../Enemies/MeleeMonster.h"
 #include "../lib_maths/maths.h"
 #include "../../../lib_tile_level_loader/LevelSystem.h"
-#include <SFML/Audio.hpp>  // Include the SFML Audio module
+#include <SFML/Audio.hpp>
 
 sf::SoundBuffer collisionSoundBuffer;
 sf::Sound collisionSound;
@@ -11,7 +11,7 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
     std::shared_ptr<Player> player,
     sf::Vector2f position)
     : Monster(std::make_unique<sf::CircleShape>(32.f), 100.f, 100, 1),
-    player(player), attackTimer(1.0f) {  // Initialize attackTimer to allow immediate attack
+    player(player), attackTimer(1.0f) {
     if (!collisionSoundBuffer.loadFromFile(musicPath)) {
         std::cerr << "Error loading collision sound!" << std::endl;
     }
@@ -22,9 +22,9 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
     _shape->setOrigin(sf::Vector2f(32.f, 32.f));
     _shape->setTexture(&spritesheet);
     _shape->setTextureRect(sf::IntRect(sf::Vector2i{ 0, 0 }, size));
-    _position = position;            // Set spawn position directly
-    _shape->setPosition(_position);  // Ensure the shape's position matches
-    _shape->setScale(1.5f, 1.5f);      // Scale the sprite up
+    _position = position;            
+    _shape->setPosition(_position); 
+    _shape->setScale(1.5f, 1.5f);  
 }
 
 void MeleeMonster::Update(const double dt) {
@@ -54,14 +54,11 @@ void MeleeMonster::Update(const double dt) {
         move(moveVect);
     }
     else {
-        // Update the attack timer
         attackTimer += static_cast<float>(dt);
-
-        // Check if the attack cooldown has elapsed
         if (attackTimer >= attackCooldown) {
             collisionSound.play();
             attack();
-            attackTimer = 0.0f;  // Reset the attack timer
+            attackTimer = 0.0f;
         }
     }
 
@@ -95,7 +92,7 @@ void MeleeMonster::Render(sf::RenderWindow& window) const {
 
 void MeleeMonster::attack() {
     if (player) {
-        player->takeDamage(10.0f);  // Deal 10 damage to the player
+        player->takeDamage(10.0f);
         std::cout << "MeleeMonster attacked the player and dealt 10 damage.\n";
     }
 }

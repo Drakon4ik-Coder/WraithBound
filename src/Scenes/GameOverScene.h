@@ -1,4 +1,3 @@
-// ../WraithBound/src/Scenes/GameOverScene.h
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -30,7 +29,7 @@ private:
         sf::FloatRect gameOverBounds = gameOverText.getLocalBounds();
         gameOverText.setPosition(
             (800 - gameOverBounds.width) / 2 - gameOverBounds.left,
-            150); // Adjust the position as needed
+            150);
 
         // Setup Restart Text
         restartText.setFont(font);
@@ -92,9 +91,7 @@ public:
         }
     }
 
-    void update(float dt) override {
-        // No dynamic content to update
-    }
+    void update(float dt) override {}
 
     void render(sf::RenderWindow& window) override {
         window.draw(gameOverText);
@@ -108,7 +105,5 @@ public:
         mainMenuText.setPosition(window.getSize().x / 2, 350);
     }
 
-    void onActivate() override {
-        // Any activation logic if needed
-    }
+    void onActivate() override {}
 };

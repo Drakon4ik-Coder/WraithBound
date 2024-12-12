@@ -4,14 +4,14 @@
 #include <memory>
 
 #include "../Entity.h"
-#include "../src/EntityManager.h"  // Include EntityManager header
+#include "../src/EntityManager.h" 
 
 class Player : public Entity {
 private:
     float _speed;
-    float _shootCooldown;           // Time between shots in seconds
-    float _shootTimer;              // Timer to track shooting cooldown
-    EntityManager* _entityManager;  // Pointer to EntityManager
+    float _shootCooldown;           
+    float _shootTimer;              
+    EntityManager* _entityManager; 
     sf::Sprite _sprite;
     sf::Texture _texture;
     sf::Vector2i _frameSize;
@@ -19,7 +19,7 @@ private:
     float _animationTime;
     float _frameTime;
     bool _facingLeft;
-    int _health;  // Add health attribute
+    int _health;  
 
 public:
     Player(EntityManager* entityManager);
@@ -27,10 +27,7 @@ public:
     void Render(sf::RenderWindow& window) const override;
     sf::FloatRect getGlobalBounds();
     void updateAnimation(float dt);
-
     void autoAimAndFire(double dt);
-
-    // Implement pure virtual functions from Entity
     void takeDamage(float damage) override;
     bool isAlive() const override;
 };

@@ -16,7 +16,6 @@ public:
     void handleInput(sf::RenderWindow& window) override;
     void update(float dt) override;
     void render(sf::RenderWindow& window) override;
-    //SceneManager* sceneManager;
 
 private:
     std::vector<sf::Vector2u> resolutions;
@@ -30,7 +29,6 @@ private:
 };
 
 
-// Constructor
 SettingsScene::SettingsScene(SceneManager* sceneManager, sf::RenderWindow& window)
     : sceneManager(sceneManager), mainWindow(window) {
     loadSettings();
@@ -70,7 +68,6 @@ void SettingsScene::handleInput(sf::RenderWindow& window) {
             }
             else if (event.key.code == sf::Keyboard::Escape) {
                 if (sceneManager) {
-                    //std::shared_ptr<MainMenuScene> mainMenuScene = std::make_shared<MainMenuScene>(sceneManager);
                     sceneManager->setActiveScene("MainMenu");
                 }
                 else {
@@ -81,12 +78,9 @@ void SettingsScene::handleInput(sf::RenderWindow& window) {
     }
 }
 
-void SettingsScene::update(float dt) {
-    // Update logic if necessary
-}
+void SettingsScene::update(float dt) {}
 
 void SettingsScene::render(sf::RenderWindow& window) {
-    //window.clear();
     sf::Font font;
     font.loadFromFile("res/fonts/RobotoMono-Regular.ttf");
 
@@ -112,7 +106,6 @@ void SettingsScene::render(sf::RenderWindow& window) {
 }
 
 void SettingsScene::saveSettings() {
-    //std::string path = "res/settings/settings.txt";
 
     // Open file
     std::ofstream settingsFile("res/settings/settings.txt");
@@ -143,8 +136,6 @@ void SettingsScene::saveSettings() {
 }
 
 void SettingsScene::loadSettings() {
-    //std::string path = "res/settings/settings.txt";
-
     std::ifstream settingsFile("res/settings/settings.txt");
 
     if (!settingsFile.is_open()) {
@@ -174,6 +165,6 @@ void SettingsScene::loadSettings() {
     if (!found) {
         std::cerr << "No matching resolution found for " << width << "x" << height
             << ". Using default resolution." << std::endl;
-        currentResolutionIndex = 0; // Or your desired fallback index
+        currentResolutionIndex = 0;
     }
 }

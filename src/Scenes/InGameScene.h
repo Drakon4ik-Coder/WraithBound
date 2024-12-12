@@ -14,7 +14,6 @@ class InGameScene : public Scene {
     SceneManager* sceneManager;
 
 public:
-    // Modified constructor to accept SceneManager pointer
     InGameScene(std::shared_ptr<EntityManager> entityManager, SceneManager* sceneMgr)
         : entityManager(entityManager), sceneManager(sceneMgr) {
         // Create the Player with the entity manager
@@ -37,15 +36,12 @@ public:
                         sceneManager->setActiveScene("Pause");
                     }
                 }
-                // Handle other key inputs...
             }
-
-            // Handle other inputs...
         }
     }
 
     void update(float dt) override {
-        entityManager->Update(dt);  // Update all entities
+        entityManager->Update(dt);
 
         // Check if the player is dead
         if (!player->isAlive()) {
@@ -59,7 +55,7 @@ public:
 
     void render(sf::RenderWindow& window) override {
         LevelSystem::Render(window);
-        entityManager->Render(window);  // Render all entities
+        entityManager->Render(window);
     }
 
     void spawnMonsters() {
@@ -73,10 +69,10 @@ public:
             auto monster = std::make_shared<MeleeMonster>(
                 melee_skeleton,        // Texture
                 sf::Vector2i(68, 68),  // Size of the texture frame
-                player,                // Player reference
-                position               // Monster's spawn position
+                player,        
+                position   
             );
-            entityManager->AddEntity(monster);  // Add to the entity manager
+            entityManager->AddEntity(monster);
         }
     }
 
@@ -110,9 +106,9 @@ public:
             std::cerr << "Error loading background music!" << std::endl;
         }
         else {
-            backgroundMusic.setLoop(true);  // Loop the music
-            backgroundMusic.setVolume(50);  // Set volume to 70% of the maximum volume
-            backgroundMusic.play();         // Start the music
+            backgroundMusic.setLoop(true);  
+            backgroundMusic.setVolume(50); 
+            backgroundMusic.play();
         }
     }
 

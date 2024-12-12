@@ -20,8 +20,6 @@ public:
     void OnCollision(Entity* other) override;
     bool isActive() const { return _isActive; }
     void deactivate() { _isActive = false; }
-
-    // Implement pure virtual functions from Entity
     void takeDamage(float damage) override;
     bool isAlive() const override;
 
@@ -31,9 +29,8 @@ private:
     float speed;
     sf::Vector2f size;
     bool _isActive;
-    float elapsedTime;  // Track the elapsed time
-    float maxTravelDistance = 800.f;  // Maximum travel distance
+    float elapsedTime;  // Elapsed existance time
+    float maxTravelDistance = 800.f;
 
-    // Initializes the shape based on whether a texture is provided.
     static std::unique_ptr<sf::Shape> InitializeShape(const sf::Texture* texture, const sf::Vector2f& size);
 };

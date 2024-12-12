@@ -37,15 +37,11 @@ public:
         }
     }
 
-    void update(float dt) override {
-        // No dynamic content to update in the victory screen
-    }
+    void update(float dt) override {}
 
     void render(sf::RenderWindow& window) override {
         window.draw(victoryText);
     }
 
-    void onActivate() override {
-        // Any activation logic if needed
-    }
+    void onActivate() override {}
 };

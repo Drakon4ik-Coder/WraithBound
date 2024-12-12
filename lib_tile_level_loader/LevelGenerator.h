@@ -126,7 +126,7 @@ vector<vector<char>> generateDungeonLayout(int width, int height,
                     layout[tunnelY][tunnelX] = (dy != 0) ? 'v' : 'h';
 
                     placed = true;
-                    break;  // Exit direction loop
+                    break;
                 }
             }
         }
@@ -223,7 +223,7 @@ vector<vector<vector<string>>> expandDungeon(
                              spawnablePositions.end(), rng);
                 for (size_t i = 0; i < std::min(size_t(5), spawnablePositions.size()); ++i) {
                     auto [row, col] = spawnablePositions[i];
-                    roomTemplate[row][col] = 'm';  // Place monster spawn
+                    roomTemplate[row][col] = 'm';
                 }
 
                 expandedDungeon[y][x] = roomTemplate;
@@ -267,7 +267,7 @@ void fixIsolatedEInDungeon(const string& filePath) {
     file.close();
 
     int height = dungeonGrid.size();
-    if (height == 0) return;  // Empty file, nothing to check
+    if (height == 0) return;
 
     int width = dungeonGrid[0].size();
 

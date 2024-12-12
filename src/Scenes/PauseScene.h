@@ -1,4 +1,3 @@
-// ../WraithBound/src/Scenes/PauseScene.h
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -16,7 +15,7 @@ private:
     sf::Text resumeText;
     sf::Text quitText;
 
-    SceneManager* sceneManager;  // Pointer to SceneManager
+    SceneManager* sceneManager;
 
     void initializeButtons() {
         // Load font
@@ -62,12 +61,9 @@ private:
     }
 
 public:
-    // Constructor accepts SceneManager pointer
     PauseScene(SceneManager* sceneMgr) : sceneManager(sceneMgr) {
         initializeButtons();
     }
-
-    // PauseScene.h
 
     void handleInput(sf::RenderWindow& window) override {
         sf::Event event;
@@ -100,9 +96,7 @@ public:
                     if (quitButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Quit to Menu clicked" << std::endl;
                         if (sceneManager) {
-                            //sceneManager->removeScene("InGame");  // Remove InGameScene
-                            sceneManager->setActiveScene("MainMenu");  // Switch to MainMenu
-                            //sceneManager->removeScene("Pause");   // Remove PauseScene
+                            sceneManager->setActiveScene("MainMenu"); 
 
                         }
                     }
@@ -112,9 +106,7 @@ public:
     }
 
 
-    void update(float dt) override {
-        // Pause scene might not need to update dynamic content
-    }
+    void update(float dt) override {}
 
     void render(sf::RenderWindow& window) override {
         // Optionally, draw a semi-transparent overlay
@@ -137,7 +129,5 @@ public:
         quitText.setPosition(window.getSize().x/2, 300);
     }
 
-    void onActivate() override {
-        // Any activation logic if needed
-    }
+    void onActivate() override {}
 };
