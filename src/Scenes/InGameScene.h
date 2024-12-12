@@ -117,6 +117,11 @@ public:
         if (!hasMonsters) {
             if (sceneManager) {
                 sceneManager->setActiveScene("Victory");
+                entityManager->RemoveEntities();
+                player = std::make_shared<Player>(entityManager.get());
+                entityManager->AddEntity(player);
+                onActivate();
+                spawnMonsters();
             }
         }
     }
