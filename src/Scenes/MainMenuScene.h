@@ -112,7 +112,7 @@ class MainMenuScene : public Scene {
                         if (sceneManager) {
                             entityManager = std::make_shared<EntityManager>();
                             std::shared_ptr<InGameScene> inGameScene =
-                                std::make_shared<InGameScene>(entityManager);
+                                std::make_shared<InGameScene>(entityManager, sceneManager);
                             sceneManager->addScene("InGame", inGameScene);
                             sceneManager->setActiveScene("InGame");
                             inGameScene->onActivate();  // Call to generate and

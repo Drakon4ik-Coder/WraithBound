@@ -11,6 +11,7 @@
 #include "../src/Scenes/InGameScene.h"
 #include "../src/Scenes/MainMenuScene.h"
 #include "../src/Scenes/Scene.h"
+#include "../src/Scenes/PauseScene.h"
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
@@ -111,19 +112,22 @@ int main(int argc, char* argv[]) {
 
     Load();
 
-    // Create and add scenes to the SceneManager
-    std::shared_ptr<MainMenuScene> mainMenuScene =
-        std::make_shared<MainMenuScene>(
-            sceneManager.get());  // Pass SceneManager pointer
-    // std::shared_ptr<InGameScene> inGameScene =
-    // std::make_shared<InGameScene>(entityManager);
 
+    // Create MainMenuScene with SceneManager pointer
+    std::shared_ptr<MainMenuScene> mainMenuScene =
+        std::make_shared<MainMenuScene>(sceneManager.get());
+
+    // Add MainMenuScene to SceneManager
     sceneManager->addScene("MainMenu", mainMenuScene);
-    // sceneManager->addScene("InGame", inGameScene);
+
+    // Add PauseScene with SceneManager pointer
+    std::shared_ptr<PauseScene> pauseScene =
+        std::make_shared<PauseScene>(sceneManager.get());
+    sceneManager->addScene("Pause", pauseScene);
 
     // Set the active scene to MainMenu
     sceneManager->setActiveScene("MainMenu");  // Start with MainMenu
-    mainMenuScene->onActivate();               // Initialize main menu
+    mainMenuScene->onActivate();            // Initialize main menu
 
     sf::Clock timer;
     sf::Clock clock;
