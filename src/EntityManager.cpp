@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../src/Entities/Projectile.h"
 #include "../lib_tile_level_loader/LevelSystem.h"
+#include "../src/Entities/Enemies/Monster.h"
 
 void EntityManager::AddEntity(std::shared_ptr<Entity> entity) {
     if (entity) {
@@ -125,4 +126,22 @@ void EntityManager::HandleCollisions() {
             //std::cerr << "Entity out of bounds: " << entityPos.x << ", " << entityPos.y << std::endl;
         }
     }
+}
+
+std::shared_ptr<Entity> EntityManager::findNearestEnemy(const sf::Vector2f& position) {
+    std::shared_ptr<Entity> nearestEnemy = nullptr;
+    float minDistance = std::numeric_limits<float>::max();
+
+    for (const auto& entity : entities) {
+        auto monster = std::dynamic_pointer_cast<Monster>(entity);
+        if (monster) {
+            float distance = sf::length(position - monster->getPosition());
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestEnemy = monster;
+            }
+        }
+    }
+
+    return nearestEnemy;
 }
