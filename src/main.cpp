@@ -13,6 +13,7 @@
 #include "../src/Scenes/SettingsScene.h"
 #include "../src/Scenes/Scene.h"
 #include "../src/Scenes/PauseScene.h"
+#include "../src/Scenes/GameOverScene.h"
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
@@ -120,10 +121,13 @@ int main(int argc, char* argv[]) {
     sceneManager->addScene("MainMenu", mainMenuScene);
 
     // Add PauseScene with SceneManager pointer
-    std::shared_ptr<PauseScene> pauseScene =
-        std::make_shared<PauseScene>(sceneManager.get());
+    std::shared_ptr<PauseScene> pauseScene = std::make_shared<PauseScene>(sceneManager.get());
     sceneManager->addScene("Pause", pauseScene);
 
+    // Add GameOverScene with SceneManager pointer
+    std::shared_ptr<GameOverScene> gameOverScene =
+        std::make_shared<GameOverScene>(sceneManager.get());
+    sceneManager->addScene("GameOver", gameOverScene);
     sceneManager->addScene("Settings", settingsScene);
 
     // Set the active scene to MainMenu

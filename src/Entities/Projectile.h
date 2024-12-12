@@ -21,6 +21,10 @@ public:
     bool isActive() const { return _isActive; }
     void deactivate() { _isActive = false; }
 
+    // Implement pure virtual functions from Entity
+    void takeDamage(float damage) override;
+    bool isAlive() const override;
+
 private:
     float damage;
     sf::Vector2f direction;   // Normalized direction vector

@@ -16,4 +16,5 @@ public:
 
     void takeDamage(int damage);
     bool isAlive() const;
+
 };

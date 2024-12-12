@@ -1,5 +1,3 @@
-// Player.cpp
-
 #include "../Player/Player.h"
 #include "../src/Entities/Projectile.h"
 #include "../lib_maths/maths.h"
@@ -24,22 +22,23 @@ Player::Player(EntityManager* entityManager)
     _currentFrame(0),
     _animationTime(0),
     _frameTime(0.1f),
-    _facingLeft(false)
+    _facingLeft(false),
+    _health(100)  // Initialize health
 {
     // Load player texture
     if (!_texture.loadFromFile("res/img/Main Character/Sword_Run/Sword_Run_full.png")) {
         std::cerr << "Failed to load player spritesheet!" << std::endl;
     }
-    
+
     // Setup sprite
     _sprite.setTexture(_texture);
     _frameSize = sf::Vector2i(64, 64); // Adjust based on your spritesheet's frame size
     _sprite.setTextureRect(sf::IntRect(0, 64, _frameSize.x, _frameSize.y));
-    _sprite.setOrigin(_frameSize.x/2.f, _frameSize.y/2.f);
-    
+    _sprite.setOrigin(_frameSize.x / 2.f, _frameSize.y / 2.f);
+
     float scale = 2.0f;
     _sprite.setScale(scale, scale);
-    
+
     // Load projectile texture
     if (!projectileTexture.loadFromFile("res/img/Projectiles/projectile.png")) {
         std::cerr << "Failed to load projectile texture!" << std::endl;
@@ -83,18 +82,19 @@ sf::FloatRect Player::getGlobalBounds() {
 
 void Player::updateAnimation(float dt) {
     _animationTime += dt;
-    
+
     // Update animation frame
     if (_animationTime >= _frameTime) {
         _animationTime = 0;
         _currentFrame = (_currentFrame + 1) % 8; // Assuming 8 frames in spritesheet
-        _sprite.setTextureRect(sf::IntRect(_currentFrame * _frameSize.x, 64*2, _frameSize.x, _frameSize.y));
+        _sprite.setTextureRect(sf::IntRect(_currentFrame * _frameSize.x, 64 * 2, _frameSize.x, _frameSize.y));
     }
 
     // Update sprite direction
     if (_facingLeft) {
         _sprite.setScale(-3.0f, 3.0f);
-    } else {
+    }
+    else {
         _sprite.setScale(3.0f, 3.0f);
     }
 
@@ -150,4 +150,12 @@ void Player::autoAimAndFire(double dt) {
                 << projectileDirection.y << ")\n";
         }
     }
+}
+
+void Player::takeDamage(float damage) {
+    _health -= static_cast<int>(damage);
+}
+
+bool Player::isAlive() const {
+    return _health > 0;
 }

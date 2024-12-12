@@ -46,6 +46,13 @@ public:
 
     void update(float dt) override {
         entityManager->Update(dt);  // Update all entities
+
+        // Check if the player is dead
+        if (!player->isAlive()) {
+            if (sceneManager) {
+                sceneManager->setActiveScene("GameOver");
+            }
+        }
     }
 
     void render(sf::RenderWindow& window) override {
