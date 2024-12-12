@@ -15,7 +15,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 # Escaped paths for Inno Setup
-string(REPLACE "\\" "/" CMAKE_RUNTIME_OUTPUT_DIRECTORY_ESCAPED ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+string(REPLACE "\\" "/" CMAKE_BINARY_DIR_ESCAPED ${CMAKE_BINARY_DIR})
 
 # ### Find OpenGL ####
 find_package(OpenGL REQUIRED)
@@ -45,7 +45,7 @@ target_include_directories(lib_maths INTERFACE "${CMAKE_SOURCE_DIR}/lib_maths" S
 add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND}
     -E copy_directory
     "${PROJECT_SOURCE_DIR}/res"
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/res
 )
 
 # ### Game ####
@@ -75,10 +75,6 @@ set_target_properties(WraithBound
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
 add_dependencies(WraithBound copy_resources)
-
-# ### Inno Setup Configuration ####
-# Configure the Inno Setup file with escaped paths
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # ### Inno Setup Configuration ####
 # Configure the Inno Setup file with escaped paths

@@ -9,9 +9,9 @@ Compression=lzma
 SolidCompression=yes
 
 [Files]
-Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/Release/WraithBound.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/Release/*.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/Release/res/*"; DestDir: "{app}\res"; Flags: ignoreversion recursesubdirs 
+Source: "@CMAKE_BINARY_DIR@\bin\Release\WraithBound.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@CMAKE_BINARY_DIR@\bin\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@CMAKE_BINARY_DIR@\bin\Release\res\*"; DestDir: "{app}\res"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: "{group}\WraithBound"; Filename: "{app}\WraithBound.exe"
