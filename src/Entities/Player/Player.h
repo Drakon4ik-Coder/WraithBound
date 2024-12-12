@@ -1,4 +1,3 @@
-// Player.h
 #pragma once
 
 #include <SFML/Window.hpp>
@@ -8,7 +7,7 @@
 #include "../src/EntityManager.h"  // Include EntityManager header
 
 class Player : public Entity {
-   private:
+private:
     float _speed;
     float _shootCooldown;           // Time between shots in seconds
     float _shootTimer;              // Timer to track shooting cooldown
@@ -20,6 +19,7 @@ class Player : public Entity {
     float _animationTime;
     float _frameTime;
     bool _facingLeft;
+    int _health;  // Add health attribute
 
 public:
     Player(EntityManager* entityManager);
@@ -29,4 +29,8 @@ public:
     void updateAnimation(float dt);
 
     void autoAimAndFire(double dt);
+
+    // Implement pure virtual functions from Entity
+    void takeDamage(float damage) override;
+    bool isAlive() const override;
 };

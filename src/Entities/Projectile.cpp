@@ -4,7 +4,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <iostream>
 #include <cmath>
-#include "../src/Entities/Player/Player.h"  // Include the Player class
+#include "Player/Player.h"
+#include "Enemies/Monster.h"  // Include the Monster class
 
 std::unique_ptr<sf::Shape> Projectile::InitializeShape(const sf::Texture* texture, const sf::Vector2f& size) {
     if (texture) {
@@ -74,7 +75,20 @@ void Projectile::OnCollision(Entity* other) {
         return;
     }
 
-    std::cout << "Projectile collided with an entity.\n";
+    // Deal damage to the other entity
+    other->takeDamage(damage);
+
+    // Deactivate the projectile
     deactivate();
     _shape->setFillColor(sf::Color::Yellow);
+
+    std::cout << "Projectile collided with an entity and dealt " << damage << " damage.\n";
+}
+
+void Projectile::takeDamage(float damage) {
+    // Projectiles do not take damage
+}
+
+bool Projectile::isAlive() const {
+    return _isActive;
 }

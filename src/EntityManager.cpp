@@ -48,7 +48,11 @@ void EntityManager::RemoveEntities() {
                     std::cout << "Entity removed for being outside bounds at position: " << entity->getPosition().x << ", " << entity->getPosition().y << std::endl;
                     return true;
                 }
-                // Add conditions for other entity types if needed
+                // Check if the entity is dead
+                if (!entity->isAlive()) {
+                    std::cout << "Entity removed for being dead.\n";
+                    return true;
+                }
                 return false;
             }),
         entities.end());

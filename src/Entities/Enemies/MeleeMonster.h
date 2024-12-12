@@ -13,4 +13,7 @@ class MeleeMonster : public Monster {
     void Update(const double dt) override;
     void Render(sf::RenderWindow& window) const override;
     void attack();
+
+    void takeDamage(float damage) override;
+    bool isAlive() const override;
 };

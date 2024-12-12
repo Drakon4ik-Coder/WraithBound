@@ -91,3 +91,11 @@ void MeleeMonster::Render(sf::RenderWindow& window) const {
 }
 
 void MeleeMonster::attack() { return; }
+
+void MeleeMonster::takeDamage(float damage) {
+    _health -= static_cast<int>(damage);
+}
+
+bool MeleeMonster::isAlive() const {
+    return _health > 0;
+}
