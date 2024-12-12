@@ -46,6 +46,7 @@ Player::Player(EntityManager* entityManager)
 }
 
 void Player::Update(double dt) {
+    Entity::Update(dt);
     Vector2f direction = { 0.f, 0.f };
     // Move in four directions based on keys
     if (Keyboard::isKeyPressed(Keyboard::W)) direction.y--;
@@ -69,8 +70,6 @@ void Player::Update(double dt) {
 
     // Auto-aim and fire at the nearest enemy
     autoAimAndFire(dt);
-
-    Entity::Update(dt);
 }
 
 void Player::Render(sf::RenderWindow& window) const {

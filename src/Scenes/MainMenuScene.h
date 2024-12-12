@@ -20,7 +20,7 @@ class MainMenuScene : public Scene {
     sf::Text settingsText;
     sf::Text quitText;
 
-    SceneManager* sceneManager;  // Pointer to SceneManager
+    SceneManager* sceneManager;
     std::shared_ptr<EntityManager> entityManager;
 
     void initializeButtons() {
@@ -132,6 +132,7 @@ class MainMenuScene : public Scene {
                     if (settingsButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Settings clicked" << std::endl;
                         // Implement settings functionality here
+                        sceneManager->setActiveScene("Settings");
                     }
 
                     if (quitButton.getGlobalBounds().contains(mousePosF)) {

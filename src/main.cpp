@@ -10,6 +10,7 @@
 #include "../src/SceneManager/SceneManager.h"
 #include "../src/Scenes/InGameScene.h"
 #include "../src/Scenes/MainMenuScene.h"
+#include "../src/Scenes/SettingsScene.h"
 #include "../src/Scenes/Scene.h"
 #include "../src/Scenes/PauseScene.h"
 #include "../src/Scenes/GameOverScene.h"
@@ -102,12 +103,15 @@ int main(int argc, char* argv[]) {
     }
     srand(static_cast<unsigned int>(time(0)));
 
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600),
-                                                "Wraithbound");
+    sf::Vector2u resolution(800, 600);  // Default resolution
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(resolution.x, resolution.y), "Wraithbound");
+
     sceneManager = std::make_unique<SceneManager>();
 
     Load();
 
+    // Pass window reference to SettingsScene
+    auto settingsScene = std::make_shared<SettingsScene>(sceneManager.get(), *window);
 
     // Create MainMenuScene with SceneManager pointer
     std::shared_ptr<MainMenuScene> mainMenuScene =
@@ -124,10 +128,13 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<GameOverScene> gameOverScene =
         std::make_shared<GameOverScene>(sceneManager.get());
     sceneManager->addScene("GameOver", gameOverScene);
+    sceneManager->addScene("Settings", settingsScene);
 
     // Set the active scene to MainMenu
     sceneManager->setActiveScene("MainMenu");  // Start with MainMenu
-    mainMenuScene->onActivate();            // Initialize main menu
+    mainMenuScene->onActivate();               // Initialize main menu
+    //sceneManager->setActiveScene("Settings");
+    
 
     sf::Clock timer;
     sf::Clock clock;
