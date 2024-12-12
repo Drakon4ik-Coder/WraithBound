@@ -10,6 +10,7 @@
 #include "../src/SceneManager/SceneManager.h"
 #include "../src/Scenes/InGameScene.h"
 #include "../src/Scenes/MainMenuScene.h"
+#include "../src/Scenes/SettingsScene.h"
 #include "../src/Scenes/Scene.h"
 
 std::shared_ptr<EntityManager> entityManager;
@@ -119,11 +120,15 @@ int main(int argc, char* argv[]) {
     // std::make_shared<InGameScene>(entityManager);
 
     sceneManager->addScene("MainMenu", mainMenuScene);
-    // sceneManager->addScene("InGame", inGameScene);
+
+    std::shared_ptr<SettingsScene> settingsScene = std::make_shared<SettingsScene>(sceneManager.get());
+    sceneManager->addScene("Settings", settingsScene);
 
     // Set the active scene to MainMenu
     sceneManager->setActiveScene("MainMenu");  // Start with MainMenu
     mainMenuScene->onActivate();               // Initialize main menu
+    //sceneManager->setActiveScene("Settings");
+    
 
     sf::Clock timer;
     sf::Clock clock;
