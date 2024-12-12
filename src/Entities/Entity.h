@@ -16,7 +16,7 @@ class Entity {
 
     virtual void Update(const double dt);
     virtual void Render(sf::RenderWindow& window) const = 0;
-    virtual void OnCollision(Entity* other) {}  // Added collision handler
+    virtual void OnCollision(Entity* other) {} 
     virtual void OnTileCollision(int tileType) {}
 
     const sf::Vector2f getPosition();

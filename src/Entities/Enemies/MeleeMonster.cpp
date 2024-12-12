@@ -43,7 +43,7 @@ void MeleeMonster::Update(const double dt) {
             return;
         }
         std::pair<int,int> nextTile = path.front();
-        diff = LevelSystem::getTilePosition(sf::Vector2ul{ static_cast<unsigned long>(nextTile.first), static_cast<unsigned long>(nextTile.second) }) - getPosition();
+        diff = LevelSystem::getTilePosition(sf::Vector2ul{ static_cast<unsigned long>(nextTile.first), static_cast<unsigned long>(nextTile.second) }) + sf::Vector2f{LevelSystem::getTileSize()/2,LevelSystem::getTileSize()/2} - getPosition();
     }
 
     
@@ -56,8 +56,7 @@ void MeleeMonster::Update(const double dt) {
         move(moveVect);
     } else {
         collisionSound.play();
-        player->OnCollision(this);
-        this->OnCollision(player.get());
+        
     }
 
     // Handle direction looking
