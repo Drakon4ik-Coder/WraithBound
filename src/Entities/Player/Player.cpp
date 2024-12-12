@@ -136,7 +136,7 @@ void Player::autoAimAndFire(double dt) {
             projectileSpeed,
             projectileDamage,
             &projectileTexture, // Use loaded texture
-            sf::Vector2f(10.f, 10.f)
+            sf::Vector2f(50.f, 50.f)
         );
 
         // Add the projectile to the entity manager
