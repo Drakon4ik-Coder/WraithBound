@@ -23,7 +23,6 @@ class Player : public Entity {
 
 public:
     Player(EntityManager* entityManager);
-
     void Update(double dt) override;
     void Render(sf::RenderWindow& window) const override;
     sf::FloatRect getGlobalBounds();

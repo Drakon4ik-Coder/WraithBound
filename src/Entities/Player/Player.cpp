@@ -20,10 +20,10 @@ Player::Player(EntityManager* entityManager)
     _shootCooldown(0.5f),
     _shootTimer(_shootCooldown),
     _entityManager(entityManager),
-    Entity(make_unique<RectangleShape>(Vector2f(64, 64))), // Adjust size to match your sprite
+    Entity(make_unique<RectangleShape>(Vector2f(64, 64))),
     _currentFrame(0),
     _animationTime(0),
-    _frameTime(0.1f), // Adjust animation speed
+    _frameTime(0.1f),
     _facingLeft(false)
 {
     // Load player texture
@@ -34,9 +34,11 @@ Player::Player(EntityManager* entityManager)
     // Setup sprite
     _sprite.setTexture(_texture);
     _frameSize = sf::Vector2i(64, 64); // Adjust based on your spritesheet's frame size
-    _sprite.setTextureRect(sf::IntRect(0, 64*2, _frameSize.x, _frameSize.y));
+    _sprite.setTextureRect(sf::IntRect(0, 64, _frameSize.x, _frameSize.y));
     _sprite.setOrigin(_frameSize.x/2.f, _frameSize.y/2.f);
-    _sprite.setScale(1.0f, 1.0f); // Adjust scale if needed
+    
+    float scale = 2.0f;
+    _sprite.setScale(scale, scale);
     
     // Load projectile texture
     if (!projectileTexture.loadFromFile("res/img/Projectiles/projectile.png")) {
@@ -136,14 +138,14 @@ void Player::updateAnimation(float dt) {
     if (_animationTime >= _frameTime) {
         _animationTime = 0;
         _currentFrame = (_currentFrame + 1) % 8; // Assuming 8 frames in spritesheet
-        _sprite.setTextureRect(sf::IntRect(_currentFrame * _frameSize.x, 0, _frameSize.x, _frameSize.y));
+        _sprite.setTextureRect(sf::IntRect(_currentFrame * _frameSize.x, 64*2, _frameSize.x, _frameSize.y));
     }
 
     // Update sprite direction
     if (_facingLeft) {
-        _sprite.setScale(-0.5f, 0.5f);
+        _sprite.setScale(-3.0f, 3.0f);
     } else {
-        _sprite.setScale(0.5f, 0.5f);
+        _sprite.setScale(3.0f, 3.0f);
     }
 
     // Update sprite position to match entity position
