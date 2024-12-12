@@ -30,6 +30,8 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
 }
 
 void MeleeMonster::Update(const double dt) {
+    Monster::Update(dt);
+    
     if (!player) return;
 
     sf::Vector2f diff;
@@ -81,8 +83,6 @@ void MeleeMonster::Update(const double dt) {
         frame_i = (frame_i + 1) % frames;
         time = 0;
     }
-
-    Monster::Update(dt);
 }
 
 void MeleeMonster::Render(sf::RenderWindow& window) const {

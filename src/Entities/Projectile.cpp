@@ -46,9 +46,9 @@ Projectile::Projectile(const sf::Vector2f& position,
 
 void Projectile::Update(const double dt) {
     if (_isActive) {
+        Entity::Update(dt);
         sf::Vector2f velocity = direction * speed * static_cast<float>(dt);
         move(velocity);
-        Entity::Update(dt);
 
         // Update the elapsed time
         elapsedTime += static_cast<float>(dt);
