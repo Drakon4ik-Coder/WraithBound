@@ -18,10 +18,12 @@ public:
     void render(sf::RenderWindow& window) override;
 
 private:
+    sf::RectangleShape fullScreenButton;
     std::vector<sf::Vector2u> resolutions;
     SceneManager* sceneManager;
     size_t currentResolutionIndex;
     sf::RenderWindow& mainWindow;
+    bool fullScreen;
     void saveSettings();
     void loadSettings();
     void applyResolution();
@@ -32,15 +34,22 @@ private:
 SettingsScene::SettingsScene(SceneManager* sceneManager, sf::RenderWindow& window)
     : sceneManager(sceneManager), mainWindow(window) {
     loadSettings();
-    resolutions = { {800, 600}, {1024, 768}, {1280, 720}, {1920, 1080} };
+    resolutions = { {800, 600}, {1024, 768}, {1280, 720}, {1920, 1080}, {sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height} };
     currentResolutionIndex = 0;
+    fullScreen = true;
+    applyResolution();
 }
 
 // Apply the resolution dynamically
 void SettingsScene::applyResolution() {
     const sf::Vector2u& resolution = resolutions[currentResolutionIndex];
     // Close the current window and create a new one with the selected resolution
-    mainWindow.create(sf::VideoMode(resolution.x, resolution.y), "WraithBound");
+    if(fullScreen){
+        mainWindow.create(sf::VideoMode(resolution.x, resolution.y), "WraithBound", sf::Style::Fullscreen);
+    } 
+    else {
+        mainWindow.create(sf::VideoMode(resolution.x, resolution.y), "WraithBound");
+    }
     std::cout << "Applied new resolution: " << resolution.x << "x" << resolution.y << std::endl;
 }
 
@@ -51,6 +60,17 @@ void SettingsScene::onActivate() {
 void SettingsScene::handleInput(sf::RenderWindow& window) {
     sf::Event event;
     while (window.pollEvent(event)) {
+        if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
+                        static_cast<float>(mousePos.y));
+
+                    if (fullScreenButton.getGlobalBounds().contains(mousePosF)) {
+                        fullScreen = !fullScreen;
+                    }
+                }
+        }
         if (event.type == sf::Event::Closed) {
             window.close();
         }
@@ -92,16 +112,36 @@ void SettingsScene::render(sf::RenderWindow& window) {
     resolutionText.setOrigin(resolutionText.getLocalBounds().width / 2, resolutionText.getLocalBounds().height / 2);
     resolutionText.setPosition(mainWindow.getSize().x/2, 100);
 
+    fullScreenButton.setFillColor(sf::Color::Blue);
+    fullScreenButton.setOrigin(fullScreenButton.getLocalBounds().width / 2, fullScreenButton.getLocalBounds().height / 2);
+    fullScreenButton.setPosition(mainWindow.getSize().x/2, 150);
+
+
+
+    sf::Text fullScreenText;
+    fullScreenText.setFont(font);
+    if(fullScreen){
+        fullScreenText.setString("Fullscreen: On");
+    } else {
+        fullScreenText.setString("Fullscreen: Off");
+    }
+    fullScreenText.setCharacterSize(24);
+    fullScreenText.setFillColor(sf::Color::White);
+    fullScreenText.setOrigin(fullScreenText.getLocalBounds().width / 2, fullScreenText.getLocalBounds().height / 2);
+    fullScreenText.setPosition(mainWindow.getSize().x/2, 150);
+
     sf::Text exitText;
     exitText.setFont(font);
     exitText.setString("Press ESC to return to Main Menu");
     exitText.setCharacterSize(24);
     exitText.setFillColor(sf::Color::White);
     exitText.setOrigin(exitText.getLocalBounds().width / 2, exitText.getLocalBounds().height / 2);
-    exitText.setPosition(mainWindow.getSize().x/2, 150);
+    exitText.setPosition(mainWindow.getSize().x/2, 200);
 
     window.draw(resolutionText);
     window.draw(exitText);
+    window.draw(fullScreenText);
+    window.draw(fullScreenButton);
  
 }
 
