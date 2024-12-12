@@ -31,4 +31,5 @@ public:
 
     std::shared_ptr<Entity> findNearestEnemy(const sf::Vector2f& position, float range);
 
+    bool isEntityOutsideBounds(const std::shared_ptr<Entity>& entity) const;
 };

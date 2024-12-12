@@ -37,11 +37,16 @@ void EntityManager::Render(sf::RenderWindow& window) const {
 void EntityManager::RemoveEntities() {
     entities.erase(
         std::remove_if(entities.begin(), entities.end(),
-            [](const std::shared_ptr<Entity>& entity) {
+            [this](const std::shared_ptr<Entity>& entity) {
                 // Check if the entity is a Projectile and inactive
                 auto projectile = std::dynamic_pointer_cast<Projectile>(entity);
                 if (projectile) {
                     return !projectile->isActive();
+                }
+                // Check if the entity is outside the map bounds
+                if (isEntityOutsideBounds(entity)) {
+                    std::cout << "Entity removed for being outside bounds at position: " << entity->getPosition().x << ", " << entity->getPosition().y << std::endl;
+                    return true;
                 }
                 // Add conditions for other entity types if needed
                 return false;
@@ -144,4 +149,9 @@ std::shared_ptr<Entity> EntityManager::findNearestEnemy(const sf::Vector2f& posi
     }
 
     return nearestEnemy;
+}
+
+bool EntityManager::isEntityOutsideBounds(const std::shared_ptr<Entity>& entity) const {
+    sf::Vector2f position = entity->getPosition();
+    return position.x < 0 || position.y < 0 || position.x >= LevelSystem::getWidth() * LevelSystem::getTileSize() || position.y >= LevelSystem::getHeight() * LevelSystem::getTileSize();
 }
