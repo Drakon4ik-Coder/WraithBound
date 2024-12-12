@@ -6,35 +6,44 @@
 #include "../SceneManager/SceneManager.h" 
 #include "../Scenes/MainMenuScene.h"
 #include "Scene.h"
-
-
 #include <filesystem>
 
 
 class SettingsScene : public Scene {
 public:
-    SettingsScene(SceneManager* sceneManager);  // Constructor with no arguments
+    SettingsScene(SceneManager* sceneManager, sf::RenderWindow& window);
     void onActivate() override;
     void handleInput(sf::RenderWindow& window) override;
     void update(float dt) override;
     void render(sf::RenderWindow& window) override;
     //SceneManager* sceneManager;
-    SceneManager* sceneManager;
 
 private:
     std::vector<sf::Vector2u> resolutions;
+    SceneManager* sceneManager;
     size_t currentResolutionIndex;
+    sf::RenderWindow& mainWindow;
     void saveSettings();
     void loadSettings();
+    void applyResolution();
     SettingsScene() = delete;
 };
 
 
-SettingsScene::SettingsScene(SceneManager* sceneManager) {
-    this->sceneManager = sceneManager;
+// Constructor
+SettingsScene::SettingsScene(SceneManager* sceneManager, sf::RenderWindow& window)
+    : sceneManager(sceneManager), mainWindow(window) {
     loadSettings();
     resolutions = { {800, 600}, {1024, 768}, {1280, 720}, {1920, 1080} };
     currentResolutionIndex = 0;
+}
+
+// Apply the resolution dynamically
+void SettingsScene::applyResolution() {
+    const sf::Vector2u& resolution = resolutions[currentResolutionIndex];
+    // Close the current window and create a new one with the selected resolution
+    mainWindow.create(sf::VideoMode(resolution.x, resolution.y), "WraithBound");
+    std::cout << "Applied new resolution: " << resolution.x << "x" << resolution.y << std::endl;
 }
 
 void SettingsScene::onActivate() {
@@ -55,13 +64,9 @@ void SettingsScene::handleInput(sf::RenderWindow& window) {
                 currentResolutionIndex = (currentResolutionIndex - 1 + resolutions.size()) % resolutions.size();
             }
             else if (event.key.code == sf::Keyboard::Enter) {
+                // Save settings and apply resolution when Enter is pressed
                 saveSettings();
-            }
-            else if (event.key.code == sf::Keyboard::Enter) {
-                saveSettings();
-            }
-            else if (event.key.code == sf::Keyboard::Enter) {
-                saveSettings();
+                applyResolution();
             }
             else if (event.key.code == sf::Keyboard::Escape) {
                 if (sceneManager) {
@@ -93,6 +98,7 @@ void SettingsScene::render(sf::RenderWindow& window) {
     resolutionText.setPosition(100, 100);
 
     window.draw(resolutionText);
+ 
 }
 
 void SettingsScene::saveSettings() {
@@ -101,8 +107,7 @@ void SettingsScene::saveSettings() {
     // Open file
     std::ofstream settingsFile("res/settings/settings.txt");
     if (!settingsFile.is_open()) {
-        std::cerr << "Failed to open file for writing: " << "res/settings/settings.txt"
-            << "\nError: " << std::strerror(errno) << std::endl;
+        std::cerr << "Failed to open file for writing: " << "res/settings/settings.txt" << std::endl;
         return;
     }
 
@@ -133,8 +138,7 @@ void SettingsScene::loadSettings() {
     std::ifstream settingsFile("res/settings/settings.txt");
 
     if (!settingsFile.is_open()) {
-        std::cerr << "Failed to open " << "res/settings/settings.txt" << " for reading. Error: "
-            << std::strerror(errno) << std::endl;
+        std::cerr << "Failed to open " << "res/settings/settings.txt" << std::endl;
         return;
     }
 

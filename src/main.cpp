@@ -102,12 +102,15 @@ int main(int argc, char* argv[]) {
     }
     srand(static_cast<unsigned int>(time(0)));
 
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600),
-                                                "Wraithbound");
+    sf::Vector2u resolution(800, 600);  // Default resolution
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(resolution.x, resolution.y), "Wraithbound");
+
     sceneManager = std::make_unique<SceneManager>();
 
     Load();
 
+    // Pass window reference to SettingsScene
+    auto settingsScene = std::make_shared<SettingsScene>(sceneManager.get(), *window);
 
     // Create MainMenuScene with SceneManager pointer
     std::shared_ptr<MainMenuScene> mainMenuScene =
@@ -121,7 +124,6 @@ int main(int argc, char* argv[]) {
         std::make_shared<PauseScene>(sceneManager.get());
     sceneManager->addScene("Pause", pauseScene);
 
-    std::shared_ptr<SettingsScene> settingsScene = std::make_shared<SettingsScene>(sceneManager.get());
     sceneManager->addScene("Settings", settingsScene);
 
     // Set the active scene to MainMenu
