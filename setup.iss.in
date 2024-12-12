@@ -1,6 +1,6 @@
 [Setup]
 AppName=WraithBound
-AppVersion=1.0.0
+AppVersion=1.0
 DefaultDirName={pf}\WraithBound
 DefaultGroupName=WraithBound
 OutputDir=.
@@ -9,9 +9,12 @@ Compression=lzma
 SolidCompression=yes
 
 [Files]
-Source: "@CMAKE_BINARY_DIR@\bin\Release\WraithBound.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_BINARY_DIR@\bin\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@CMAKE_BINARY_DIR@\bin\Release\res\*"; DestDir: "{app}\res"; Flags: ignoreversion recursesubdirs
+Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@\Release\WraithBound.exe"; DestDir: "{app}\bin\Release"; Flags: ignoreversion
+Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@\*.dll"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@\res\*"; DestDir: "{app}\res"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\WraithBound"; Filename: "{app}\WraithBound.exe"
+Name: "{group}\WraithBound"; Filename: "{app}\bin\Release\WraithBound.exe"
+
+[Run]
+Filename: "{app}\bin\Release\WraithBound.exe"; Description: "{cm:LaunchProgram,WraithBound}"; Flags: nowait postinstall skipifsilent
