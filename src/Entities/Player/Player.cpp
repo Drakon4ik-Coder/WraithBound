@@ -47,6 +47,7 @@ Player::Player(EntityManager* entityManager)
 }
 
 void Player::Update(double dt) {
+    Entity::Update(dt);
     Vector2f direction = { 0.f, 0.f };
     // Move in four directions based on keys
     if (Keyboard::isKeyPressed(Keyboard::W)) direction.y--;
@@ -64,63 +65,12 @@ void Player::Update(double dt) {
 
     // Move the player
     move(Vector2f(direction.x * dt * _speed, direction.y * dt * _speed));
-    
+
     // Update animation
     updateAnimation(dt);
 
-    // Handle shooting cooldown
-    if (_shootTimer < _shootCooldown) {
-        _shootTimer += static_cast<float>(dt);
-    }
-
-    // Handle shooting
-    if (Keyboard::isKeyPressed(Keyboard::Space) && _shootTimer >= _shootCooldown) {
-        // Define projectile parameters
-        sf::Vector2f playerPosition = getPosition();
-        sf::Vector2f projectileDirection = direction;
-
-        // If the player is not moving, set a default direction
-        if (projectileDirection.x == 0.f && projectileDirection.y == 0.f) {
-            projectileDirection = sf::Vector2f(1.f, 0.f); // Default to right
-        }
-
-        // Normalize the projectile direction
-        projectileDirection = normalize(projectileDirection);
-
-        // Calculate spawn offset
-        float playerRadius = 25.f;
-        float projectileHalfSize = 5.f; // Half of 10.f size
-        sf::Vector2f spawnOffset = projectileDirection * (playerRadius + projectileHalfSize + 1.f); // Additional 1.f to prevent overlap
-
-        // Set projectile spawn position
-        sf::Vector2f projectilePosition = playerPosition + spawnOffset;
-
-        float projectileSpeed = 400.f;
-        float projectileDamage = 20.f;
-
-        // Create and initialize the projectile
-        std::shared_ptr<Projectile> projectile = std::make_shared<Projectile>(
-            projectilePosition,
-            projectileDirection,
-            projectileSpeed,
-            projectileDamage,
-            &projectileTexture, // Use loaded texture
-            sf::Vector2f(10.f, 10.f)
-        );
-
-        // Add the projectile to the entity manager
-        if (_entityManager) {
-            _entityManager->AddEntity(projectile);
-            _shootTimer = 0.f; // Reset the shoot timer
-            std::cout << "Projectile spawned at position ("
-                << projectilePosition.x << ", "
-                << projectilePosition.y << ")\n";
-            std::cout << "Projectile Direction: (" << projectileDirection.x << ", "
-                << projectileDirection.y << ")\n";
-        }
-    }
-
-    Entity::Update(dt);
+    // Auto-aim and fire at the nearest enemy
+    autoAimAndFire(dt);
 }
 
 void Player::Render(sf::RenderWindow& window) const {
@@ -150,4 +100,54 @@ void Player::updateAnimation(float dt) {
 
     // Update sprite position to match entity position
     _sprite.setPosition(getPosition());
+}
+
+void Player::autoAimAndFire(double dt) {
+    if (_shootTimer < _shootCooldown) {
+        _shootTimer += static_cast<float>(dt);
+        return;
+    }
+
+    float range = 500.0f;
+    auto nearestEnemy = _entityManager->findNearestEnemy(getPosition(), range);
+    if (nearestEnemy) {
+        sf::Vector2f direction = nearestEnemy->getPosition() - getPosition();
+        direction = normalize(direction);
+
+        // Define projectile parameters
+        sf::Vector2f playerPosition = getPosition();
+        sf::Vector2f projectileDirection = direction;
+
+        // Calculate spawn offset
+        float playerRadius = 25.f;
+        float projectileHalfSize = 5.f; // Half of 10.f size
+        sf::Vector2f spawnOffset = projectileDirection * (playerRadius + projectileHalfSize + 1.f); // Additional 1.f to prevent overlap
+
+        // Set projectile spawn position
+        sf::Vector2f projectilePosition = playerPosition + spawnOffset;
+
+        float projectileSpeed = 300.f;
+        float projectileDamage = 20.f;
+
+        // Create and initialize the projectile
+        std::shared_ptr<Projectile> projectile = std::make_shared<Projectile>(
+            projectilePosition,
+            projectileDirection,
+            projectileSpeed,
+            projectileDamage,
+            &projectileTexture, // Use loaded texture
+            sf::Vector2f(10.f, 10.f)
+        );
+
+        // Add the projectile to the entity manager
+        if (_entityManager) {
+            _entityManager->AddEntity(projectile);
+            _shootTimer = 0.f; // Reset the shoot timer
+            std::cout << "Projectile auto-aimed and fired at position ("
+                << projectilePosition.x << ", "
+                << projectilePosition.y << ")\n";
+            std::cout << "Projectile Direction: (" << projectileDirection.x << ", "
+                << projectileDirection.y << ")\n";
+        }
+    }
 }

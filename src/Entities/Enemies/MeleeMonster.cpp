@@ -30,6 +30,8 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
 }
 
 void MeleeMonster::Update(const double dt) {
+    Monster::Update(dt);
+    
     if (!player) return;
 
     sf::Vector2f diff;
@@ -43,7 +45,7 @@ void MeleeMonster::Update(const double dt) {
             return;
         }
         std::pair<int,int> nextTile = path.front();
-        diff = LevelSystem::getTilePosition(sf::Vector2ul{ static_cast<unsigned long>(nextTile.first), static_cast<unsigned long>(nextTile.second) }) - getPosition();
+        diff = LevelSystem::getTilePosition(sf::Vector2ul{ static_cast<unsigned long>(nextTile.first), static_cast<unsigned long>(nextTile.second) }) + sf::Vector2f{LevelSystem::getTileSize()/2,LevelSystem::getTileSize()/2} - getPosition();
     }
 
     
@@ -56,8 +58,7 @@ void MeleeMonster::Update(const double dt) {
         move(moveVect);
     } else {
         collisionSound.play();
-        player->OnCollision(this);
-        this->OnCollision(player.get());
+        
     }
 
     // Handle direction looking
@@ -82,8 +83,6 @@ void MeleeMonster::Update(const double dt) {
         frame_i = (frame_i + 1) % frames;
         time = 0;
     }
-
-    Monster::Update(dt);
 }
 
 void MeleeMonster::Render(sf::RenderWindow& window) const {
