@@ -68,6 +68,7 @@ void SettingsScene::handleInput(sf::RenderWindow& window) {
 
                     if (fullScreenButton.getGlobalBounds().contains(mousePosF)) {
                         fullScreen = !fullScreen;
+                        applyResolution();
                     }
                 }
         }
@@ -112,6 +113,7 @@ void SettingsScene::render(sf::RenderWindow& window) {
     resolutionText.setOrigin(resolutionText.getLocalBounds().width / 2, resolutionText.getLocalBounds().height / 2);
     resolutionText.setPosition(mainWindow.getSize().x/2, 100);
 
+    fullScreenButton.setSize(sf::Vector2f(250, 50));
     fullScreenButton.setFillColor(sf::Color::Blue);
     fullScreenButton.setOrigin(fullScreenButton.getLocalBounds().width / 2, fullScreenButton.getLocalBounds().height / 2);
     fullScreenButton.setPosition(mainWindow.getSize().x/2, 150);
@@ -140,8 +142,8 @@ void SettingsScene::render(sf::RenderWindow& window) {
 
     window.draw(resolutionText);
     window.draw(exitText);
-    window.draw(fullScreenText);
     window.draw(fullScreenButton);
+    window.draw(fullScreenText);
  
 }
 
