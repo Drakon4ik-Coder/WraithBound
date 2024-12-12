@@ -1,0 +1,30 @@
+name: Check Installer
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up CMake
+      uses: lukka/get-cmake@v3
+
+    - name: Configure CMake
+      run: cmake -S . -B build
+
+    - name: Build project
+      run: cmake --build build --config Release
+
+    - name: Run installer
+      run: |
+        cmake --build build --target installer
+        if exist build\setup.exe (
+          echo "Installer created successfully."
+        ) else (
+          echo "Installer creation failed."
+          exit 1
+        )
