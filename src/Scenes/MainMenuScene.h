@@ -102,26 +102,29 @@ class MainMenuScene : public Scene {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                     sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
-                                           static_cast<float>(mousePos.y));
-
-                    std::cout << "Mouse Clicked at: (" << mousePosF.x << ", "
-                              << mousePosF.y << ")\n";
+                        static_cast<float>(mousePos.y));
 
                     if (startButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Start Game clicked" << std::endl;
                         if (sceneManager) {
-                            entityManager = std::make_shared<EntityManager>();
-                            std::shared_ptr<InGameScene> inGameScene =
-                                std::make_shared<InGameScene>(entityManager, sceneManager);
-                            sceneManager->addScene("InGame", inGameScene);
-                            sceneManager->setActiveScene("InGame");
-                            inGameScene->onActivate();  // Call to generate and
-                                                        // load the maze
-
-                            inGameScene->spawnMonsters();  // Call to spawn
-                                                           // monsters
-
-                        } else {
+                            // Check if "InGame" scene already exists
+                            auto inGameScene = std::dynamic_pointer_cast<InGameScene>(
+                                sceneManager->getScene("InGame"));
+                            if (inGameScene) {
+                                // Scene exists, set it as active
+                                sceneManager->setActiveScene("InGame");
+                            }
+                            else {
+                                // Create new InGameScene
+                                entityManager = std::make_shared<EntityManager>();
+                                inGameScene = std::make_shared<InGameScene>(entityManager, sceneManager);
+                                sceneManager->addScene("InGame", inGameScene);
+                                sceneManager->setActiveScene("InGame");
+                                inGameScene->onActivate();   // Generate and load the maze
+                                inGameScene->spawnMonsters(); // Spawn monsters
+                            }
+                        }
+                        else {
                             std::cerr << "SceneManager is null!" << std::endl;
                         }
                     }
@@ -133,9 +136,10 @@ class MainMenuScene : public Scene {
 
                     if (quitButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Quit clicked, closing window."
-                                  << std::endl;
+                            << std::endl;
                         window.close();
                     }
+
                 }
             }
         }

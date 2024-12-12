@@ -67,6 +67,8 @@ public:
         initializeButtons();
     }
 
+    // PauseScene.h
+
     void handleInput(sf::RenderWindow& window) override {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -77,9 +79,6 @@ public:
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape) {
                     if (sceneManager) {
-                        //sceneManager->removeScene("Pause");
-                        // Assuming the previous scene is the game scene
-                        // Adjust as per your SceneManager's implementation
                         sceneManager->setActiveScene("InGame");
                     }
                 }
@@ -94,7 +93,6 @@ public:
                     if (resumeButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Resume clicked" << std::endl;
                         if (sceneManager) {
-                            //sceneManager->removeScene("Pause");
                             sceneManager->setActiveScene("InGame");
                         }
                     }
@@ -102,13 +100,17 @@ public:
                     if (quitButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Quit to Menu clicked" << std::endl;
                         if (sceneManager) {
-                            sceneManager->setActiveScene("MainMenu");
+                            //sceneManager->removeScene("InGame");  // Remove InGameScene
+                            sceneManager->setActiveScene("MainMenu");  // Switch to MainMenu
+                            //sceneManager->removeScene("Pause");   // Remove PauseScene
+
                         }
                     }
                 }
             }
         }
     }
+
 
     void update(float dt) override {
         // Pause scene might not need to update dynamic content
