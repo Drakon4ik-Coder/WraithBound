@@ -215,8 +215,10 @@ vector<pair<int, int>> LevelSystem::findPath(sf::Vector2f e1, sf::Vector2f e2) {
     set<pair<int, int>> visited; // To keep track of visited tiles
 
     // Initialize BFS
-    bfsQueue.push({e1P, {}});
-    visited.insert(e1P);
+    if (visited.find(e1P) == visited.end() && getTile({ static_cast<size_t>(e1P.first), static_cast<size_t>(e1P.second) }) != TILE::ENTRANCE && getTile({ static_cast<size_t>(e1P.first), static_cast<size_t>(e1P.second) }) != TILE::WALL) {
+        bfsQueue.push({e1P, {}});
+        visited.insert(e1P);
+    }
 
     while (!bfsQueue.empty()) {
         auto [current, path] = bfsQueue.front();
