@@ -1,30 +1,37 @@
-name: Check Installer
+name: Build and Check Installer
 
 on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up CMake
-      uses: actions/setup-cmake@v3
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ libopenal-dev libgl1-mesa-dev
+
+    - name: Create build directory
+      run: mkdir build
 
     - name: Configure CMake
-      run: cmake -S . -B build
+      run: cmake .. -B build
 
-    - name: Build project
-      run: cmake --build build --config Release
+    - name: Build copy_resources_release target
+      run: cmake --build build --target copy_resources_release --config Release
 
-    - name: Run installer
+    - name: Build installer target
+      run: cmake --build build --target installer --config Release
+
+    - name: Check for installer
       run: |
-        cmake --build build --target installer
-        if exist build\WraithBoundInstaller.exe (
-          echo "Installer created successfully."
-        ) else (
-          echo "Installer creation failed."
+        if [ -f build/WraithBoundInstaller.exe ]; then
+          echo "Installer found."
+        else
+          echo "Installer not found."
           exit 1
-        )
+        fi
