@@ -9,9 +9,9 @@
 class Player : public Entity {
 private:
     float _speed;
-    float _shootCooldown;           
-    float _shootTimer;              
-    EntityManager* _entityManager; 
+    float _shootCooldown;
+    float _shootTimer;
+    EntityManager* _entityManager;
     sf::Sprite _sprite;
     sf::Texture _texture;
     sf::Vector2i _frameSize;
@@ -19,7 +19,9 @@ private:
     float _animationTime;
     float _frameTime;
     bool _facingLeft;
-    int _health;  
+    int _health;
+    sf::RectangleShape _healthBar; 
+    sf::RectangleShape _healthBarBackground; 
 
 public:
     Player(EntityManager* entityManager);
@@ -30,4 +32,5 @@ public:
     void autoAimAndFire(double dt);
     void takeDamage(float damage) override;
     bool isAlive() const override;
+    void updateHealthBar(); 
 };

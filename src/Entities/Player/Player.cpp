@@ -42,6 +42,16 @@ Player::Player(EntityManager* entityManager)
     if (!projectileTexture.loadFromFile("res/img/Projectiles/projectile.png")) {
         std::cerr << "Failed to load projectile texture!" << std::endl;
     }
+
+    // Initialize health bar
+    _healthBar.setSize(Vector2f(64, 10));
+    _healthBar.setFillColor(Color::Green);
+    _healthBar.setOrigin(_healthBar.getSize().x / 2.f, _healthBar.getSize().y / 2.f);
+
+    // Initialize health bar background
+    _healthBarBackground.setSize(Vector2f(64, 10));
+    _healthBarBackground.setFillColor(Color::Red);
+    _healthBarBackground.setOrigin(_healthBarBackground.getSize().x / 2.f, _healthBarBackground.getSize().y / 2.f);
 }
 
 void Player::Update(double dt) {
@@ -63,10 +73,13 @@ void Player::Update(double dt) {
     move(Vector2f(direction.x * dt * _speed, direction.y * dt * _speed));
     updateAnimation(dt);
     autoAimAndFire(dt);
+    updateHealthBar();
 }
 
 void Player::Render(sf::RenderWindow& window) const {
     window.draw(_sprite);
+    window.draw(_healthBarBackground); 
+    window.draw(_healthBar); 
 }
 
 sf::FloatRect Player::getGlobalBounds() {
@@ -144,8 +157,16 @@ void Player::autoAimAndFire(double dt) {
 
 void Player::takeDamage(float damage) {
     _health -= static_cast<int>(damage);
+    if (_health < 0) _health = 0;
+    updateHealthBar();
 }
 
 bool Player::isAlive() const {
     return _health > 0;
+}
+
+void Player::updateHealthBar() {
+    _healthBar.setSize(Vector2f(64 * (_health / 100.f), 10));
+    _healthBar.setPosition(_sprite.getPosition().x, _sprite.getPosition().y - 50);
+    _healthBarBackground.setPosition(_sprite.getPosition().x, _sprite.getPosition().y - 50);
 }
