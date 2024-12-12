@@ -32,4 +32,14 @@ public:
     std::shared_ptr<Entity> findNearestEnemy(const sf::Vector2f& position, float range);
 
     bool isEntityOutsideBounds(const std::shared_ptr<Entity>& entity) const;
+
+    template <typename T>
+    bool hasEntitiesOfType() const {
+        for (const auto& entity : entities) {
+            if (std::dynamic_pointer_cast<T>(entity)) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
