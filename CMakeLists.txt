@@ -36,6 +36,12 @@ add_library(lib_maths INTERFACE)
 target_sources(lib_maths INTERFACE "${CMAKE_SOURCE_DIR}/lib_maths/maths.h")
 target_include_directories(lib_maths INTERFACE "${CMAKE_SOURCE_DIR}/lib_maths" SYSTEM INTERFACE ${SFML_INCS})
 
+# # Tile loader lib
+file(GLOB_RECURSE SOURCE_FILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)
+add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
+target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/lib_tile_level_loader/")
+target_link_libraries(lib_tile_level_loader lib_maths sfml-graphics)
+
 # ### Copy Resources ####
 add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND}
     -E copy_directory
@@ -48,10 +54,25 @@ add_custom_target(copy_resources2 ALL COMMAND ${CMAKE_COMMAND}
     "${PROJECT_SOURCE_DIR}/res"
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/res
 )
-add_custom_target(copy_resources3 ALL COMMAND ${CMAKE_COMMAND}
+
+add_custom_target(copy_resources_release ALL COMMAND ${CMAKE_COMMAND}
     -E copy_directory
-    "${PROJECT_SOURCE_DIR}/res/settings"
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/res/settings
+    "${PROJECT_SOURCE_DIR}/res"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/res
+)
+
+# Copy OpenAL32.dll to the output directory for different configurations
+add_custom_target(copy_openal_dll ALL
+    COMMAND ${CMAKE_COMMAND} -E copy
+    "${PROJECT_SOURCE_DIR}/external/OpenAL/OpenAL32.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/OpenAL32.dll
+)
+
+# Copy OpenAL32.lib for linking
+add_custom_target(copy_openal_lib ALL
+    COMMAND ${CMAKE_COMMAND} -E copy
+    "${PROJECT_SOURCE_DIR}/external/OpenAL/OpenAL32.dll"
+    ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/OpenAL32.dll
 )
 
 # ### Game ####
@@ -70,15 +91,20 @@ target_link_libraries(WraithBound
     OpenAL::OpenAL
 )
 
-# # Tile loader lib
-file(GLOB_RECURSE SOURCE_FILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)
-add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
-target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/lib_tile_level_loader/")
-target_link_libraries(lib_tile_level_loader lib_maths sfml-graphics)
-
 set_target_properties(WraithBound
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
 
-add_dependencies(WraithBound copy_resources copy_resources2 copy_resources3)
+# ### Installer ####
+configure_file(${CMAKE_SOURCE_DIR}/setup.iss.in ${CMAKE_BINARY_DIR}/setup.iss @ONLY)
+
+add_custom_target(installer
+    COMMAND "C:/Program Files (x86)/Inno Setup 6/ISCC.exe" ${CMAKE_BINARY_DIR}/setup.iss
+    DEPENDS WraithBound
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Generating installer using Inno Setup"
+)
+
+# Ensure the copy_openal_dll and copy_openal_lib targets are built before the installer
+add_dependencies(installer copy_openal_dll copy_openal_lib)
