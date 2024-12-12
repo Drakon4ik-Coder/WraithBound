@@ -1,38 +1,45 @@
-name: Build and Check Installer
+name: Build Windows Installer
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-    - name: Install dependencies
+    # Setup dependencies
+    - name: Install Dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake g++ libopenal-dev libgl1-mesa-dev
+        choco install cmake --installargs '"ADD_CMAKE_TO_PATH=System"' --yes
+        choco install innosetup --yes
+        choco install openal-soft --yes
+        choco install sfml --yes
 
-    - name: Create build directory
-      run: mkdir build
-
+    # Configure CMake
     - name: Configure CMake
-      run: cmake .. -B build
-      working-directory: ${{ github.workspace }}
-
-    - name: Build copy_resources_release target
-      run: cmake --build build --target copy_resources_release --config Release
-
-    - name: Build installer target
-      run: cmake --build build --target installer --config Release
-
-    - name: Check for installer
       run: |
-        if [ -f build/WraithBoundInstaller.exe ]; then
-          echo "Installer found."
-        else
-          echo "Installer not found."
-          exit 1
-        fi
+        mkdir build
+        cd build
+        cmake ..
+
+    # Build the project
+    - name: Build Project
+      run: |
+        cd build
+        cmake --build . --target copy_resources_release --config Release
+        cmake --build . --target installer --config Release
+
+    # Upload the installer artifact
+    - name: Upload Installer
+      uses: actions/upload-artifact@v3
+      with:
+        name: WraithBoundInstaller
+        path: build/WraithBoundInstaller.exe
