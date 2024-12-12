@@ -7,6 +7,10 @@
 #include "../Scenes/MainMenuScene.h"
 #include "Scene.h"
 
+
+#include <filesystem>
+
+
 class SettingsScene : public Scene {
 public:
     SettingsScene(SceneManager* sceneManager);  // Constructor with no arguments
@@ -92,35 +96,70 @@ void SettingsScene::render(sf::RenderWindow& window) {
 }
 
 void SettingsScene::saveSettings() {
-    std::string path = "settings.txt";
-    std::ofstream settingsFile(path);
-    if (settingsFile.is_open()) {
-        settingsFile << resolutions[currentResolutionIndex].x << " " << resolutions[currentResolutionIndex].y << std::endl;
-        settingsFile.close();
-        std::cout << "Settings saved to " << path << std::endl;  // Debug output
+    //std::string path = "res/settings/settings.txt";
+
+    // Open file
+    std::ofstream settingsFile("res/settings/settings.txt");
+    if (!settingsFile.is_open()) {
+        std::cerr << "Failed to open file for writing: " << "res/settings/settings.txt"
+            << "\nError: " << std::strerror(errno) << std::endl;
+        return;
+    }
+
+    // Debug resolution data
+    std::cout << "Writing resolution: "
+        << resolutions[currentResolutionIndex].x << " x "
+        << resolutions[currentResolutionIndex].y << std::endl;
+
+    // Write data
+    settingsFile << resolutions[currentResolutionIndex].x << " "
+        << resolutions[currentResolutionIndex].y << std::endl;
+
+    // Flush and close
+    settingsFile.flush();
+    settingsFile.close();
+
+    if (settingsFile) {
+        std::cout << "Settings saved successfully to " << "res/settings/settings.txt" << std::endl;
     }
     else {
-        std::cerr << "Failed to open " << path << " for writing" << std::endl;
+        std::cerr << "Error occurred during writing to file: " << "res/settings/settings.txt" << std::endl;
     }
 }
 
 void SettingsScene::loadSettings() {
-    std::string path = "settings.txt";
-    std::ifstream settingsFile(path);
-    if (settingsFile.is_open()) {
-        unsigned int width, height;
-        settingsFile >> width >> height;
-        settingsFile.close();
-        std::cout << "Settings loaded from " << path << std::endl;  // Debug output
+    //std::string path = "res/settings/settings.txt";
 
-        for (size_t i = 0; i < resolutions.size(); ++i) {
-            if (resolutions[i].x == width && resolutions[i].y == height) {
-                currentResolutionIndex = i;
-                break;
-            }
+    std::ifstream settingsFile("res/settings/settings.txt");
+
+    if (!settingsFile.is_open()) {
+        std::cerr << "Failed to open " << "res/settings/settings.txt" << " for reading. Error: "
+            << std::strerror(errno) << std::endl;
+        return;
+    }
+
+    unsigned int width = 0, height = 0;
+    if (!(settingsFile >> width >> height)) {
+        std::cerr << "Invalid data format in " << "res/settings/settings.txt" << std::endl;
+        return;
+    }
+
+    settingsFile.close();
+
+    std::cout << "Loaded resolution: " << width << " x " << height << std::endl;
+
+    bool found = false;
+    for (size_t i = 0; i < resolutions.size(); ++i) {
+        if (resolutions[i].x == width && resolutions[i].y == height) {
+            currentResolutionIndex = i;
+            found = true;
+            break;
         }
     }
-    else {
-        std::cerr << "Failed to open " << path << " for reading" << std::endl;
+
+    if (!found) {
+        std::cerr << "No matching resolution found for " << width << "x" << height
+            << ". Using default resolution." << std::endl;
+        currentResolutionIndex = 0; // Or your desired fallback index
     }
 }
