@@ -24,6 +24,7 @@ MeleeMonster::MeleeMonster(sf::Texture& spritesheet, sf::Vector2i size,
     _shape->setTextureRect(sf::IntRect(sf::Vector2i{ 0, 0 }, size));
     _position = position;            // Set spawn position directly
     _shape->setPosition(_position);  // Ensure the shape's position matches
+    _shape->setScale(1.5f, 1.5f);      // Scale the sprite up
 }
 
 void MeleeMonster::Update(const double dt) {

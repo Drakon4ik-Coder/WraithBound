@@ -98,7 +98,16 @@ void SettingsScene::render(sf::RenderWindow& window) {
     resolutionText.setOrigin(resolutionText.getLocalBounds().width / 2, resolutionText.getLocalBounds().height / 2);
     resolutionText.setPosition(mainWindow.getSize().x/2, 100);
 
+    sf::Text exitText;
+    exitText.setFont(font);
+    exitText.setString("Press ESC to return to Main Menu");
+    exitText.setCharacterSize(24);
+    exitText.setFillColor(sf::Color::White);
+    exitText.setOrigin(exitText.getLocalBounds().width / 2, exitText.getLocalBounds().height / 2);
+    exitText.setPosition(mainWindow.getSize().x/2, 150);
+
     window.draw(resolutionText);
+    window.draw(exitText);
  
 }
 
