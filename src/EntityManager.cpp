@@ -127,6 +127,9 @@ std::shared_ptr<Entity> EntityManager::findNearestEnemy(const sf::Vector2f& posi
     float minDistance = range;
 
     for (const auto& entity : entities) {
+        if(LevelSystem::findPath(position, entity->getPosition()).empty()) {
+            continue;
+        }
         auto monster = std::dynamic_pointer_cast<Monster>(entity);
         if (monster && monster->isAlive()) {
             float distance = sf::length(position - monster->getPosition());

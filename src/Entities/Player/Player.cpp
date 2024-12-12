@@ -14,7 +14,7 @@ static sf::Texture projectileTexture;
 
 Player::Player(EntityManager* entityManager)
     : _speed(200.0f),
-    _shootCooldown(0.5f),
+    _shootCooldown(1.5f),
     _shootTimer(_shootCooldown),
     _entityManager(entityManager),
     Entity(make_unique<RectangleShape>(Vector2f(64, 64))),
