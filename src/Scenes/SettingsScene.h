@@ -95,7 +95,8 @@ void SettingsScene::render(sf::RenderWindow& window) {
     resolutionText.setString("Resolution: " + std::to_string(resolutions[currentResolutionIndex].x) + "x" + std::to_string(resolutions[currentResolutionIndex].y));
     resolutionText.setCharacterSize(24);
     resolutionText.setFillColor(sf::Color::White);
-    resolutionText.setPosition(100, 100);
+    resolutionText.setOrigin(resolutionText.getLocalBounds().width / 2, resolutionText.getLocalBounds().height / 2);
+    resolutionText.setPosition(mainWindow.getSize().x/2, 100);
 
     window.draw(resolutionText);
  
