@@ -48,10 +48,11 @@ add_custom_target(copy_resources2 ALL COMMAND ${CMAKE_COMMAND}
     "${PROJECT_SOURCE_DIR}/res"
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/res
 )
-add_custom_target(copy_resources3 ALL COMMAND ${CMAKE_COMMAND}
+
+add_custom_target(copy_resources_release ALL COMMAND ${CMAKE_COMMAND}
     -E copy_directory
-    "${PROJECT_SOURCE_DIR}/res/settings"
-    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/res/settings
+    "${PROJECT_SOURCE_DIR}/res"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/res
 )
 
 # ### Game ####
@@ -81,4 +82,12 @@ set_target_properties(WraithBound
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
 
-add_dependencies(WraithBound copy_resources copy_resources2 copy_resources3)
+# ### Installer ####
+configure_file(${CMAKE_SOURCE_DIR}/setup.iss.in ${CMAKE_BINARY_DIR}/setup.iss @ONLY)
+
+add_custom_target(installer
+    COMMAND "C:/Program Files (x86)/Inno Setup 6/ISCC.exe" ${CMAKE_BINARY_DIR}/setup.iss
+    DEPENDS WraithBound
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Generating installer using Inno Setup"
+)
