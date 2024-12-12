@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <iostream>
 #include <cmath>
+#include "../src/Entities/Player/Player.h"  // Include the Player class
 
 std::unique_ptr<sf::Shape> Projectile::InitializeShape(const sf::Texture* texture, const sf::Vector2f& size) {
     if (texture) {
@@ -68,6 +69,11 @@ void Projectile::Render(sf::RenderWindow& window) const {
 }
 
 void Projectile::OnCollision(Entity* other) {
+    // Exclude player from collision
+    if (dynamic_cast<Player*>(other) != nullptr) {
+        return;
+    }
+
     std::cout << "Projectile collided with an entity.\n";
     deactivate();
     _shape->setFillColor(sf::Color::Yellow);

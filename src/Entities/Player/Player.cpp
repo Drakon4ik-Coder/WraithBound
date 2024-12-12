@@ -127,7 +127,7 @@ void Player::autoAimAndFire(double dt) {
         // Set projectile spawn position
         sf::Vector2f projectilePosition = playerPosition + spawnOffset;
 
-        float projectileSpeed = 400.f;
+        float projectileSpeed = 300.f;
         float projectileDamage = 20.f;
 
         // Create and initialize the projectile
