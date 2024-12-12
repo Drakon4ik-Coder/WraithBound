@@ -16,10 +16,11 @@ public:
         }
 
         victoryText.setFont(font);
-        victoryText.setString("Victory! You have defeated all monsters!");
-        victoryText.setCharacterSize(36);
-        victoryText.setFillColor(sf::Color::White);
-        victoryText.setPosition(100, 300);  // Adjust position as needed
+        victoryText.setString("Victory!\nYou have defeated all monsters!\nPress Enter to return to the main menu.");
+        victoryText.setCharacterSize(24);
+        victoryText.setFillColor(sf::Color::Green);
+        victoryText.setOrigin(victoryText.getLocalBounds().width / 2, victoryText.getLocalBounds().height / 2);
+        victoryText.setPosition(window.get()->getSize().x/2, 300);  // Adjust position as needed
     }
 
     void handleInput(sf::RenderWindow& window) override {
