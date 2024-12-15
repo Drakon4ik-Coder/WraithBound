@@ -9,7 +9,7 @@
 #include "Scene.h"
 
 class MainMenuScene : public Scene {
-   private:
+private:
     sf::Font font;
     sf::RectangleShape startButton;
     sf::RectangleShape settingsButton;
@@ -84,7 +84,7 @@ class MainMenuScene : public Scene {
                 quitBounds.top);
     }
 
-   public:
+public:
     MainMenuScene(SceneManager* sceneMgr) : sceneManager(sceneMgr) {
         initializeButtons();
     }
@@ -105,22 +105,16 @@ class MainMenuScene : public Scene {
                     if (startButton.getGlobalBounds().contains(mousePosF)) {
                         std::cout << "Start Game clicked" << std::endl;
                         if (sceneManager) {
-                            // Check if "InGame" scene already exists
-                            auto inGameScene = std::dynamic_pointer_cast<InGameScene>(
-                                sceneManager->getScene("InGame"));
-                            if (inGameScene) {
-                                // Scene exists, set it as active
-                                sceneManager->setActiveScene("InGame");
-                            }
-                            else {
-                                // Create new InGameScene
-                                entityManager = std::make_shared<EntityManager>();
-                                inGameScene = std::make_shared<InGameScene>(entityManager, sceneManager);
-                                sceneManager->addScene("InGame", inGameScene);
-                                sceneManager->setActiveScene("InGame");
-                                inGameScene->onActivate();  
-                                inGameScene->spawnMonsters(); 
-                            }
+                            // Remove and recreate InGameScene
+                            sceneManager->removeScene("InGame");
+
+                            // Create new InGameScene
+                            entityManager = std::make_shared<EntityManager>();
+                            auto inGameScene = std::make_shared<InGameScene>(entityManager, sceneManager);
+                            sceneManager->addScene("InGame", inGameScene);
+                            sceneManager->setActiveScene("InGame");
+                            inGameScene->onActivate();  
+                            inGameScene->spawnMonsters(); 
                         }
                         else {
                             std::cerr << "SceneManager is null!" << std::endl;

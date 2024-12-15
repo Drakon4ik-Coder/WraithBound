@@ -2,6 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "../SceneManager/SceneManager.h"
 #include "Scene.h"
+#include "../Entities/Player/Player.h"
+#include "../EntityManager.h"
+#include "InGameScene.h"
 
 class VictoryScene : public Scene {
 private:
@@ -20,7 +23,7 @@ public:
         victoryText.setCharacterSize(24);
         victoryText.setFillColor(sf::Color::Green);
         victoryText.setOrigin(victoryText.getLocalBounds().width / 2, victoryText.getLocalBounds().height / 2);
-        victoryText.setPosition(window.get()->getSize().x/2, 300);  // Adjust position as needed
+        victoryText.setPosition(400, 300);  // Adjust position as needed
     }
 
     void handleInput(sf::RenderWindow& window) override {
@@ -32,7 +35,17 @@ public:
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Enter) {
-                    sceneManager->setActiveScene("MainMenu");
+                    // Return to main menu and reset InGameScene
+                    if (sceneManager) {
+                        sceneManager->removeScene("InGame");
+
+                        // Create new InGameScene
+                        auto entityManager = std::make_shared<EntityManager>();
+                        auto inGameScene = std::make_shared<InGameScene>(entityManager, sceneManager);
+                        sceneManager->addScene("InGame", inGameScene);
+
+                        sceneManager->setActiveScene("MainMenu");
+                    }
                 }
             }
         }

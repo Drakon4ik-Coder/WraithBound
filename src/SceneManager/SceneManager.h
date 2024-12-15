@@ -1,16 +1,18 @@
 #pragma once
-#include "../src/Scenes/Scene.h"
-#include <unordered_map>
-#include <string>
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <string>
+#include <unordered_map>
+
+#include "../src/Scenes/Scene.h"
 
 class SceneManager {
-private:
-    std::unordered_map<std::string, std::shared_ptr<Scene>> _scenes; // Map of scenes by name
-    std::shared_ptr<Scene> _activeScene; // Pointer to the current active scene
+   private:
+    std::unordered_map<std::string, std::shared_ptr<Scene>>
+        _scenes;                          // Map of scenes by name
+    std::shared_ptr<Scene> _activeScene;  // Pointer to the current active scene
 
-public:
+   public:
     void addScene(const std::string& name, std::shared_ptr<Scene> scene) {
         _scenes[name] = scene;
         std::cout << "Scene added: " << name << std::endl;
@@ -20,15 +22,12 @@ public:
         if (_scenes.find(name) != _scenes.end()) {
             _activeScene = _scenes[name];
             std::cout << "Scene " << name << " found!" << std::endl;
-        }
-        else {
+        } else {
             std::cout << "Scene " << name << " not found!" << std::endl;
         }
     }
 
-    std::shared_ptr<Scene> getActiveScene() const {
-        return _activeScene;
-    }
+    std::shared_ptr<Scene> getActiveScene() const { return _activeScene; }
 
     void handleInput(sf::RenderWindow& window) {
         if (_activeScene) _activeScene->handleInput(window);
@@ -58,5 +57,10 @@ public:
             return it->second;
         }
         return nullptr;
+    }
+
+    void resetScene(const std::string& name) {
+        removeScene(name);
+        // Re-add the scene if necessary, depending on your game logic
     }
 };
