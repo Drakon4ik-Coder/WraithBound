@@ -16,7 +16,7 @@ std::unique_ptr<sf::Shape> Projectile::InitializeShape(const sf::Texture* textur
         return rectShape;
     }
     else {
-        float radius = size.x / 2.f;
+        float radius = size.x / 4.f;
         auto circleShape = std::make_unique<sf::CircleShape>(radius);
         circleShape->setFillColor(sf::Color::Yellow);
         return circleShape;

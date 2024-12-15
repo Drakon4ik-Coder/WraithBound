@@ -14,7 +14,7 @@ static sf::Texture projectileTexture;
 
 Player::Player(EntityManager* entityManager)
     : _speed(300.0f),
-    _shootCooldown(0.75f),
+    _shootCooldown(0.3f),
     _shootTimer(_shootCooldown),
     _entityManager(entityManager),
     Entity(make_unique<RectangleShape>(Vector2f(64, 64))),
@@ -114,7 +114,7 @@ void Player::autoAimAndFire(double dt) {
         return;
     }
 
-    float range = 500.0f;
+    float range = 1000.0f;
     auto nearestEnemy = _entityManager->findNearestEnemy(getPosition(), range);
     if (nearestEnemy) {
         sf::Vector2f direction = nearestEnemy->getPosition() - getPosition();
@@ -126,13 +126,13 @@ void Player::autoAimAndFire(double dt) {
 
         // Calculate spawn offset
         float playerRadius = 25.f;
-        float projectileHalfSize = 5.f; // Half of 10.f size
+        float projectileHalfSize = 1.f; // Half of 10.f size
         sf::Vector2f spawnOffset = projectileDirection * (playerRadius + projectileHalfSize + 1.f); // Additional 1.f to prevent overlap
 
         sf::Vector2f projectilePosition = playerPosition + spawnOffset;
 
-        float projectileSpeed = 300.f;
-        float projectileDamage = 20.f;
+        float projectileSpeed = 500.f;
+        float projectileDamage = 10.f;
 
         std::shared_ptr<Projectile> projectile = std::make_shared<Projectile>(
             projectilePosition,

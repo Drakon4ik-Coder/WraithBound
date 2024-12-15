@@ -15,7 +15,7 @@
 
 std::shared_ptr<EntityManager> entityManager;
 sf::View camera(sf::Vector2f(400, 300),
-                sf::Vector2f(800, 600));
+                sf::Vector2f(1600, 1200));
 Texture melee_skeleton;
 Texture player_sword;
 Texture dungeonTexture;
