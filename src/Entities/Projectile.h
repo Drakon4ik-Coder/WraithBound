@@ -11,7 +11,7 @@ public:
         float speed,
         float damage,
         const sf::Texture* texture = nullptr,
-        const sf::Vector2f& size = sf::Vector2f(10.f, 10.f));
+        const sf::Vector2f& size = sf::Vector2f(4.f, 4.f));
 
     virtual void Update(const double dt) override;
     virtual void Render(sf::RenderWindow& window) const override;

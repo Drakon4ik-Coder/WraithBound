@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 #include <memory>
 #include <iostream>
+#include <random>
 #include "../src/EntityManager.h"
 
 using namespace sf;
@@ -14,7 +15,7 @@ static sf::Texture projectileTexture;
 
 Player::Player(EntityManager* entityManager)
     : _speed(300.0f),
-    _shootCooldown(0.3f),
+    _shootCooldown(0.15f),
     _shootTimer(_shootCooldown),
     _entityManager(entityManager),
     Entity(make_unique<RectangleShape>(Vector2f(64, 64))),
@@ -120,19 +121,27 @@ void Player::autoAimAndFire(double dt) {
         sf::Vector2f direction = nearestEnemy->getPosition() - getPosition();
         direction = normalize(direction);
 
+        // Introduce random deviation
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<float> dis(-0.20f, 0.20f);
+        direction.x += dis(gen);
+        direction.y += dis(gen);
+        direction = normalize(direction);
+
         // Define projectile parameters
         sf::Vector2f playerPosition = getPosition();
         sf::Vector2f projectileDirection = direction;
 
         // Calculate spawn offset
         float playerRadius = 25.f;
-        float projectileHalfSize = 1.f; // Half of 10.f size
+        float projectileHalfSize = 2.f; // Half of 4.f size
         sf::Vector2f spawnOffset = projectileDirection * (playerRadius + projectileHalfSize + 1.f); // Additional 1.f to prevent overlap
 
         sf::Vector2f projectilePosition = playerPosition + spawnOffset;
 
         float projectileSpeed = 500.f;
-        float projectileDamage = 10.f;
+        float projectileDamage = 5.f;
 
         std::shared_ptr<Projectile> projectile = std::make_shared<Projectile>(
             projectilePosition,
@@ -140,7 +149,7 @@ void Player::autoAimAndFire(double dt) {
             projectileSpeed,
             projectileDamage,
             &projectileTexture,
-            sf::Vector2f(50.f, 50.f)
+            sf::Vector2f(20.f, 20.f)
         );
 
         if (_entityManager) {
