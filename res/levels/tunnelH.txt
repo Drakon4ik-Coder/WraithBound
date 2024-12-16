@@ -3,11 +3,11 @@
                
                
 wwwwwwwwwwwwwww
-w             w
-w             w
-e             e
-w             w
-w             w
+wrrrrrrrrrrrrrw
+wrrrrrrrrrrrrrw
+errrrrrrrrrrrre
+wrrrrrrrrrrrrrw
+wrrrrrrrrrrrrrw
 wwwwwwwwwwwwwww
                
                

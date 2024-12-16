@@ -14,7 +14,7 @@ using Vector2ul = sf::Vector2<size_t>;
 
 class LevelSystem {
    public:
-    enum TILE { EMPTY, START, ENTRANCE, WALL, ENEMY };
+    enum TILE { EMPTY, START, ENTRANCE, WALL, ROOM, ENEMY };
 
     static void loadLevelFile(const std::string&, float tileSize = 50.f);
     static void Render(sf::RenderWindow& window);

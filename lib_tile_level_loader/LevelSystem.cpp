@@ -2,10 +2,12 @@
 
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
 #include <queue>
-#include <vector>
 #include <set>
+#include <stdexcept>
+#include <vector>
+#include <random>
+
 
 #include "maths.h"
 
@@ -15,11 +17,11 @@ using namespace sf;
 sf::Texture LevelSystem::_spritesheet;
 std::map<LevelSystem::TILE, sf::IntRect> LevelSystem::_textureRects = {
     {WALL, sf::IntRect(128, 0, 32, 32)},
+    {ROOM, sf::IntRect(160, 64, 32, 32)},
     {ENTRANCE, sf::IntRect(96, 64, 32, 32)},
     {START, sf::IntRect(32, 32, 32, 32)},
-    {EMPTY, sf::IntRect(160, 128, 32, 32)},
-    {ENEMY, sf::IntRect(160, 128, 32, 32)}
-};
+    {EMPTY, sf::IntRect(160, 160, 32, 32)},
+    {ENEMY, sf::IntRect(160, 128, 32, 32)}};
 
 std::unique_ptr<LevelSystem::TILE[]> LevelSystem::_tiles;
 size_t LevelSystem::_width;
@@ -36,11 +38,8 @@ void LevelSystem::loadSpritesheet(const std::string& path) {
 }
 
 std::map<LevelSystem::TILE, sf::Color> LevelSystem::_colours = {
-    {WALL, Color::White},
-    {ENTRANCE, Color::Red},
-    {START, Color::Green},
-    {EMPTY, Color::Transparent},
-    {ENEMY, Color::Blue}};
+    {WALL, Color::White},  {ROOM, Color::Transparent},  {ENTRANCE, Color::Red},
+    {START, Color::Green}, {EMPTY, Color::Transparent}, {ENEMY, Color::Blue}};
 
 sf::Color LevelSystem::getColor(LevelSystem::TILE t) {
     auto it = _colours.find(t);
@@ -79,6 +78,9 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
             case 'w':
                 temp_tiles.push_back(WALL);
                 break;
+            case 'r':
+                temp_tiles.push_back(ROOM);
+                break;
             case 's':
                 temp_tiles.push_back(START);
                 break;
@@ -114,9 +116,12 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
     buildSprites();
 }
 
-
 void LevelSystem::buildSprites() {
     _sprites.clear();
+
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> dist(0, 2);
 
     for (size_t y = 0; y < getHeight(); ++y) {
         for (size_t x = 0; x < getWidth(); ++x) {
@@ -125,10 +130,27 @@ void LevelSystem::buildSprites() {
             s->setSize(sf::Vector2f(_tileSize, _tileSize));
 
             TILE tile = getTile({x, y});
-            auto& textureRect = _textureRects[tile];
+            sf::IntRect textureRect;
 
-            if (_textureRects.find(tile) != _textureRects.end()) {
-                s->setTexture(&_spritesheet); 
+            if (tile == ROOM || tile == ENTRANCE || tile == ENEMY) {
+                int randomIndex = dist(rng);
+                switch (randomIndex) {
+                    case 0:
+                        textureRect = sf::IntRect(96, 64, 32, 32);
+                        break;
+                    case 1:
+                        textureRect = sf::IntRect(128, 64, 32, 32);
+                        break;
+                    case 2:
+                        textureRect = sf::IntRect(160, 64, 32, 32);
+                        break;
+                }
+            } else {
+                textureRect = _textureRects[tile];
+            }
+
+            if (_textureRects.find(tile) != _textureRects.end() || tile == ROOM) {
+                s->setTexture(&_spritesheet);
                 s->setTextureRect(textureRect);
             } else {
                 s->setFillColor(getColor(tile));
@@ -138,8 +160,6 @@ void LevelSystem::buildSprites() {
         }
     }
 }
-
-
 
 int LevelSystem::getWidth() { return _width; }
 
@@ -166,7 +186,7 @@ Vector2ul LevelSystem::getTileVectPos(Vector2f v) {
 }
 
 bool LevelSystem::isPassable(TILE tile) {
-    return tile == EMPTY || tile == START || tile == ENTRANCE;
+    return tile == EMPTY || tile == START || tile == ENTRANCE || tile == ROOM;
 }
 
 std::vector<sf::Vector2ul> LevelSystem::getMonsterSpawnPoints() {
@@ -195,10 +215,11 @@ void LevelSystem::Render(RenderWindow& window) {
     }
 }
 
-const vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+const vector<pair<int, int>> directions = {{-1, 0}, {1, 0},  {0, -1}, {0, 1},
+                                           {1, 1},  {1, -1}, {-1, 1}, {-1, -1}};
 
 bool LevelSystem::inSameRoom(sf::Vector2f e1, sf::Vector2f e2) {
-    if(findPath(e1, e2).empty()) {
+    if (findPath(e1, e2).empty()) {
         return false;
     }
     return true;
@@ -208,14 +229,18 @@ vector<pair<int, int>> LevelSystem::findPath(sf::Vector2f e1, sf::Vector2f e2) {
     Vector2ul e1Tile = getTileVectPos(e1);
     Vector2ul e2Tile = getTileVectPos(e2);
 
-    pair<int,int> e1P = pair(e1Tile.x, e1Tile.y);
-    pair<int,int> e2P = pair(e2Tile.x, e2Tile.y);
+    pair<int, int> e1P = pair(e1Tile.x, e1Tile.y);
+    pair<int, int> e2P = pair(e2Tile.x, e2Tile.y);
 
     queue<pair<pair<int, int>, vector<pair<int, int>>>> bfsQueue;
-    set<pair<int, int>> visited; // To keep track of visited tiles
+    set<pair<int, int>> visited;  // To keep track of visited tiles
 
     // Initialize BFS
-    if (visited.find(e1P) == visited.end() && getTile({ static_cast<size_t>(e1P.first), static_cast<size_t>(e1P.second) }) != TILE::ENTRANCE && getTile({ static_cast<size_t>(e1P.first), static_cast<size_t>(e1P.second) }) != TILE::WALL) {
+    if (visited.find(e1P) == visited.end() &&
+        getTile({static_cast<size_t>(e1P.first),
+                 static_cast<size_t>(e1P.second)}) != TILE::ENTRANCE &&
+        getTile({static_cast<size_t>(e1P.first),
+                 static_cast<size_t>(e1P.second)}) != TILE::WALL) {
         bfsQueue.push({e1P, {}});
         visited.insert(e1P);
     }
@@ -233,13 +258,18 @@ vector<pair<int, int>> LevelSystem::findPath(sf::Vector2f e1, sf::Vector2f e2) {
         for (const auto& direction : directions) {
             int newRow = current.first + direction.first;
             int newCol = current.second + direction.second;
-            pair<int,int> neighbor = pair(newRow, newCol);
+            pair<int, int> neighbor = pair(newRow, newCol);
 
             // Check bounds, walls, and if already visited
-            if (visited.find(neighbor) == visited.end() && getTile({ static_cast<size_t>(neighbor.first), static_cast<size_t>(neighbor.second) }) != TILE::ENTRANCE && getTile({ static_cast<size_t>(neighbor.first), static_cast<size_t>(neighbor.second) }) != TILE::WALL) {
+            if (visited.find(neighbor) == visited.end() &&
+                getTile({static_cast<size_t>(neighbor.first),
+                         static_cast<size_t>(neighbor.second)}) !=
+                    TILE::ENTRANCE &&
+                getTile({static_cast<size_t>(neighbor.first),
+                         static_cast<size_t>(neighbor.second)}) != TILE::WALL) {
                 visited.insert(neighbor);
-                vector<pair<int,int>> newPath = path; // Copy the current path
-                newPath.push_back(neighbor);          // Add the neighbor to the path
+                vector<pair<int, int>> newPath = path;  
+                newPath.push_back(neighbor);  
                 bfsQueue.push({neighbor, newPath});
             }
         }
@@ -248,4 +278,3 @@ vector<pair<int, int>> LevelSystem::findPath(sf::Vector2f e1, sf::Vector2f e2) {
     // Return an empty path if no path exists
     return {};
 }
-

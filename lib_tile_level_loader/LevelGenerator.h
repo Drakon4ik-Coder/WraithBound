@@ -212,7 +212,7 @@ vector<vector<vector<string>>> expandDungeon(
                 vector<pair<int, int>> spawnablePositions;
                 for (int i = 3; i <= 11; ++i) {
                     for (int j = 3; j <= 11; ++j) {
-                        if (roomTemplate[i][j] == ' ') {
+                        if (roomTemplate[i][j] == 'r') {
                             spawnablePositions.emplace_back(i, j);
                         }
                     }
