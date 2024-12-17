@@ -40,6 +40,9 @@ jobs:
       - name: Build Project
         run: cmake --build build --target copy_resources_release --config Release
 
+      # Copy resources
+      - name: Resources for Project
+        run: cmake --build build --target WraithBound --config Release
 
       # List contents of the build directory
       - name: List Build Directory
