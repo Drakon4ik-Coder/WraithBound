@@ -36,24 +36,22 @@ jobs:
       - name: Configure Project
         run: cmake -B build -S . -DOPENAL_INCLUDE_DIR="/usr/include/AL" -DOPENAL_LIBRARY="/usr/lib/x86_64-linux-gnu/libopenal.so"
 
-      # Build the project
-      - name: Build Project
-        run: cmake --build build --target copy_resources_release --config Release
-
-      # Copy resources
-      - name: Resources for Project
-        run: cmake --build build --target WraithBound --config Release
+      # Build the project and copy resources
+      - name: Build Project and Copy Resources
+        run: |
+          cmake --build build --target copy_resources_release --config Release
+          cmake --build build --target WraithBound --config Release
 
       # List contents of the build directory
       - name: List Build Directory
         run: ls -R build/bin/Release
 
-      # Check for the installer
-      - name: Check for Installer
+      # Check for the executable
+      - name: Check for Executable
         run: |
           if [ -f build/bin/Release/WraithBound ]; then
-            echo "Installer found."
+            echo "Executable found."
           else
-            echo "Installer not found."
+            echo "Executable not found."
             exit 1
           fi
