@@ -43,7 +43,7 @@ jobs:
 
       # List contents of the build directory
       - name: List Build Directory
-        run: ls -R build
+        run: ls -R build/bin/Release
 
       # Check for the installer
       - name: Check for Installer
