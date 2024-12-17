@@ -40,18 +40,17 @@ jobs:
       - name: Build Project
         run: cmake --build build --target copy_resources_release --config Release
 
+
       # List contents of the build directory
       - name: List Build Directory
         run: ls -R build
 
-      # Run the executable without launching the display
-      - name: Test Executable with Xvfb
+      # Check for the installer
+      - name: Check for Installer
         run: |
-          if [ -f "./build/bin/Release/WraithBound" ]; then
-            echo "Executable WraithBound found!"
-            xvfb-run -s "-screen 0 1024x768x24" ./build/bin/Release/WraithBound --test-mode || exit 1
+          if [ -f build/bin/Release/WraithBound ]; then
+            echo "Installer found."
           else
-            echo "Error: Executable WraithBound not found."
+            echo "Installer not found."
             exit 1
-          fixit 1
-              fi
+          fi

@@ -96,6 +96,9 @@ set_target_properties(WraithBound
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
 
+# Ensure the copy_resources_release target is built before the installer
+add_dependencies(WraithBound copy_resources_release)
+
 # ### Installer ####
 configure_file(${CMAKE_SOURCE_DIR}/setup.iss.in ${CMAKE_BINARY_DIR}/setup.iss @ONLY)
 
