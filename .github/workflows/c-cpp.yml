@@ -28,23 +28,30 @@ jobs:
               libopenal-dev libvorbis-dev libogg-dev libflac-dev \
               libxrandr-dev libxcursor-dev xvfb
 
+      # Create build directory
+      - name: Create Build Directory
+        run: mkdir build
+
       # Configure the project with CMake
       - name: Configure Project
-        run: cmake -B build -S .
+        run: cmake -B build -S . -DOPENAL_INCLUDE_DIR="/usr/include/AL" -DOPENAL_LIBRARY="/usr/lib/x86_64-linux-gnu/libopenal.so"
 
       # Build the project
       - name: Build Project
-        run: cmake --build build --config Release
+        run: cmake --build build --target copy_resources_release --config Release
+
+      # List contents of the build directory
+      - name: List Build Directory
+        run: ls -R build
 
       # Run the executable without launching the display
       - name: Test Executable with Xvfb
         run: |
-          if [ -f "./build/bin/WraithBound" ]; then
+          if [ -f "./build/bin/Release/WraithBound" ]; then
             echo "Executable WraithBound found!"
-            xvfb-run -s "-screen 0 1024x768x24" ./build/bin/WraithBound --test-mode || exit 1
+            xvfb-run -s "-screen 0 1024x768x24" ./build/bin/Release/WraithBound --test-mode || exit 1
           else
             echo "Error: Executable WraithBound not found."
             exit 1
-          fi
-
-
+          fixit 1
+              fi
